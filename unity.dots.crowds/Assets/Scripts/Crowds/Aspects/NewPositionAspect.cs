@@ -9,10 +9,16 @@ namespace Crowds.Aspects {
 
         private readonly RefRO<LocalTransform> _transform;
         private readonly RefRW<TargetPosition> _targetPosition;
+        private readonly RefRW<Speed> _speed;
         
         private float3 TargetPosition {
             get => _targetPosition.ValueRO.Value;
             set => _targetPosition.ValueRW.Value = value;
+        }
+        
+        private float Speed {
+            get => _speed.ValueRO.Value;
+            set => _speed.ValueRW.Value = value;
         }
 
         public void TestReachedTargetPosition(RefRW<RandomComponent> random) {
@@ -20,6 +26,7 @@ namespace Crowds.Aspects {
                 return;
             }
             TargetPosition = NewRandomPosition(random);
+            Speed = random.ValueRW.Value.NextFloat(1f, 3f);
         }
 
         private bool HasReachedTargetPosition() {
@@ -27,11 +34,7 @@ namespace Crowds.Aspects {
         }
 
         private float3 NewRandomPosition(RefRW<RandomComponent> random) {
-            return new float3 {
-                x = random.ValueRW.Value.NextFloat(-15f, 15f),
-                y = 0f,
-                z = random.ValueRW.Value.NextFloat(-15f, 15f)
-            };
+            return Utils.Utils.NewRandomPosition(random.ValueRW.Value);
         }
     }
 }
