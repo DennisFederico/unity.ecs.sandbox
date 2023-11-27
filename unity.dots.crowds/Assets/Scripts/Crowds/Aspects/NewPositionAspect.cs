@@ -1,15 +1,18 @@
 using Crowds.Components;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace Crowds.Aspects {
 
+    [BurstCompile]
     public readonly partial struct NewPositionAspect : IAspect {
 
         private readonly RefRO<LocalTransform> _transform;
-        private readonly RefRW<TargetPosition> _targetPosition;
+        private readonly RefRW<RandomComponent> _random;
         private readonly RefRW<Speed> _speed;
+        private readonly RefRW<TargetPosition> _targetPosition;
         
         private float3 TargetPosition {
             get => _targetPosition.ValueRO.Value;
@@ -21,20 +24,27 @@ namespace Crowds.Aspects {
             set => _speed.ValueRW.Value = value;
         }
 
-        public void TestReachedTargetPosition(RefRW<RandomComponent> random) {
+        [BurstCompile]
+        public void TestReachedTargetPosition() {
             if (!HasReachedTargetPosition()) {
                 return;
             }
-            TargetPosition = NewRandomPosition(random);
-            Speed = random.ValueRW.Value.NextFloat(1f, 3f);
+            TargetPosition = NewRandomPosition();
+            Speed = _random.ValueRW.Value.NextFloat(1f, 3f);
         }
 
+        [BurstCompile]
         private bool HasReachedTargetPosition() {
             return math.distancesq(_transform.ValueRO.Position, TargetPosition) < 0.1f;
         }
 
-        private float3 NewRandomPosition(RefRW<RandomComponent> random) {
-            return Utils.Utils.NewRandomPosition(random.ValueRW.Value);
+        [BurstCompile]
+        private float3 NewRandomPosition() {
+            return new float3 {
+                x = _random.ValueRW.Value.NextFloat(-25, 25f),
+                y = 0f,
+                z = _random.ValueRW.Value.NextFloat(-25f, 25f)
+            };
         }
     }
 }

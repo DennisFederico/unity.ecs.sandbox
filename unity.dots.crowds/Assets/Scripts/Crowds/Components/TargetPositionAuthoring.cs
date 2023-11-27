@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Crowds.Components {
     public class TargetPositionAuthoring : MonoBehaviour {
         [SerializeField] private Vector3 targetPosition = Vector3.zero;
-        [SerializeField] private bool randomize = true;
+        [SerializeField] private bool randomize;
 
         private class TargetPositionAuthoringBaker : Baker<TargetPositionAuthoring> {
             public override void Bake(TargetPositionAuthoring authoring) {

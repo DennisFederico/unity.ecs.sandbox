@@ -14,13 +14,13 @@ namespace Crowds.Systems.Jobs {
         // [ReadOnly] public float Speed;
         // [ReadOnly] public float3 TargetPosition;
         
-        [NativeDisableUnsafePtrRestriction]
-        public RefRW<RandomComponent> RandomComponent;
+        // [NativeDisableUnsafePtrRestriction]
+        // public RefRW<RandomComponent> RandomComponent;
         
         public void Execute(int index) {
             var entityInstance = Ecb.Instantiate(index, PrefabEntity);
-            Ecb.SetComponent(index, entityInstance, new Speed() { Value = RandomComponent.ValueRW.Value.NextFloat(1f, 3f) });
-            Ecb.SetComponent(index, entityInstance, new TargetPosition() { Value = Utils.Utils.NewRandomPosition(RandomComponent.ValueRW.Value) });
+            //Ecb.SetComponent(index, entityInstance, new Speed() { Value = RandomComponent.ValueRW.Value.NextFloat(1f, 3f) });
+            //Ecb.SetComponent(index, entityInstance, new TargetPosition() { Value = Utils.Utils.NewRandomPosition(RandomComponent.ValueRW.Value) });
         }
     }
 }

@@ -10,18 +10,16 @@ namespace Crowds.Systems {
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            RefRW<RandomComponent> randomComponent = SystemAPI.GetSingletonRW<RandomComponent>();
+            // RefRW<RandomComponent> randomComponent = SystemAPI.GetSingletonRW<RandomComponent>();
             float timeDeltaTime = SystemAPI.Time.DeltaTime;
 
             var moveJobHandle = new MoveJob() {
-                deltaTime = timeDeltaTime
+                DeltaTime = timeDeltaTime
             }.ScheduleParallel(state.Dependency);
 
             moveJobHandle.Complete();
 
-            new ReachedPositionJob() {
-                RandomComponent = randomComponent
-            }.ScheduleParallel(moveJobHandle).Complete();
+            new ReachedPositionJob().ScheduleParallel(moveJobHandle).Complete();
         }
 
         [BurstCompile]

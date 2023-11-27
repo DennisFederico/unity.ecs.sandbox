@@ -1,7 +1,5 @@
 using Crowds.Aspects;
-using Crowds.Components;
 using Unity.Burst;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 
 namespace Crowds.Systems.Jobs {
@@ -9,11 +7,12 @@ namespace Crowds.Systems.Jobs {
     [BurstCompile]
     public partial struct ReachedPositionJob : IJobEntity {
 
-        [NativeDisableUnsafePtrRestriction]
-        public RefRW<RandomComponent> RandomComponent;
+        // [NativeDisableUnsafePtrRestriction]
+        // public RefRW<RandomComponent> RandomComponent;
 
+        [BurstCompile]
         public void Execute(NewPositionAspect newPositionAspect) {
-            newPositionAspect.TestReachedTargetPosition(RandomComponent);
+            newPositionAspect.TestReachedTargetPosition();
         }
     }
 }

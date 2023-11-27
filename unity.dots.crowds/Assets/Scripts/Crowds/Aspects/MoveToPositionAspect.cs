@@ -1,10 +1,12 @@
 using Crowds.Components;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace Crowds.Aspects {
     
+    [BurstCompile]
     public readonly partial struct MoveToPositionAspect : IAspect {
  
         //private readonly Entity _self;
@@ -17,6 +19,7 @@ namespace Crowds.Aspects {
         private float3 TargetPosition => _targetPosition.ValueRO.Value;
 
         //TODO SPLIT THE LOGIC FOR NEW POSITION IN ANOTHER SYSTEM TO AVOID PASSING THE RANDOM COMPONENT HERE
+        [BurstCompile]
         public void Move(float deltaTime) {
             if (HasReachedTargetPosition()) {
                 return;
