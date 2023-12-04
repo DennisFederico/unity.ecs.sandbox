@@ -9,7 +9,7 @@ namespace Crowds {
 
         private void LateUpdate() {
             int maxCrowdSize = 0;
-            if (_crowdMembers.Count > maxCrowdSize) return;
+            if (_crowdMembers.Count >= maxCrowdSize) return;
 
             for (int i = 0; i < 100; i++) {
                 var crowdMember = Instantiate(prefab, transform.position, Quaternion.identity);

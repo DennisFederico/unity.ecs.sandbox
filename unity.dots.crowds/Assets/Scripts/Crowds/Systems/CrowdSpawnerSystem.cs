@@ -1,11 +1,10 @@
 using Crowds.Components;
 using Unity.Burst;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Crowds.Systems {
-    
+    [DisableAutoCreation]
     [BurstCompile]
     public partial class CrowdSpawnerSystem : SystemBase {
         
@@ -33,9 +32,9 @@ namespace Crowds.Systems {
             //Queue the instantiation command
             for (int i = 0; i < 500; i++) {
                 var crowdMember = ecb.Instantiate(crowdSpawner.Prefab);
-                ecb.SetComponent(crowdMember, new RandomComponent() {
-                    Value = Unity.Mathematics.Random.CreateFromIndex(randomSeeder.ValueRW.NextSeed.NextUInt())
-                });
+                // ecb.SetComponent(crowdMember, new RandomComponent() {
+                //     Value = Unity.Mathematics.Random.CreateFromIndex(randomSeeder.ValueRW.NextSeed.NextUInt())
+                // });
                 // ecb.SetComponent(crowdMember, new Speed() {
                 //     Value = randomComponent.ValueRW.Value.NextFloat(1f, 3f)
                 // });

@@ -3,11 +3,10 @@ using Crowds.Systems.Jobs;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Crowds.Systems {
-    
+    [DisableAutoCreation]
     [BurstCompile]
     public partial class CrowdSpawnerAsJobSystem : SystemBase {
         

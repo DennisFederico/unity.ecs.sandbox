@@ -4,13 +4,14 @@ using Unity.Burst;
 using Unity.Entities;
 
 namespace Crowds.Systems {
+    [DisableAutoCreation]
     public partial struct MoveSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) { }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            // RefRW<RandomComponent> randomComponent = SystemAPI.GetSingletonRW<RandomComponent>();
+            RefRW<RandomSeeder> randomSeeder = SystemAPI.GetSingletonRW<RandomSeeder>();
             float timeDeltaTime = SystemAPI.Time.DeltaTime;
 
             var moveJobHandle = new MoveJob() {
@@ -19,7 +20,9 @@ namespace Crowds.Systems {
 
             moveJobHandle.Complete();
 
-            new ReachedPositionJob().ScheduleParallel(moveJobHandle).Complete();
+            new ReachedPositionRandomJob() {
+                RandomComponent = randomSeeder
+            }.ScheduleParallel(moveJobHandle).Complete();
         }
 
         [BurstCompile]
