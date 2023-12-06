@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace CameraMove.Components {
+namespace PlayerCamera.Components {
     public struct FreezeRotationComponentData : IComponentData {
         public bool3 Flags;
     }

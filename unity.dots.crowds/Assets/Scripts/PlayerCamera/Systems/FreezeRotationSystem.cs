@@ -1,9 +1,9 @@
-using CameraMove.Components;
+using PlayerCamera.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Physics;
 
-namespace CameraMove.Systems {
+namespace PlayerCamera.Systems {
     public partial struct FreezeRotationSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

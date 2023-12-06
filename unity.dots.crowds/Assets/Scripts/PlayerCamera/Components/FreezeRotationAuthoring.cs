@@ -1,11 +1,11 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace CameraMove.Components {
+namespace PlayerCamera.Components {
     
     [DisallowMultipleComponent]
+    [AddComponentMenu("FreezeRotation")]
     [RequireComponent(typeof(Rigidbody))]
     public class FreezeRotationAuthoring : MonoBehaviour {
         public bool3 flags;
