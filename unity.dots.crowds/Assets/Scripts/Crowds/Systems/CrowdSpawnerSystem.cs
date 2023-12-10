@@ -33,13 +33,13 @@ namespace Crowds.Systems {
             for (int i = 0; i < 500; i++) {
                 var crowdMember = ecb.Instantiate(crowdSpawner.Prefab);
                 // ecb.SetComponent(crowdMember, new RandomComponent() {
-                //     Value = Unity.Mathematics.Random.CreateFromIndex(randomSeeder.ValueRW.NextSeed.NextUInt())
+                //     ParentEntity = Unity.Mathematics.Random.CreateFromIndex(randomSeeder.ValueRW.NextSeed.NextUInt())
                 // });
                 // ecb.SetComponent(crowdMember, new Speed() {
-                //     Value = randomComponent.ValueRW.Value.NextFloat(1f, 3f)
+                //     ParentEntity = randomComponent.ValueRW.ParentEntity.NextFloat(1f, 3f)
                 // });
                 // ecb.SetComponent(crowdMember, new TargetPosition {
-                //     Value = Utils.Utils.NewRandomPosition(randomComponent.ValueRW.Value)
+                //     ParentEntity = Utils.Utils.NewRandomPosition(randomComponent.ValueRW.ParentEntity)
                 // });
             }
         }

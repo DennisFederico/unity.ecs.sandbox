@@ -19,8 +19,8 @@ namespace Crowds.Systems.Jobs {
         
         public void Execute(int index) {
             var entityInstance = Ecb.Instantiate(index, PrefabEntity);
-            //Ecb.SetComponent(index, entityInstance, new Speed() { Value = RandomComponent.ValueRW.Value.NextFloat(1f, 3f) });
-            //Ecb.SetComponent(index, entityInstance, new TargetPosition() { Value = Utils.Utils.NewRandomPosition(RandomComponent.ValueRW.Value) });
+            //Ecb.SetComponent(index, entityInstance, new Speed() { ParentEntity = RandomComponent.ValueRW.ParentEntity.NextFloat(1f, 3f) });
+            //Ecb.SetComponent(index, entityInstance, new TargetPosition() { ParentEntity = Utils.Utils.NewRandomPosition(RandomComponent.ValueRW.ParentEntity) });
         }
     }
 }
