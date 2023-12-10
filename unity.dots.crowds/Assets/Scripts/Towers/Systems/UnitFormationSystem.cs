@@ -17,24 +17,25 @@ namespace Towers.Systems {
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             //This should be changed to query and parallelize by tower, avoiding each unit having to check its parent
-            foreach (var (unitData, parentReference, entity) in
-                     SystemAPI.Query<RefRW<MoveComponent>,
-                         ParentEntityReferenceComponent>().WithEntityAccess()) {
+            foreach (var (formationData,
+                         moveData,
+                         parentReference) in
+                     SystemAPI.Query<
+                         RefRW<FormationComponent>,
+                         RefRW<MoveComponent>,
+                         ParentEntityReferenceComponent>()) {
                 
                 TowerComponent parentTowerData = state.EntityManager.GetComponentData<TowerComponent>(parentReference.ParentEntity);
                 var parentFormation = parentTowerData.Formation;
-                var currentFormation = unitData.ValueRO.Formation;
-                
-                //Debug.Log($"Formation {entity.Index} to {parentFormation} from {currentFormation}");
+                var currentFormation = formationData.ValueRO.Value;
 
                 if (currentFormation != parentFormation) {
-                    Debug.Log($"Formation Changed to {parentFormation} from {currentFormation}");
-                    unitData.ValueRW.Formation = parentFormation;
-                    int unitFormationIndex = unitData.ValueRO.FormationIndex;
+                    formationData.ValueRW.Value = parentFormation;
+                    int unitFormationIndex = formationData.ValueRO.Index;
                     var targetPosition = parentTowerData.Formation.Position(parentTowerData.Radius, unitFormationIndex / (float)parentTowerData.UnitCount);
                     LocalTransform parentTransform = state.EntityManager.GetComponentData<LocalTransform>(parentReference.ParentEntity);
                     targetPosition = parentTransform.TransformPoint(targetPosition);
-                    unitData.ValueRW.TargetPosition = targetPosition;
+                    moveData.ValueRW.TargetPosition = targetPosition;
                     //Enable the move component
                     //enabled.ValueRW = true;
                 }

@@ -23,7 +23,11 @@ namespace Towers.Systems {
             var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
             
-            foreach (var (transform, tower, prefab, enabled, entity) in 
+            foreach (var (transform, 
+                         tower, 
+                         prefab, 
+                         enabled, 
+                         entity) in 
                      SystemAPI.Query<
                          RefRO<LocalTransform>,
                          RefRO<TowerComponent>, 
@@ -48,11 +52,15 @@ namespace Towers.Systems {
                     ecb.AddComponent(unitEntity, new ParentEntityReferenceComponent {
                         ParentEntity = entity
                     });
+                    
+                    ecb.AddComponent(unitEntity, new FormationComponent {
+                        Value = formation,
+                        Index = index
+                    });
+                    
                     ecb.AddComponent(unitEntity, new MoveComponent {
                         TargetPosition = worldPosition,
-                        Speed = 30,
-                        FormationIndex = index,
-                        Formation = formation
+                        Speed = 30
                     });
                     
                     // SHOULD WE SET THE POSITION
