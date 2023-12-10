@@ -7,7 +7,10 @@ namespace Recap101.Components {
         private class MoveMeAuthoringBaker : Baker<MoveMeAuthoring> {
             public override void Bake(MoveMeAuthoring authoring) {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new MoveSpeed {Value = authoring.speed});
+                if (authoring.speed > 0) {
+                    AddComponent(entity, new MoveSpeedComponent {Value = authoring.speed});    
+                }
+                AddComponent(entity, new TagComponent());
             }
         }
     }

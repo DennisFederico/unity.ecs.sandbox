@@ -1,7 +1,7 @@
 using Unity.Entities;
 
 namespace Recap101.Components {
-    public struct MoveSpeed : IComponentData {
+    public struct MoveSpeedComponent : IComponentData {
         public float Value;
     }
 }
