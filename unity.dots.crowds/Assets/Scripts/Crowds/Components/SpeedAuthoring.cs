@@ -11,14 +11,14 @@ namespace Crowds.Components {
                 AddComponent(entity, new Speed { Value = authoring.speed });
 
                 // var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-                // var entity2 = entityManager.CreateEntity(typeof(Speed));
-                // entityManager.SetComponentData(entity2, new Speed {ParentEntity = authoring.speed});
+                // var entity2 = entityManager.CreateEntity(typeof(Value));
+                // entityManager.SetComponentData(entity2, new Value {ParentEntity = authoring.speed});
                 
                 // var add1 = CreateAdditionalEntity(TransformUsageFlags.Dynamic, false, entityName: "Another 1");
-                // AddComponent(add1, new Speed { ParentEntity = authoring.speed + 100 });
+                // AddComponent(add1, new Value { ParentEntity = authoring.speed + 100 });
                 
                 // var add2 = CreateAdditionalEntity(TransformUsageFlags.Dynamic, true, entityName: "Another 2");
-                // AddComponent(add2, new Speed { ParentEntity = authoring.speed + 200 });
+                // AddComponent(add2, new Value { ParentEntity = authoring.speed + 200 });
             }
         }
     }

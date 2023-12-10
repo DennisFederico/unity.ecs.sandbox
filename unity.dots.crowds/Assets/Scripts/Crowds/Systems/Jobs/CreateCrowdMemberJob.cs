@@ -11,7 +11,7 @@ namespace Crowds.Systems.Jobs {
     public partial struct CreateCrowdMemberJob : IJobParallelFor {
         public EntityCommandBuffer.ParallelWriter Ecb;
         [ReadOnly] public Entity PrefabEntity;
-        // [ReadOnly] public float Speed;
+        // [ReadOnly] public float Value;
         // [ReadOnly] public float3 TargetPosition;
         
         // [NativeDisableUnsafePtrRestriction]
@@ -19,7 +19,7 @@ namespace Crowds.Systems.Jobs {
         
         public void Execute(int index) {
             var entityInstance = Ecb.Instantiate(index, PrefabEntity);
-            //Ecb.SetComponent(index, entityInstance, new Speed() { ParentEntity = RandomComponent.ValueRW.ParentEntity.NextFloat(1f, 3f) });
+            //Ecb.SetComponent(index, entityInstance, new Value() { ParentEntity = RandomComponent.ValueRW.ParentEntity.NextFloat(1f, 3f) });
             //Ecb.SetComponent(index, entityInstance, new TargetPosition() { ParentEntity = Utils.Utils.NewRandomPosition(RandomComponent.ValueRW.ParentEntity) });
         }
     }

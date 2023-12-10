@@ -37,9 +37,10 @@ namespace Towers.Systems {
                 
                 //SPAWN THE UNITS
                 var formation = tower.ValueRO.Formation;
-                // var parentEntityReferenceComponent = new ParentEntityReferenceComponent {
-                //     ParentEntity = entity
-                // };
+
+                var sharedParent = new ParentEntityReferenceComponent {
+                    ParentEntity = entity
+                };
 
                 for (int index = 0; index < tower.ValueRO.UnitCount; index++) {
                     var unitEntity = ecb.Instantiate(prefab.ValueRO.Value);
@@ -49,9 +50,7 @@ namespace Towers.Systems {
                     var worldPosition = transform.ValueRO.TransformPoint(relativePosition);
                     
                     // ecb.AddSharedComponent(unitEntity, parentEntityReferenceComponent);
-                    ecb.AddComponent(unitEntity, new ParentEntityReferenceComponent {
-                        ParentEntity = entity
-                    });
+                    ecb.AddSharedComponent(unitEntity, sharedParent);
                     
                     ecb.AddComponent(unitEntity, new FormationComponent {
                         Value = formation,

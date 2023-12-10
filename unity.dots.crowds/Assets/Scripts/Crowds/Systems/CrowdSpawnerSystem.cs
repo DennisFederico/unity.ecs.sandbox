@@ -35,7 +35,7 @@ namespace Crowds.Systems {
                 // ecb.SetComponent(crowdMember, new RandomComponent() {
                 //     ParentEntity = Unity.Mathematics.Random.CreateFromIndex(randomSeeder.ValueRW.NextSeed.NextUInt())
                 // });
-                // ecb.SetComponent(crowdMember, new Speed() {
+                // ecb.SetComponent(crowdMember, new Value() {
                 //     ParentEntity = randomComponent.ValueRW.ParentEntity.NextFloat(1f, 3f)
                 // });
                 // ecb.SetComponent(crowdMember, new TargetPosition {

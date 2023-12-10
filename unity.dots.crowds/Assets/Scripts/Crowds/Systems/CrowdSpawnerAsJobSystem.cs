@@ -30,7 +30,7 @@ namespace Crowds.Systems {
 
             // var newEntityArchetype = EntityManager.CreateArchetype(
             //     typeof(CrowdMemberTag),
-            //     typeof(Speed),
+            //     typeof(Value),
             //     typeof(TargetPosition)
             // );
             

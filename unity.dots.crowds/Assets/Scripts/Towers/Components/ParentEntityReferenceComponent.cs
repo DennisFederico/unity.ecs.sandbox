@@ -1,7 +1,7 @@
 using Unity.Entities;
 
 namespace Towers.Components {
-    public struct ParentEntityReferenceComponent : IComponentData {
+    public struct ParentEntityReferenceComponent : ISharedComponentData {
         public Entity ParentEntity;
     }
 }
