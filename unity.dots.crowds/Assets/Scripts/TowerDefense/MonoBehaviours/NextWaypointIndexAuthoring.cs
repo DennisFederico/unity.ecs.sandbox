@@ -1,11 +1,8 @@
+using TowerDefense.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace TowerDefense.Components {
-    public struct NextWaypointIndexComponent : IComponentData {
-        public int Value;
-    }
-
+namespace TowerDefense.MonoBehaviours {
     public class NextWaypointIndexAuthoring : MonoBehaviour {
         [SerializeField] private int value;
 

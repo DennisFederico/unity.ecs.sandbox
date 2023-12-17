@@ -16,7 +16,7 @@ namespace TowerDefense.Systems {
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
             foreach (var (spawner, spawnPos, waypoints) in 
-                     SystemAPI.Query<RefRW<SpawnerComponent>, RefRO<LocalToWorld>, DynamicBuffer<WaypointsComponent>>()) {
+                     SystemAPI.Query<RefRW<SpawnerDataComponent>, RefRO<LocalToWorld>, DynamicBuffer<WaypointsComponent>>()) {
                 spawner.ValueRW.SpawnTimer -= SystemAPI.Time.DeltaTime;
                 if (spawner.ValueRO.SpawnTimer < 0) {
                     spawner.ValueRW.SpawnTimer = spawner.ValueRO.SpawnInterval;

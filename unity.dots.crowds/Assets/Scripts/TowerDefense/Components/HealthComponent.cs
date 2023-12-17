@@ -1,8 +1,8 @@
 using Unity.Entities;
 
 namespace TowerDefense.Components {
-
-    public struct MoveSpeedComponent : IComponentData {
+    
+    public struct HealthComponent : IComponentData {
         public float Value;
     }
     

@@ -1,15 +1,9 @@
 using System;
+using TowerDefense.Components;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 
-namespace TowerDefense.Components {
-    
-    [InternalBufferCapacity(4)]
-    public struct WaypointsComponent : IBufferElementData {
-        public float3 Value;
-    }
-    
+namespace TowerDefense.MonoBehaviours {
     public class WaypointsAuthoring : MonoBehaviour {
         
         //OR ARRAY OF TRANSFORMS!?

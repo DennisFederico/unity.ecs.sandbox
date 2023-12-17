@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using TowerDefense.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace TowerDefense.Components {
+namespace TowerDefense.MonoBehaviours {
     public class SpawnerAuthoring : MonoBehaviour {
         
         [SerializeField] private GameObject prefab;
@@ -17,7 +18,7 @@ namespace TowerDefense.Components {
                     waypoints.Add(new WaypointsComponent {Value = spawnPoint.position});
                 }
                 
-                AddComponent(entity, new SpawnerComponent {
+                AddComponent(entity, new SpawnerDataComponent {
                     Prefab = GetEntity(authoring.prefab, TransformUsageFlags.Dynamic), 
                     SpawnInterval = authoring.spawnInterval,
                     SpawnTimer = authoring.spawnInterval

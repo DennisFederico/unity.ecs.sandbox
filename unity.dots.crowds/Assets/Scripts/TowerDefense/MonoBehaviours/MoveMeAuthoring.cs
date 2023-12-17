@@ -1,7 +1,8 @@
+using TowerDefense.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace TowerDefense.Components {
+namespace TowerDefense.MonoBehaviours {
     public class MoveMeAuthoring : MonoBehaviour {
         [SerializeField] private float speed = 3f;
         private class MoveMeAuthoringBaker : Baker<MoveMeAuthoring> {

@@ -1,7 +1,8 @@
+using TowerDefense.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace TowerDefense.Components {
+namespace TowerDefense.MonoBehaviours {
     public class VisualGameObjectAuthoring : MonoBehaviour {
         [SerializeField] private GameObject visualPrefab;
 
