@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 188f1042b5ff4644389fad5df1f98d7c
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35635
+  packageName: Fantasy Monster - Skeleton
+  packageVersion: Initial Version
+  assetPath: Assets/FantasyMonster/Skeleton/Ani/Skeleton@Walk.FBX
+  uploadId: 72682
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable:
@@ -251,7 +258,7 @@ ModelImporter:
     second: Object01
   - first:
       74: 7400000
-    second: Take 001
+    second: Walk
   - first:
       95: 9500000
     second: //RootNode
@@ -287,11 +294,40 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Walk
+      takeName: Take 001
+      internalID: 7400000
+      firstFrame: 0
+      lastFrame: 52
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.01
+    globalScale: 0.1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -346,7 +382,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.01
+    globalScale: 0.1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
@@ -363,10 +399,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 35635
-  packageName: Fantasy Monster - Skeleton
-  packageVersion: Initial Version
-  assetPath: Assets/FantasyMonster/Skeleton/Ani/Skeleton@Walk.FBX
-  uploadId: 72682

@@ -4,8 +4,9 @@ using Unity.Entities;
 using UnityEngine;
 
 namespace Recap101.Systems {
-    public partial struct VisualGameObjectSystem : ISystem {
-        [BurstCompile]
+    [DisableAutoCreation]
+    public partial struct CreateVisualGameObjectSystem : ISystem {
+
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<VisualGameObjectComponent>();

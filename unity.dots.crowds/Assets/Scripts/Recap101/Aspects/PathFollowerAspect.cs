@@ -21,6 +21,11 @@ namespace Recap101.Aspects {
 
             var aSpeed = speed.IsValid ? speed.ValueRO.Value : 1f;
             transform.ValueRW.Position += math.normalize(direction) * (aSpeed * deltaTime);
+            transform.ValueRW.Rotation = quaternion.LookRotation(direction, math.up());
+        }
+        
+        public bool IsAtEndOfPath() {
+            return math.distance(transform.ValueRO.Position, waypoints[^1].Value) < 0.15f;
         }
     }
 }

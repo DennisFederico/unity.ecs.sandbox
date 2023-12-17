@@ -1,7 +1,8 @@
 using Unity.Entities;
+using UnityEngine;
 
 namespace Recap101.Components {
-    public struct VisualAnimatorComponent : IComponentData {
-        
+    public class VisualAnimatorComponent : IComponentData {
+        public Animator Animator;
     }
 }
