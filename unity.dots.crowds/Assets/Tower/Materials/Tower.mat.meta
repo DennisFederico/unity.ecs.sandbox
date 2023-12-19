@@ -1,0 +1,31 @@
+fileFormatVersion: 2
+guid: 6e06b6d0c696f9544b327c597d334766
+labels:
+- game
+- bricks
+- magic
+- hardsurface
+- mobile
+- lowpoly
+- building
+- fantasy
+- handpainted
+- defence
+- moba
+- stylize
+- stylized
+- mage
+- tower
+timeCreated: 1452787866
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 53793
+  packageName: Awesome Stylized Mage Tower
+  packageVersion: 1.0
+  assetPath: Assets/Tower/Materials/Tower.mat
+  uploadId: 98091

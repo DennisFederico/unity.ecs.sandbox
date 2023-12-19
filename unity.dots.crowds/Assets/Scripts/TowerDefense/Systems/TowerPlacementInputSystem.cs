@@ -19,6 +19,7 @@ namespace TowerDefense.Systems {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<PhysicsWorldSingleton>();
+            state.RequireForUpdate<TowersBufferElementData>();
         }
 
         [BurstCompile]
