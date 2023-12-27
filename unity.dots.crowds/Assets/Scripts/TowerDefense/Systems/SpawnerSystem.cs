@@ -16,13 +16,19 @@ namespace TowerDefense.Systems {
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
             foreach (var (spawner, spawnPos, waypoints) in 
-                     SystemAPI.Query<RefRW<SpawnerDataComponent>, RefRO<LocalToWorld>, DynamicBuffer<WaypointsComponent>>()) {
+                     SystemAPI.Query<RefRW<SpawnerDataComponent>, RefRO<LocalToWorld>, RefRO<BlobPathAsset>>()) {
                 spawner.ValueRW.SpawnTimer -= SystemAPI.Time.DeltaTime;
                 if (spawner.ValueRO.SpawnTimer < 0) {
                     spawner.ValueRW.SpawnTimer = spawner.ValueRO.SpawnInterval;
                     var entity = ecb.Instantiate(spawner.ValueRO.Prefab);
-                    var path = ecb.AddBuffer<WaypointsComponent>(entity);
-                    path.AddRange(waypoints.AsNativeArray());
+                    
+                    // CHANGED DynamicBuffer<WaypointsComponent>
+                    // var path = ecb.AddBuffer<WaypointsComponent>(entity);
+                    // path.AddRange(waypoints.AsNativeArray());
+                    
+                    ecb.AddComponent<BlobPathAsset>(entity, new BlobPathAsset {
+                        Path = waypoints.ValueRO.Path
+                    });
                     ecb.AddComponent<NextWaypointIndexComponent>(entity);
                     ecb.SetComponent(entity, new LocalTransform {
                         Position = spawnPos.ValueRO.Position,

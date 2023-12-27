@@ -10,20 +10,21 @@ using Unity.Transforms;
 
 namespace TowerDefense.Systems {
 
-    [BurstCompile]
+    // [BurstCompile]
     public partial struct ShootProjectileJob : IJobEntity {
 
         [ReadOnly] public float DeltaTime;
         [ReadOnly] public PhysicsWorldSingleton PhysicsWorld;
         public EntityCommandBuffer.ParallelWriter EntityBuffer;
         
-        [BurstCompile]
-        private void Execute(ref TowerDataComponent towerData, in LocalToWorld towerPos) {
+        // [BurstCompile]
+        private void Execute(ref TowerDataComponent towerData, in TowerConfigAsset configAsset, in LocalToWorld towerPos) {
             towerData.ShootTimer -= DeltaTime;
             if (towerData.ShootTimer <= 0) {
-                ClosestHitCollector<DistanceHit> closestHitCollector = new ClosestHitCollector<DistanceHit>(towerData.Range);
-                if (PhysicsWorld.OverlapSphereCustom(towerPos.Position, towerData.Range, ref closestHitCollector, towerData.Filter)) {
-                    towerData.ShootTimer = towerData.ShootFrequency;
+                ref var config = ref configAsset.Config.Value;
+                ClosestHitCollector<DistanceHit> closestHitCollector = new ClosestHitCollector<DistanceHit>(config.Range);
+                if (PhysicsWorld.OverlapSphereCustom(towerPos.Position, config.Range, ref closestHitCollector, config.Filter)) {
+                    towerData.ShootTimer = config.ShootFrequency;
                     Entity bullet = EntityBuffer.Instantiate(0, towerData.ProjectilePrefab);
                     EntityBuffer.SetComponent(1, bullet, LocalTransform.FromPosition(towerPos.Position + towerPos.Up));
                     EntityBuffer.AddComponent(2, bullet, new TargetDataComponent { Value = closestHitCollector.ClosestHit.Entity });
@@ -159,11 +160,11 @@ namespace TowerDefense.Systems {
             }.ScheduleParallel(state.Dependency);
             
             //MOVE BULLET JOB
-            new MoveProjectileJob {
+            state.Dependency = new MoveProjectileJob {
                 PositionLookup = _positionLookup,
                 DeltaTime = SystemAPI.Time.DeltaTime,
                 EosEntityBuffer = eosEcb
-            }.ScheduleParallel();
+            }.ScheduleParallel(state.Dependency);
 
             //TODO review the execution order for the systems involved in the collision
             //HIT BULLET JOB

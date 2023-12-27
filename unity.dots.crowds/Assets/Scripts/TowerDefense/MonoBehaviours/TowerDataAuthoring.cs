@@ -1,4 +1,5 @@
 using TowerDefense.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
 using Unity.Physics.Authoring;
@@ -21,10 +22,28 @@ namespace TowerDefense.MonoBehaviours {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new TowerDataComponent {
                     ProjectilePrefab = GetEntity(authoring.projectilePrefab, TransformUsageFlags.Dynamic),
-                    Range = authoring.range,
                     ShootTimer = authoring.fireRate,
+                });
+
+                // BlobAssetReference<TowerConfig> configAsset;
+                // using (var builder = new BlobBuilder(Allocator.Temp)) {
+                //     ref var root = ref builder.ConstructRoot<TowerConfig>();
+                //     root.ProjectilePrefab = GetEntity(authoring.projectilePrefab, TransformUsageFlags.Dynamic);
+                //     root.Range = authoring.range;
+                //     root.ShootFrequency = authoring.fireRate;
+                //     root.Filter = filter;
+                //     configAsset = builder.CreateBlobAssetReference<TowerConfig>(Allocator.Persistent);
+                // }
+                
+                BlobAssetReference<TowerConfig> configAsset = BlobAssetReference<TowerConfig>.Create(new TowerConfig {
+                    Range = authoring.range,
                     ShootFrequency = authoring.fireRate,
                     Filter = filter
+                });
+                AddBlobAsset(ref configAsset, out var hash);
+                
+                AddComponent(entity, new TowerConfigAsset {
+                    Config = configAsset
                 });
             }
         }

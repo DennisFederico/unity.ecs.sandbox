@@ -18,9 +18,9 @@ MonoBehaviour:
   - Tower
   - Enemy
   - Projectile
-  - 
-  - 
-  - 
+  - Unit
+  - Selection
+  - ExtraCategory
   - 
   - 
   - 

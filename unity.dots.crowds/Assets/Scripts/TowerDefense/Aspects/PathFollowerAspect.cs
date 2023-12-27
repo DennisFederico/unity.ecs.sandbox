@@ -10,11 +10,13 @@ namespace TowerDefense.Aspects {
         [Optional]
         readonly RefRO<MoveSpeedComponent> speed;
         readonly RefRW<NextWaypointIndexComponent> nextWaypoint;
-        [ReadOnly]
-        readonly DynamicBuffer<WaypointsComponent> waypoints;
+        // [ReadOnly]
+        // readonly DynamicBuffer<WaypointsComponent> waypoints;
+        readonly RefRO<BlobPathAsset> path;
 
         public void FollowPath(float deltaTime) {
-            float3 direction = waypoints[nextWaypoint.ValueRO.Value].Value - transform.ValueRO.Position;
+            ref var waypoints = ref path.ValueRO.Path.Value.Waypoints;
+            float3 direction = waypoints[nextWaypoint.ValueRO.Value] - transform.ValueRO.Position;
             if (math.length(direction) < 0.15f) {
                 nextWaypoint.ValueRW.Value = (nextWaypoint.ValueRO.Value + 1) % waypoints.Length;
             }
@@ -25,7 +27,8 @@ namespace TowerDefense.Aspects {
         }
         
         public bool IsAtEndOfPath() {
-            return math.distance(transform.ValueRO.Position, waypoints[^1].Value) < 0.15f;
+            ref var waypoints = ref path.ValueRO.Path.Value.Waypoints;
+            return math.distance(transform.ValueRO.Position, waypoints[^1]) < 0.15f;
         }
     }
 }
