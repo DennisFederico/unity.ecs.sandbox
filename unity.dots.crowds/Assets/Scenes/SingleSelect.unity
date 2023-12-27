@@ -457,7 +457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc81f72b7c4a4857af0d4c28c92cfc6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 658753166}
   belongsTo:
     Category00: 1
     Category01: 0

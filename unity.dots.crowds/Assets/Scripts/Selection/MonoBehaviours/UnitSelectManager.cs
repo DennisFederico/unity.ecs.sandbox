@@ -36,7 +36,8 @@ namespace Selection.MonoBehaviours {
                             BelongsTo = belongsTo.Value,
                             CollidesWith = collidesWith.Value,
                         }
-                    }
+                    },
+                    Additive = Input.GetKey(KeyCode.LeftShift)
                 });
             }
         }

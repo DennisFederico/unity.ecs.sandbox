@@ -27,23 +27,33 @@ namespace Selection.Systems {
             var rayCastBuffer = SystemAPI.GetSingletonBuffer<RayCastBufferComponent>();
             foreach (var rayCastComponent in rayCastBuffer) {
                 if (physicsWorld.CastRay(rayCastComponent.Value, out var hit)) {
-                    // Debug.Log($"Hit {hit.Position} - Entity? {state.EntityManager.GetName(hit.Entity)}");
-                    if (!SystemAPI.HasComponent<SelectedUnitTag>(hit.Entity)) {
-                        // Debug.Log($"Adding SelectedUnitTag to {state.EntityManager.GetName(hit.Entity)}");
-                        //TODO BOLLOCKS ... Adding a components rearranges the memory, What if we use a enable/disable component?
-                        ecb.AddComponent<SelectedUnitTag>(hit.Entity);
-                        var ring = ecb.Instantiate(selectedPrefab.Value);
-                        ecb.AddComponent(ring, new Parent() {
-                            Value = hit.Entity
-                        });
-                    } else {
+                    if (SystemAPI.HasComponent<SelectedUnitTag>(hit.Entity)) {
+                        if (rayCastComponent.Additive) continue;
                         DeselectUnit(ref state, ecb, hit.Entity);
+                    } else {
+                        if (!rayCastComponent.Additive) {
+                            DeselectAllUnits(ref state, ecb);    
+                        }
+                        SelectUnit(ref state, ecb, hit.Entity, selectedPrefab.Value);
                     }
                 } else {
+                    if (rayCastComponent.Additive) continue; 
                     DeselectAllUnits(ref state, ecb);
                 }
             }
             rayCastBuffer.Clear();
+        }
+        
+        [BurstCompile]
+        private void SelectUnit(ref SystemState state, EntityCommandBuffer ecb, Entity entity, Entity selectedVisual) {
+            // Debug.Log($"Adding SelectedUnitTag to {state.EntityManager.GetName(entity)}");
+            //TODO BOLLOCKS ... Adding a components rearranges the memory, What if we use a enable/disable component?
+            ecb.AddComponent<SelectedUnitTag>(entity);
+            // Add the Visual
+            var ring = ecb.Instantiate(selectedVisual);
+            ecb.AddComponent(ring, new Parent() {
+                Value = entity
+            });
         }
         
         [BurstCompile]
