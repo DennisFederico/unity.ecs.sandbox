@@ -2,13 +2,18 @@ using Selection.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Physics;
+using Unity.Physics.Systems;
 using Unity.Transforms;
 
 namespace Selection.Systems {
     
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    public partial struct UnitSelectionSystem : ISystem {
+    [UpdateAfter(typeof(PhysicsSystemGroup))]
+    [BurstCompile]
+    public partial struct SingleUnitSelectionSystem : ISystem {
         
+        //TODO - Evaluate or measure the performance against using Enable/disable tags instead of adding/removing components
+        //TODO - Also we could have a single query over those components to work the ray-cast results
         //IMPORTANT: RayCasts are sent from the MonoBehavior world, since using a Camera in the ECS world is not Burst compatible
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
@@ -25,8 +30,17 @@ namespace Selection.Systems {
             var selectedPrefab = SystemAPI.GetSingleton<SelectedVisualPrefabComponent>();
             var ecb = SystemAPI.GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
             var rayCastBuffer = SystemAPI.GetSingletonBuffer<RayCastBufferComponent>();
+
+            HandleSingleSelection(ref state, rayCastBuffer, physicsWorld, ecb, selectedPrefab);
+        }
+
+        [BurstCompile]
+        private void HandleSingleSelection(ref SystemState state, DynamicBuffer<RayCastBufferComponent> rayCastBuffer, PhysicsWorld physicsWorld, EntityCommandBuffer ecb,
+            SelectedVisualPrefabComponent selectedPrefab) {
             foreach (var rayCastComponent in rayCastBuffer) {
                 if (physicsWorld.CastRay(rayCastComponent.Value, out var hit)) {
+                    
+                    //TODO MOVE THE QUESTION INSIDE THE ACTUAL SELECT/DESELECT METHODS
                     if (SystemAPI.HasComponent<SelectedUnitTag>(hit.Entity)) {
                         if (rayCastComponent.Additive) continue;
                         DeselectUnit(ref state, ecb, hit.Entity);
@@ -46,7 +60,7 @@ namespace Selection.Systems {
         
         [BurstCompile]
         private void SelectUnit(ref SystemState state, EntityCommandBuffer ecb, Entity entity, Entity selectedVisual) {
-            // Debug.Log($"Adding SelectedUnitTag to {state.EntityManager.GetName(entity)}");
+            if (SystemAPI.HasComponent<SelectedUnitTag>(entity)) return;
             //TODO BOLLOCKS ... Adding a components rearranges the memory, What if we use a enable/disable component?
             ecb.AddComponent<SelectedUnitTag>(entity);
             // Add the Visual

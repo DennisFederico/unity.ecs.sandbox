@@ -208,13 +208,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 352047687}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.19514337, y: 0.80390483, z: -0.37486696, w: 0.41848636}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 125, z: 0}
 --- !u!114 &352047690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,8 +324,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658753164}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.26687214, y: 0.2554731, z: -0.07360201, w: 0.9263345}
-  m_LocalPosition: {x: -10.976673, y: 2.7741146, z: -8.567848}
+  m_LocalRotation: {x: 0.12939024, y: -0.8706108, z: 0.33817232, w: 0.33306843}
+  m_LocalPosition: {x: 2.3813162, y: 2.6809897, z: 2.115158}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -459,13 +459,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 658753166}
   belongsTo:
-    Category00: 1
+    Category00: 0
     Category01: 0
     Category02: 0
     Category03: 0
     Category04: 0
     Category05: 0
-    Category06: 0
+    Category06: 1
     Category07: 0
     Category08: 0
     Category09: 0
@@ -524,6 +524,7 @@ MonoBehaviour:
     Category29: 0
     Category30: 0
     Category31: 0
+  debugMaterial: {fileID: 0}
 --- !u!4 &987515848
 Transform:
   m_ObjectHideFlags: 0
