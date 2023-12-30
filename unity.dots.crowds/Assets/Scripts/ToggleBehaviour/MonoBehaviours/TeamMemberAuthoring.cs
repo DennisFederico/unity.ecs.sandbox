@@ -7,13 +7,17 @@ namespace ToggleBehaviour.MonoBehaviours {
         
         [SerializeField] private string playerName;
         [SerializeField] private Team team;
+        [SerializeField] private bool isPlaying;
         private class PlayerNameAuthoringBaker : Baker<TeamMemberAuthoring> {
             public override void Bake(TeamMemberAuthoring authoring) {
+                //TODO user an Archetype instead
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new PlayerNameComponent(authoring.playerName));
                 AddComponent(entity, new TeamMemberComponent() { Team = authoring.team });
-                AddComponent<IsSelectedComponent>(entity);
-                SetComponentEnabled<IsSelectedComponent>(entity, authoring.team == Team.Blue);
+                AddComponent<IsSelectedComponentTag>(entity);
+                SetComponentEnabled<IsSelectedComponentTag>(entity, authoring.team == Team.Blue);
+                AddComponent<IsPlayingComponentTag>(entity);
+                SetComponentEnabled<IsPlayingComponentTag>(entity, authoring.isPlaying);
             }
         }
     }
