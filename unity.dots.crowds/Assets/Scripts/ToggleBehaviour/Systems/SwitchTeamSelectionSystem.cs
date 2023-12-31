@@ -3,6 +3,8 @@ using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -12,8 +14,11 @@ namespace ToggleBehaviour.Systems {
         private EntityQuery _selectedActivePlayersQuery;
         private EntityQuery _unSelectedActivePlayersQuery;
         private EntityQuery _benchedPlayersQuery;
+        private EntityQuery _nonBenchedPlayersQuery;
+        private EntityQuery _playingColorablePlayersQuery;
         private BufferLookup<Child> _childBuffer;
         private ComponentLookup<VisualComponentTag> _visualComponentLookup;
+        private ComponentLookup<VisualRepresentationTag> _visualRepresentationLookup;
 
         //NOTE. Alternatively we can use LookUp<T>. Don't really know what's the difference between the two at this point
         //TODO. Compare the performance of the two
@@ -53,12 +58,24 @@ namespace ToggleBehaviour.Systems {
                 .WithNone<IsPlayingComponentTag>()
                 .Build(ref state);
             
+            _nonBenchedPlayersQuery = new EntityQueryBuilder(Allocator.Temp)
+                .WithAll<PlayerNameComponent>()
+                .WithAll<IsPlayingComponentTag>()
+                .Build(ref state);
+            
+            _playingColorablePlayersQuery = new EntityQueryBuilder(Allocator.Temp)
+                .WithAll<PlayerNameComponent>()
+                .WithAll<IsSelectedComponentTag>()
+                .WithAll<IsPlayingComponentTag>()
+                .WithAll<TeamMemberComponent>()
+                .Build(ref state);
 
             state.RequireForUpdate<PrefabHolderComponent>();
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
 
             _childBuffer = SystemAPI.GetBufferLookup<Child>(true);
             _visualComponentLookup = SystemAPI.GetComponentLookup<VisualComponentTag>(true);
+            _visualRepresentationLookup = SystemAPI.GetComponentLookup<VisualRepresentationTag>(true);
 
             // Creating entities from an Archetype is faster than adding components to an entity one by one since it avoids structural changes to the entity manager.
             NativeArray<ComponentType> components = new NativeArray<ComponentType>(4, Allocator.Temp) {
@@ -98,26 +115,20 @@ namespace ToggleBehaviour.Systems {
 
             var visualPrefab = SystemAPI.GetSingleton<PrefabHolderComponent>();
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-
             _handles.Update(ref state);
+            
+            // Toggle enabled players
+            TogglePlayerSelectedJob toggleJob = new() {
+                IsSelectedType = _handles.IsSelectedType,
+            };
+            state.Dependency = toggleJob.Schedule(_selectedActivePlayersQuery, state.Dependency);
 
-            // Print enabled entities
-            // PrintActivePlayerNames printJob = new() {
-            //     PlayerNameType = _handles.PlayerNameType,
-            // };
-            // state.Dependency = printJob.Schedule(_selectedActivePlayersQuery, state.Dependency);
-
-            // Print enabled entities using IJobEntity
-            // TODO. Compare the performance of the two
-            state.Dependency = new PrintPlayerNames() { Prefix = "Selected:" }.Schedule(_selectedActivePlayersQuery, state.Dependency);
-            state.Dependency = new PrintPlayerNames() { Prefix = "UnSelected:" }.Schedule(_unSelectedActivePlayersQuery, state.Dependency);
-            state.Dependency = new PrintPlayerNames() { Prefix = "Benched:" }.Schedule(_benchedPlayersQuery, state.Dependency);
-
+            // Handle Selected Visuals
             state.Dependency = new AddSelectedVisualJobEntity() {
                 ECB = ecb,
                 VisualPrefab = visualPrefab.Prefab
             }.Schedule(_selectedActivePlayersQuery, state.Dependency);
-
+            
             _childBuffer.Update(ref state);
             _visualComponentLookup.Update(ref state);
             state.Dependency = new RemoveSelectedVisualJobEntity() {
@@ -125,13 +136,35 @@ namespace ToggleBehaviour.Systems {
                 ChildBuffer = _childBuffer,
                 VisualComponentLookup = _visualComponentLookup
             }.Schedule(_unSelectedActivePlayersQuery, state.Dependency);
-
-            // Toggle enabled players
-            TogglePlayerSelectedJob toggleJob = new() {
-                IsSelectedType = _handles.IsSelectedType,
-            };
-            state.Dependency = toggleJob.Schedule(_selectedActivePlayersQuery, state.Dependency);
-
+            
+            // Update Color
+            _childBuffer.Update(ref state);
+            _visualRepresentationLookup.Update(ref state);
+            state.Dependency = new UpdateColorJobEntity() {
+                ECB = ecb,
+                ChildBuffer = _childBuffer,
+                VisualRepresentationLookup = _visualRepresentationLookup
+            }.Schedule(_playingColorablePlayersQuery, state.Dependency);
+            
+            state.Dependency = new DefaultColorJobEntity() {
+                ECB = ecb,
+                DefaultColor = Color.cyan,
+                ChildBuffer = _childBuffer,
+                VisualRepresentationLookup = _visualRepresentationLookup
+            }.Schedule(_unSelectedActivePlayersQuery, state.Dependency);
+            
+            // Print enabled entities
+            // PrintActivePlayerNames printJob = new() {
+            //     PlayerNameType = _handles.PlayerNameType,
+            // };
+            // state.Dependency = printJob.Schedule(_selectedActivePlayersQuery, state.Dependency);
+            
+            // Print enabled entities using IJobEntity
+            // TODO. Compare the performance of the two
+            // state.Dependency = new PrintPlayerNames() { Prefix = "Selected:" }.Schedule(_selectedActivePlayersQuery, state.Dependency);
+            // state.Dependency = new PrintPlayerNames() { Prefix = "UnSelected:" }.Schedule(_unSelectedActivePlayersQuery, state.Dependency);
+            // state.Dependency = new PrintPlayerNames() { Prefix = "Benched:" }.Schedule(_benchedPlayersQuery, state.Dependency);
+            
             //TODO. Filter players on the bench (don't add selected visuals)
             //TODO. Handle Selected team from a World State
             //TODO. Bench Players (remind to handle the visual) -> BenchPlayers can become other model or disable the render component??
@@ -201,6 +234,43 @@ namespace ToggleBehaviour.Systems {
                     if (VisualComponentLookup.HasComponent(child.Value)) {
                         ECB.DestroyEntity(child.Value);
                     }
+                }
+            }
+        }
+        
+        [BurstCompile]
+        private partial struct UpdateColorJobEntity : IJobEntity {
+            public EntityCommandBuffer ECB;
+            [ReadOnly] public BufferLookup<Child> ChildBuffer;
+            [ReadOnly] public ComponentLookup<VisualRepresentationTag> VisualRepresentationLookup;
+
+            private void Execute(Entity entity, TeamMemberComponent memberTeam) {
+                if (!ChildBuffer.HasBuffer(entity) || ChildBuffer[entity].Length <= 0) return;
+                var children = ChildBuffer[entity];
+                foreach (var child in children) {
+                    if (!VisualRepresentationLookup.HasComponent(child.Value)) continue;
+                    ECB.SetComponent(child.Value, new URPMaterialPropertyBaseColor() {
+                        Value = memberTeam.Color
+                    });
+                }
+            }
+        }
+        
+        [BurstCompile]
+        private partial struct DefaultColorJobEntity : IJobEntity {
+            public EntityCommandBuffer ECB;
+            [ReadOnly] public Color DefaultColor;
+            [ReadOnly] public BufferLookup<Child> ChildBuffer;
+            [ReadOnly] public ComponentLookup<VisualRepresentationTag> VisualRepresentationLookup;
+
+            private void Execute(Entity entity) {
+                if (!ChildBuffer.HasBuffer(entity) || ChildBuffer[entity].Length <= 0) return;
+                var children = ChildBuffer[entity];
+                foreach (var child in children) {
+                    if (!VisualRepresentationLookup.HasComponent(child.Value)) continue;
+                    ECB.SetComponent(child.Value, new URPMaterialPropertyBaseColor() {
+                        Value = new float4(DefaultColor.r, DefaultColor.g, DefaultColor.b, DefaultColor.a)
+                    });
                 }
             }
         }

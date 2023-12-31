@@ -112,6 +112,8 @@ GameObject:
   - component: {fileID: 6691530592121189643}
   - component: {fileID: 3327185150236071529}
   - component: {fileID: 6523252678259953213}
+  - component: {fileID: 4836042891547978627}
+  - component: {fileID: 1275381320511657962}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -327,3 +329,30 @@ MonoBehaviour:
         Tag07: 0
     m_SerializedVersion: 1
   m_SerializedVersion: 1
+--- !u!114 &4836042891547978627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5848495157741982119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb68043b1484f6da4bb4253e6a7eca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 1, a: 1}
+--- !u!114 &1275381320511657962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5848495157741982119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d849f6ed953e947a0ea6954432e1ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overrideAsset: {fileID: 11400000, guid: fe495ba6738cc45ad9d65b2d6ddaf82b, type: 2}
+  overrideList: []

@@ -8,7 +8,11 @@ namespace ToggleBehaviour.MonoBehaviours {
         [SerializeField] private string playerName;
         [SerializeField] private Team team;
         [SerializeField] private bool isPlaying;
-        private class PlayerNameAuthoringBaker : Baker<TeamMemberAuthoring> {
+
+        public Team Team => team;
+        public bool IsPlaying => isPlaying;
+
+        private class TeamMemberAuthoringBaker : Baker<TeamMemberAuthoring> {
             public override void Bake(TeamMemberAuthoring authoring) {
                 //TODO user an Archetype instead
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
