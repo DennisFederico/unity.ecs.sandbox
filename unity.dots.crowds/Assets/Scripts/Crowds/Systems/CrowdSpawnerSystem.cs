@@ -4,6 +4,7 @@ using Unity.Entities;
 using UnityEngine;
 
 namespace Crowds.Systems {
+    
     [DisableAutoCreation]
     [BurstCompile]
     public partial class CrowdSpawnerSystem : SystemBase {

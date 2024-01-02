@@ -5,6 +5,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 namespace Towers.Systems {
+    [DisableAutoCreation]
     //Using a cached target position and some control that it has been reached
     //THIS IS A MOVE SYSTEM THAT KEEPS UNITS IN FORMATION
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]

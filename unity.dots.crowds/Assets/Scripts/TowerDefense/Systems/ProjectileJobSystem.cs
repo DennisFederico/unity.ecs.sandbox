@@ -111,6 +111,7 @@ namespace TowerDefense.Systems {
         }
     }
     
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
     [BurstCompile]

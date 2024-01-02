@@ -9,6 +9,9 @@ using Unity.Transforms;
 using UnityEngine;
 
 namespace ToggleBehaviour.Systems {
+    
+    [DisableAutoCreation]
+    [UpdateBefore(typeof(LateSimulationSystemGroup))]
     public partial struct SwitchTeamSelectionSystem : ISystem {
         private Handles _handles;
         private EntityQuery _selectedActivePlayersQuery;
@@ -91,7 +94,9 @@ namespace ToggleBehaviour.Systems {
             // Inactive (benched) Entities - Blue Team (Selected by default)
             for (int i = 0; i < 5; ++i) {
                 Entity entity = state.EntityManager.CreateEntity(entityArchetype);
-                state.EntityManager.SetComponentData(entity, new PlayerNameComponent($"Bench {i + 1} Blue"));
+                state.EntityManager.SetComponentData(entity, new PlayerNameComponent() {
+                    PlayerNameValue = $"Bench {i + 1} Blue"
+                });
                 state.EntityManager.SetComponentData(entity, new TeamMemberComponent() { Team = Team.Blue });
                 state.EntityManager.SetComponentEnabled<IsSelectedComponentTag>(entity, true); //Optional - default is true
                 state.EntityManager.SetComponentEnabled<IsPlayingComponentTag>(entity, false);
@@ -100,7 +105,10 @@ namespace ToggleBehaviour.Systems {
             // Inactive (benched) entities - Red Team
             for (int i = 5; i < 8; ++i) {
                 Entity entity = state.EntityManager.CreateEntity(entityArchetype);
-                state.EntityManager.SetComponentData(entity, new PlayerNameComponent($"Bench {i + 1} Red"));
+                
+                state.EntityManager.SetComponentData(entity, new PlayerNameComponent() {
+                    PlayerNameValue = $"Bench {i + 1} Red"
+                });
                 state.EntityManager.SetComponentData(entity, new TeamMemberComponent() { Team = Team.Red });
                 state.EntityManager.SetComponentEnabled<IsSelectedComponentTag>(entity, false);
                 state.EntityManager.SetComponentEnabled<IsPlayingComponentTag>(entity, false);
@@ -150,7 +158,9 @@ namespace ToggleBehaviour.Systems {
                 ECB = ecb,
                 DefaultColor = Color.cyan,
                 ChildBuffer = _childBuffer,
-                VisualRepresentationLookup = _visualRepresentationLookup
+                VisualRepresentationLookup = _visualRepresentationLookup,
+                DeltaTime = SystemAPI.Time.DeltaTime,
+                //DebugLogArchetype = DebugLogSystem.DebugDataArchetype
             }.Schedule(_unSelectedActivePlayersQuery, state.Dependency);
             
             // Print enabled entities
@@ -204,7 +214,7 @@ namespace ToggleBehaviour.Systems {
             public FixedString32Bytes Prefix;
 
             private void Execute(in PlayerNameComponent playerNameComponent) {
-                Debug.Log($"{Prefix.Value} {playerNameComponent.PlayerNameValue}");
+                Debug.Log($"{Prefix} {playerNameComponent.PlayerNameValue}");
             }
         }
 
@@ -262,6 +272,8 @@ namespace ToggleBehaviour.Systems {
             [ReadOnly] public Color DefaultColor;
             [ReadOnly] public BufferLookup<Child> ChildBuffer;
             [ReadOnly] public ComponentLookup<VisualRepresentationTag> VisualRepresentationLookup;
+            [ReadOnly] public EntityArchetype DebugLogArchetype;
+            [ReadOnly] public float DeltaTime;
 
             private void Execute(Entity entity) {
                 if (!ChildBuffer.HasBuffer(entity) || ChildBuffer[entity].Length <= 0) return;
@@ -270,6 +282,11 @@ namespace ToggleBehaviour.Systems {
                     if (!VisualRepresentationLookup.HasComponent(child.Value)) continue;
                     ECB.SetComponent(child.Value, new URPMaterialPropertyBaseColor() {
                         Value = new float4(DefaultColor.r, DefaultColor.g, DefaultColor.b, DefaultColor.a)
+                    });
+                    var log = ECB.CreateEntity();
+                    ECB.AddComponent(log, new DebugLogSystem.DebugLogDataComponent() {
+                        ElapsedTime = DeltaTime,
+                        Message = $"Setting Default color: {DefaultColor}"
                     });
                 }
             }

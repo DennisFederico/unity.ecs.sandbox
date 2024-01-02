@@ -6,6 +6,7 @@ namespace Towers.Systems {
     /// <summary>
     /// This system triggers a change in formation every X seconds for all the towers
     /// </summary>
+    [DisableAutoCreation]
     public partial struct ChangeFormationSystem : ISystem {
         private static readonly float ChangeFormationRate = 3;
         private float _nextFormationChange;

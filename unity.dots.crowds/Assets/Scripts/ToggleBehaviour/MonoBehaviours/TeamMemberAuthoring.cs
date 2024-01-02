@@ -16,7 +16,7 @@ namespace ToggleBehaviour.MonoBehaviours {
             public override void Bake(TeamMemberAuthoring authoring) {
                 //TODO user an Archetype instead
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new PlayerNameComponent(authoring.playerName));
+                AddComponent(entity, new PlayerNameComponent() { PlayerNameValue = authoring.playerName });
                 AddComponent(entity, new TeamMemberComponent() { Team = authoring.team });
                 AddComponent<IsSelectedComponentTag>(entity);
                 SetComponentEnabled<IsSelectedComponentTag>(entity, authoring.team == Team.Blue);

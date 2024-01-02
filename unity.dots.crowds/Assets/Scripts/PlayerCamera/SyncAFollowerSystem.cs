@@ -3,6 +3,8 @@ using Unity.Entities;
 using Unity.Transforms;
 
 namespace PlayerCamera {
+    
+    [DisableAutoCreation]
     public partial struct SyncAFollowerSystem : ISystem {
         //Cannot use Burst
         public void OnUpdate(ref SystemState state) {

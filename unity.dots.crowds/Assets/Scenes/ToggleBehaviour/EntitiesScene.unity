@@ -128,6 +128,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -362,6 +402,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -440,6 +520,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -523,6 +643,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -601,6 +761,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -684,6 +884,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -767,6 +1007,56 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 0.8301887
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.y
+      value: 0.58348167
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.81664395
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].instanceOverride
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -850,6 +1140,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -928,6 +1258,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -1051,6 +1421,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -1134,6 +1544,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -1212,6 +1662,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -1290,6 +1780,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -1373,6 +1903,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name
@@ -1451,6 +2021,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].name
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].value.z
+      value: 0.9454183
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].shaderName
+      value: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].displayName
+      value: _BaseColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275381320511657962, guid: 9ab59c6d1a6c84b9a90c171e45296210,
+        type: 3}
+      propertyPath: overrideList.Array.data[0].materialName
+      value: SomeMaterial
+      objectReference: {fileID: 0}
     - target: {fileID: 1839540682574889368, guid: 9ab59c6d1a6c84b9a90c171e45296210,
         type: 3}
       propertyPath: m_Name

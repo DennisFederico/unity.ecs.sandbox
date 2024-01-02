@@ -6,6 +6,7 @@ using Unity.Jobs;
 using UnityEngine;
 
 namespace Crowds.Systems {
+    
     [DisableAutoCreation]
     [BurstCompile]
     public partial class CrowdSpawnerAsJobSystem : SystemBase {

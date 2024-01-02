@@ -8,7 +8,8 @@ using Unity.Transforms;
 using UnityEngine;
 
 namespace Selection.Systems {
-
+    
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateBefore(typeof(PhysicsSystemGroup))]
     [BurstCompile]
@@ -60,6 +61,7 @@ namespace Selection.Systems {
         public void OnDestroy(ref SystemState state) { }
     }
     
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
     // [BurstCompile]

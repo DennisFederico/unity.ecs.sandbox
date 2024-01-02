@@ -2,6 +2,8 @@ using Unity.Entities;
 using Unity.Transforms;
 
 namespace PlayerCamera.Systems {
+    
+    [DisableAutoCreation]
     public partial struct SyncFollowerSystem : ISystem {
         
         //Cannot use BurstCompile here because we are using UnityEngine.Object.Instantiate

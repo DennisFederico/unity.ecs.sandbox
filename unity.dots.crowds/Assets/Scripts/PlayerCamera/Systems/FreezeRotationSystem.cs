@@ -4,6 +4,8 @@ using Unity.Entities;
 using Unity.Physics;
 
 namespace PlayerCamera.Systems {
+    
+    [DisableAutoCreation]
     public partial struct FreezeRotationSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

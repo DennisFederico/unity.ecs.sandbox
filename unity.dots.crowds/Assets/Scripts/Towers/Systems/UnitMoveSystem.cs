@@ -9,6 +9,7 @@ namespace Towers.Systems {
     //THIS SYSTEM SHOULD ONLY WORK ON ENABLED "MoveComponent" COMPONENTS
     //THE COMPONENT SHOULD BE DISABLED ONCE THE TARGET POSITION IS REACHED
     //CHANGE THE UNIT FORMATION SYSTEM TO ENABLE THE COMPONENT AND SET THE TARGET POSITIONS WHEN THE FORMATION CHANGES
+    [DisableAutoCreation]
     public partial struct UnitMoveSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

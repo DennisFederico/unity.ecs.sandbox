@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace Towers.Systems {
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     //Not sure if the properties is needed since all the queries are
     //already as RequireForUpdate during creation

@@ -6,6 +6,8 @@ using Unity.Physics.Extensions;
 using Unity.Transforms;
 
 namespace PlayerCamera.Systems {
+    
+    [DisableAutoCreation]
     [UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
     public partial struct MovingSystem : ISystem {
         [BurstCompile]

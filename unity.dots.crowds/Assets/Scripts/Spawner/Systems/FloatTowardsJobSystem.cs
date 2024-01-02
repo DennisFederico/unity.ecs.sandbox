@@ -8,7 +8,7 @@ using Unity.Physics.Extensions;
 using Unity.Transforms;
 
 namespace Spawner.Systems {
-    //[DisableAutoCreation]
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial struct FloatTowardsJobSystem : ISystem {
         [BurstCompile]

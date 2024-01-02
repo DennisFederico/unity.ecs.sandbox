@@ -7,6 +7,7 @@ using Unity.Physics.Extensions;
 using Unity.Transforms;
 
 namespace Spawner.Systems {
+    
     [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial struct FloatTowardsSystem : ISystem {

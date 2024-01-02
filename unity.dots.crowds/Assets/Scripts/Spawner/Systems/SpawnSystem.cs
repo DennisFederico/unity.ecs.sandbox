@@ -4,6 +4,8 @@ using Unity.Entities;
 using Unity.Transforms;
 
 namespace Spawner.Systems {
+    
+    [DisableAutoCreation]
     public partial struct SpawnSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

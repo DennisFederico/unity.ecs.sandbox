@@ -6,6 +6,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 namespace Spawner.Systems {
+    
     [DisableAutoCreation]
     public partial struct MoveSystem : ISystem {
         [BurstCompile]

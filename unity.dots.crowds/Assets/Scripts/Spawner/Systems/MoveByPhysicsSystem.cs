@@ -8,7 +8,8 @@ using Unity.Transforms;
 using UnityEngine;
 
 namespace Spawner.Systems {
-    //[DisableAutoCreation]
+    
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial struct MoveByPhysicsSystem : ISystem {
         [BurstCompile]

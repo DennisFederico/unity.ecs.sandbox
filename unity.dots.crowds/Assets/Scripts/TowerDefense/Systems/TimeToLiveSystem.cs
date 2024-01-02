@@ -4,6 +4,8 @@ using Unity.Collections;
 using Unity.Entities;
 
 namespace TowerDefense.Systems {
+    
+    [DisableAutoCreation]
     public partial struct TimeToLiveSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

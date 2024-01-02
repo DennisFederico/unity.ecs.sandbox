@@ -3,8 +3,8 @@ using Unity.Entities;
 using UnityEngine;
 
 namespace Recap101.Systems {
-    [DisableAutoCreation]
     
+    [DisableAutoCreation]
     [WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
     public partial class MyBakingSystem : SystemBase {
         protected override void OnUpdate() {
