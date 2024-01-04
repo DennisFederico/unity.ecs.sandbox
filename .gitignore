@@ -13,7 +13,7 @@
 */[Uu]serSettings/
 */Assets/SceneDependencyCache*
 */Assets/NetCodeGenerated*
-
+*/Assets/[Tt]hird[Pp]arty/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !*/[Aa]ssets/**/*.meta
