@@ -3,6 +3,7 @@ using Crowds.Components;
 using Unity.Burst;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
+using Utils.Narkdagas.Ecs;
 
 namespace Crowds.Systems.Jobs {
     

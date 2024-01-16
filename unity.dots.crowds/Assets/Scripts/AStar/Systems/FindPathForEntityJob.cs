@@ -3,7 +3,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 using Utils.Narkdagas.PathFinding;
 
 namespace AStar.Systems {
@@ -16,15 +15,14 @@ namespace AStar.Systems {
         [ReadOnly] public GridSingletonComponent GridInfo;
         [ReadOnly] public NativeArray<PathNode> Grid;
         
-        public EntityCommandBuffer Ecb;
+        public EntityCommandBuffer.ParallelWriter Ecb;
 
         private void Execute(in Entity entity, in PathFindingRequest request, ref PathFollowIndex currentPathIndex, DynamicBuffer<PathPositionElement> currentPath) {
-            Debug.Log($"Grid: {GridInfo.Width}x{GridInfo.Height} - Length: {Grid.Length}");
             var gridSize = new int2(GridInfo.Width, GridInfo.Height);
             var fromPosition = GetXY(request.StartPosition, GridInfo.Origin, GridInfo.CellSize);
             var toPosition = GetXY(request.EndPosition, GridInfo.Origin, GridInfo.CellSize);
 
-            Ecb.SetComponentEnabled<PathFindingRequest>(entity, false);
+            Ecb.SetComponentEnabled<PathFindingRequest>(entity.Index, entity, false);
 
             if ((fromPosition == toPosition) is { x: true, y: true }) return;
             var localGrid = InitLocalGrid(Grid, gridSize, toPosition, Allocator.Temp);
@@ -108,7 +106,7 @@ namespace AStar.Systems {
                 var nextNodeIndex = PathNodeIndex(toPosition, gridSize);
                 while (nextNodeIndex != -1) {
                     var currentNode = localGrid[nextNodeIndex];
-                    path.Add(new PathPositionElement { Position = GetWorldPosition(currentNode.XY, GridInfo.CellSize, GridInfo.Origin) });
+                    path.Add(new PathPositionElement { Position = GridInfo.GetWorldPosition(currentNode.XY) });
                     nextNodeIndex = currentNode.ParentIndex;
                 }
 
@@ -120,18 +118,13 @@ namespace AStar.Systems {
             
             if (currentPath.Length > 0) {
                 currentPathIndex.Value = currentPath.Length - 1;
-                Ecb.SetComponentEnabled<PathFollowIndex>(entity, true);
+                Ecb.SetComponentEnabled<PathFollowIndex>(entity.Index +1, entity, true);
             } else {
                 currentPathIndex.Value = -1;
-                Ecb.SetComponentEnabled<PathFollowIndex>(entity, false);
+                Ecb.SetComponentEnabled<PathFollowIndex>(entity.Index +1, entity, false);
             }
         }
 
-        //Get center of the cell
-        private static float3 GetWorldPosition(int2 xy, float cellSize, float3 originOffset) =>
-            new float3(xy, 0) * cellSize + new float3(1, 1, 0) * (cellSize * .5f) + originOffset;
-
-        [BurstCompile]
         private static int2 GetXY(in float3 worldPosition, in float3 origin, in int cellSize) {
             var x = (int)math.floor((worldPosition - origin).x / cellSize);
             var y = (int)math.floor((worldPosition - origin).y / cellSize);

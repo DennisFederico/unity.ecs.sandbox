@@ -2,6 +2,7 @@ using Crowds.Components;
 using Unity.Burst;
 using Unity.Entities;
 using UnityEngine;
+using Utils.Narkdagas.Ecs;
 
 namespace Crowds.Systems {
     

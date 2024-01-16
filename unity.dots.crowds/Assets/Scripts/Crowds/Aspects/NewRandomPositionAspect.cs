@@ -3,6 +3,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Utils.Narkdagas.Ecs;
 
 namespace Crowds.Aspects {
 

@@ -7,6 +7,8 @@ using Unity.Transforms;
 
 namespace AStar.Systems {
     
+    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [UpdateBefore(typeof(PathFollowerTtlSystem))]
     [RequireMatchingQueriesForUpdate]
     [BurstCompile]
     public partial struct MovePathFollowerSystem : ISystem {
@@ -32,9 +34,9 @@ namespace AStar.Systems {
             var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
             
             state.Dependency = new MovePathFollowerJob() {
-                Ecb = ecb,
+                Ecb = ecb.AsParallelWriter(),
                 DeltaTime = SystemAPI.Time.DeltaTime
-            }.Schedule(_entitiesFollowingAPath, state.Dependency);
+            }.ScheduleParallel(_entitiesFollowingAPath, state.Dependency);
         }
 
         [BurstCompile]
@@ -45,7 +47,7 @@ namespace AStar.Systems {
     [BurstCompile]
     public partial struct MovePathFollowerJob : IJobEntity {
         
-        public EntityCommandBuffer Ecb;
+        public EntityCommandBuffer.ParallelWriter Ecb;
         public float DeltaTime;
         
         //TODO PATH REQUEST TO RANDOM POINT
@@ -57,7 +59,7 @@ namespace AStar.Systems {
                 pathFollowIndex.Value = pathFollowIndex.Value - 1;
                 
                 if (pathFollowIndex.Value < 0) {
-                    Ecb.SetComponentEnabled<PathFollowIndex>(entity, false);
+                    Ecb.SetComponentEnabled<PathFollowIndex>(entity.Index, entity, false);
                     return;
                 }
                 direction = currentPath[pathFollowIndex.Value].Position - transform.Position;

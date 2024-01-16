@@ -1,7 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace Crowds.Components {
+namespace Utils.Narkdagas.Ecs {
     public class RandomSeederAuthoring : MonoBehaviour {
         [SerializeField] private bool randomizeSeed;
         [SerializeField] private uint seed;

@@ -54,8 +54,9 @@ namespace Utils.Narkdagas.GridSystem {
         }
 
         //return the grid center
+        public Vector3 GetWorldPosition(int2 pos) => GetWorldPosition(pos.x, pos.y);
         public Vector3 GetWorldPosition(int x, int y) => new Vector3(x, y) * _cellSize + new Vector3(1, 1, 0) * (_cellSize * .5f) + _origin;
-
+        
         public int GetFlatIndex(int x, int y) => y * _width + x;
 
         public int GetFlatIndexSafe(int x, int y) {

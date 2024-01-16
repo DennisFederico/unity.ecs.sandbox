@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Crowds.Components {
+namespace Utils.Narkdagas.Ecs {
     public struct RandomSeeder : IComponentData {
         public Unity.Mathematics.Random NextSeed;
     }

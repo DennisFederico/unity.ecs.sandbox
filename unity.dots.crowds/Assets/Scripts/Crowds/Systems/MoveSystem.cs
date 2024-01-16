@@ -2,6 +2,7 @@ using Crowds.Components;
 using Crowds.Systems.Jobs;
 using Unity.Burst;
 using Unity.Entities;
+using Utils.Narkdagas.Ecs;
 
 namespace Crowds.Systems {
     [DisableAutoCreation]
