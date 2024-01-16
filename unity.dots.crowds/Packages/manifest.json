@@ -2,6 +2,7 @@
   "dependencies": {
     "com.unity.burst": "1.8.11",
     "com.unity.collab-proxy": "2.2.0",
+    "com.unity.collections": "2.2.1",
     "com.unity.entities": "1.0.16",
     "com.unity.entities.graphics": "1.0.16",
     "com.unity.ide.rider": "3.0.27",

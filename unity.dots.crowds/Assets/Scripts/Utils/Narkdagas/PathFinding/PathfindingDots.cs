@@ -5,8 +5,8 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace AStar.MonoBehaviors {
-    public class Pathfinding : MonoBehaviour {
+namespace Utils.Narkdagas.PathFinding {
+    public class PathfindingDots : MonoBehaviour {
         private const int DiagonalCost = 14;
         private const int StraightCost = 10;
 
@@ -26,6 +26,7 @@ namespace AStar.MonoBehaviors {
             public int2 FromPosition;
             public int2 ToPosition;
             public int2 GridSize;
+            // public NativeArray<int2> resultPath;
 
             public void Execute() {
                 FindPath(FromPosition, ToPosition, GridSize);
@@ -130,11 +131,15 @@ namespace AStar.MonoBehaviors {
                     Debug.Log("No Path");
                 } else {
                     //There is a path
-                    // var backtrackPath = BacktrackPathFromEndNode(PathNodeIndex(toPosition, gridSize), pathNodes);
-                    // var nativeArray = backtrackPath.ToArray(Allocator.Temp);
-                    // Debug.Log($"Path: {string.Join("-> ", nativeArray.ToArray())}");
-                    // nativeArray.Dispose();
-                    // backtrackPath.Dispose();
+                    var backtrackPath = BacktrackPathFromEndNode(PathNodeIndex(toPosition, gridSize), pathNodes);
+                    var nativeArray = backtrackPath.ToArray(Allocator.Temp);
+                    // string result = "";
+                    // foreach (var pos in nativeArray) {
+                    //     result += pos + " ";
+                    // }
+                    // Debug.Log($"Path: {result}");
+                    nativeArray.Dispose();
+                    backtrackPath.Dispose();
                 }
 
                 pathNodes.Dispose();
