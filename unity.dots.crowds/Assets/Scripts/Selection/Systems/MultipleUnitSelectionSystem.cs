@@ -9,62 +9,10 @@ using UnityEngine;
 
 namespace Selection.Systems {
     
-    [DisableAutoCreation]
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateBefore(typeof(PhysicsSystemGroup))]
-    [BurstCompile]
-    public partial struct CreateSelectionColliderSystem : ISystem {
-        
-        [BurstCompile]
-        public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<SelectionVerticesBufferComponent>();
-            state.RequireForUpdate<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>();
-        }
-
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state) {
-            var verticesBuffer = SystemAPI.GetSingletonBuffer<SelectionVerticesBufferComponent>();
-            if (verticesBuffer.Length == 0) return;
-            var ecb = SystemAPI.GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-            CreateSelectionCollider(ref state, verticesBuffer, ecb);
-        }
-
-        [BurstCompile]
-        private void CreateSelectionCollider(ref SystemState state, DynamicBuffer<SelectionVerticesBufferComponent> selectionDataBuffer, EntityCommandBuffer ecb) {
-            foreach (var selectionData in selectionDataBuffer) {
-                var physicsMaterial = Unity.Physics.Material.Default;
-                physicsMaterial.CollisionResponse = CollisionResponsePolicy.RaiseTriggerEvents;
-                var collisionFilter = new CollisionFilter {
-                    BelongsTo = selectionData.belongsTo.Value,
-                    CollidesWith = selectionData.collidesWith.Value
-                };
-                var selectionCollider = ConvexCollider.Create(selectionData.Vertices, ConvexHullGenerationParameters.Default, collisionFilter, physicsMaterial);
-                
-                var entity = ecb.CreateEntity();
-                ecb.SetName(entity, "Selection");
-                ecb.AddComponent(entity, new SelectionColliderDataComponent() {
-                    Additive = selectionData.Additive,
-                    BelongsTo = selectionData.belongsTo,
-                    CollidesWith = selectionData.collidesWith
-                });
-                ecb.AddComponent(entity, new LocalToWorld {Value = float4x4.identity});
-                ecb.AddSharedComponent(entity, new PhysicsWorldIndex());
-                ecb.AddComponent(entity, new PhysicsCollider() { Value = selectionCollider });
-                // ReSharper disable once PossiblyImpureMethodCallOnReadonlyVariable
-                selectionData.Vertices.Dispose(); //TODO Dispose the vertices if TEMP is not enough
-                // Debug.Log("Unit selection collider created");
-            }
-            selectionDataBuffer.Clear();
-        }
-        
-        [BurstCompile]
-        public void OnDestroy(ref SystemState state) { }
-    }
-    
-    [DisableAutoCreation]
+    // [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
-    // [BurstCompile]
+    [BurstCompile]
     public partial struct SelectMultipleUnitsSystem : ISystem {
         //TODO - Evaluate or measure the performance against using Enable/disable tags instead of adding/removing components
         //TODO - Also we could have a single query over those components to work trigger results
@@ -72,7 +20,7 @@ namespace Selection.Systems {
         //private ComponentLookup<SelectedUnitTag> _positionLookup;
         // private ComponentLookup<HealthComponent> _enemyHealthLookup;
         
-        // [BurstCompile]
+        [BurstCompile]
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<SelectionColliderDataComponent>();
             state.RequireForUpdate<SimulationSingleton>();
@@ -81,7 +29,7 @@ namespace Selection.Systems {
             state.RequireForUpdate<SelectedVisualPrefabComponent>();
         }
         
-        // [BurstCompile]
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             // Debug.Log("System - SelectMultipleUnitsSystem - Update");
             state.CompleteDependency(); //NOTE because we are in the main thread, probably not required when using ITriggerEventsJob

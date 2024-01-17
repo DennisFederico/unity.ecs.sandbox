@@ -7,6 +7,7 @@ using Unity.Transforms;
 
 namespace AStar.Systems {
     
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     [UpdateBefore(typeof(PathFollowerTtlSystem))]
     [RequireMatchingQueriesForUpdate]

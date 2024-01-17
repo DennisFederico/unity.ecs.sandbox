@@ -17,6 +17,7 @@ namespace Selection.MonoBehaviours {
         [SerializeField] private PhysicsCategoryTags belongsTo;
         [SerializeField] private PhysicsCategoryTags collidesWith;
         [SerializeField] private Material debugMaterial;
+        // [SerializeField] private bool debugMesh;
 
         private World _world;
         private float3 _mouseStartPos;
@@ -25,14 +26,15 @@ namespace Selection.MonoBehaviours {
         //A Singleton that keeps the buffer of ray-casts
         private Entity _rayCastBuffer;
         private Entity _meshVerticesBuffer;
+        private Entity _meshBoxBuffer;
 
         private void OnEnable() {
             mainCamera = mainCamera == null ? Camera.main : mainCamera;
             _world = World.DefaultGameObjectInjectionWorld;
-            
+
             if (debugMaterial == null) {
                 debugMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit")) {
-                    color = new Color(1f,150/255f, 0f, 145/255f)
+                    color = new Color(1f, 150 / 255f, 0f, 145 / 255f)
                 };
             }
 
@@ -43,6 +45,10 @@ namespace Selection.MonoBehaviours {
 
                 if (!_world.EntityManager.Exists(_meshVerticesBuffer)) {
                     _meshVerticesBuffer = _world.EntityManager.CreateSingletonBuffer<SelectionVerticesBufferComponent>();
+                }
+
+                if (!_world.EntityManager.Exists(_meshBoxBuffer)) {
+                    _meshBoxBuffer = _world.EntityManager.CreateSingletonBuffer<SelectionBoxBufferComponent>();
                 }
             }
         }
@@ -62,13 +68,15 @@ namespace Selection.MonoBehaviours {
                 if (!_isDragging) {
                     SelectSingleUnit();
                 } else {
-                    SelectMultipleUnits();
+                    // SelectMultipleUnitsUsingPrism();
+                    SelectMultipleUnitsUsingBox();
                     _isDragging = false;
                 }
             }
         }
 
         private void SelectSingleUnit() {
+            // Debug.Log("Send Selection for single unit");
             var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             _world.EntityManager.GetBuffer<RayCastBufferComponent>(_rayCastBuffer).Add(new RayCastBufferComponent() {
                 Value = new RaycastInput() {
@@ -83,7 +91,45 @@ namespace Selection.MonoBehaviours {
             });
         }
 
-        private void SelectMultipleUnits() {
+        private void SelectMultipleUnitsUsingBox() {
+            Debug.Log("Send Box Data for multiple units selection");
+            var topLeft = math.min(_mouseStartPos, Input.mousePosition);
+            var botRight = math.max(_mouseStartPos, Input.mousePosition);
+
+            //Need a float3 for center
+            //The orientation as a quaternion (Look at)
+            //The size as float3
+
+            var rect = Rect.MinMaxRect(topLeft.x, topLeft.y, botRight.x, botRight.y);
+            var xCenter = (rect.xMax - rect.xMin) / 2 + rect.xMin;
+            var yCenter = (rect.yMax - rect.yMin) / 2 + rect.yMin;
+            var centerRay = mainCamera.ScreenPointToRay(new Vector2(xCenter, yCenter));
+
+            var zSize = mainCamera.farClipPlane - mainCamera.nearClipPlane;
+            var xSize = rect.xMax - rect.xMin;
+            var ySize = rect.yMax - rect.yMin;
+            var boxCenter = centerRay.GetPoint(zSize / 2);
+            //Center adjustment?
+            //boxCenter -= mainCamera.transform.forward * mainCamera.nearClipPlane;
+            var transformPosition = boxCenter - mainCamera.transform.position;
+            var orientation = Quaternion.LookRotation(transformPosition, Vector3.up);
+
+
+            // PUSH THE DATA TO THE BUFFER
+            _world.EntityManager.GetBuffer<SelectionBoxBufferComponent>(_meshBoxBuffer).Add(new SelectionBoxBufferComponent() {
+                BoxCenter = boxCenter,
+                BoxSize = new float3(xSize, ySize, zSize),
+                BoxOrientation = orientation,
+                Additive = Input.GetKey(KeyCode.LeftShift),
+                BelongsTo = belongsTo,
+                CollidesWith = collidesWith
+            });
+        }
+
+        //DebugBoxMesh(boxCenter, new float3(xSize, ySize, zSize), orientation);
+
+        private void SelectMultipleUnitsUsingPrism() {
+            Debug.Log("Send Selection for multiple units");
             var topLeft = math.min(_mouseStartPos, Input.mousePosition);
             var botRight = math.max(_mouseStartPos, Input.mousePosition);
 
@@ -96,27 +142,30 @@ namespace Selection.MonoBehaviours {
             };
 
             //CREATE THE VERTICES FOR THE MESH
-            var rayDistance = 50f; //mainCamera.farClipPlane;
+            var rayDistance = mainCamera.farClipPlane;
             var nVertices = new NativeArray<float3>(5, Allocator.TempJob);
             for (int i = 0; i < cornerRays.Length; i++) {
                 nVertices[i] = cornerRays[i].GetPoint(rayDistance);
                 Debug.DrawLine(cornerRays[i].GetPoint(mainCamera.nearClipPlane), cornerRays[i].GetPoint(mainCamera.farClipPlane), Color.red, 5f);
             }
+
             //The center of the near clip plane, better if it is the intersection of the rays with the nearClip (4 more points)
             var cameraTransform = mainCamera.transform;
             nVertices[4] = cameraTransform.position + (cameraTransform.forward * mainCamera.nearClipPlane);
-            
+
+            // if (debugMesh) {
             //DebugCollisionMeshGo(nVertices);
-            //BoxCollider();
-            //DebugCollisionMeshEntity(nVertices);
-            
+            // BoxCollider();
+            // DebugCollisionMeshEntity(nVertices);    
+            // }
+
             // PUSH THE DATA TO THE BUFFER
-             _world.EntityManager.GetBuffer<SelectionVerticesBufferComponent>(_meshVerticesBuffer).Add(new SelectionVerticesBufferComponent() {
-                 Vertices = nVertices,
-                 Additive = Input.GetKey(KeyCode.LeftShift),
-                 belongsTo = belongsTo,
-                 collidesWith = collidesWith
-             });
+            _world.EntityManager.GetBuffer<SelectionVerticesBufferComponent>(_meshVerticesBuffer).Add(new SelectionVerticesBufferComponent() {
+                Vertices = nVertices,
+                Additive = Input.GetKey(KeyCode.LeftShift),
+                BelongsTo = belongsTo,
+                CollidesWith = collidesWith
+            });
             // nVertices.Dispose();
         }
 
@@ -124,7 +173,7 @@ namespace Selection.MonoBehaviours {
             var material = new Material(Shader.Find("Universal Render Pipeline/Unlit")) {
                 color = Color.yellow
             };
-            
+
             //CREATE THE TRIANGLES FOR THE MESH
             var triangles = new[] {
                 4, 0, 2,
@@ -155,33 +204,33 @@ namespace Selection.MonoBehaviours {
             mr.material = material;
         }
 
-        private void BoxCollider() {
-            
+        private void DebugBoxMesh(float3 center, float3 size, quaternion orientation) {
+            GameObject.CreatePrimitive(PrimitiveType.Cube).transform.SetPositionAndRotation(center, orientation);
+
+            // var entity = _world.EntityManager.CreateEntity();
+            // _world.EntityManager.AddSharedComponent(entity, new PhysicsWorldIndex());
+            //
+            // var physicsMaterial = Unity.Physics.Material.Default;
+            // physicsMaterial.CollisionResponse = CollisionResponsePolicy.RaiseTriggerEvents;
+            // var collisionFilter = new CollisionFilter {
+            //     BelongsTo = belongsTo.Value,
+            //     CollidesWith = collidesWith.Value
+            // };
+            // var boxCollider = Unity.Physics.BoxCollider.Create(new BoxGeometry() {
+            //     Orientation = quaternion.identity,
+            //     Size = new float3(1.0f),
+            //     BevelRadius = 0.0f
+            // }, collisionFilter, physicsMaterial);
+            // var colliderComponent = new PhysicsCollider { Value = boxCollider };
+            //
+            // _world.EntityManager.AddComponentData(entity, colliderComponent);
+        }
+
+        private void DebugCollisionMeshEntity(NativeArray<float3> nVertices, bool renderMesh = false) {
             var entity = _world.EntityManager.CreateEntity();
+            _world.EntityManager.AddComponentData(entity, new LocalToWorld { Value = float4x4.identity });
             _world.EntityManager.AddSharedComponent(entity, new PhysicsWorldIndex());
 
-            var physicsMaterial = Unity.Physics.Material.Default;
-            physicsMaterial.CollisionResponse = CollisionResponsePolicy.RaiseTriggerEvents;
-            var collisionFilter = new CollisionFilter {
-                BelongsTo = belongsTo.Value,
-                CollidesWith = collidesWith.Value
-            };
-            var boxCollider = Unity.Physics.BoxCollider.Create(new BoxGeometry() {
-                Orientation = quaternion.identity,
-                Size = new float3(1.0f),
-                BevelRadius = 0.0f
-            }, collisionFilter, physicsMaterial);
-            var colliderComponent = new PhysicsCollider { Value = boxCollider };
-            
-            _world.EntityManager.AddComponentData(entity, colliderComponent);
-        }
-        
-        private void DebugCollisionMeshEntity(NativeArray<float3> nVertices, bool renderMesh = false) {
-            
-            var entity = _world.EntityManager.CreateEntity();
-            _world.EntityManager.AddComponentData(entity, new LocalToWorld {Value = float4x4.identity});
-            _world.EntityManager.AddSharedComponent(entity, new PhysicsWorldIndex());
-            
             if (renderMesh) {
                 //CREATE THE TRIANGLES FOR THE MESH
                 var triangles = new[] {
@@ -192,7 +241,7 @@ namespace Selection.MonoBehaviours {
                     0, 1, 2,
                     0, 3, 1
                 };
-                
+
                 //MESH USING UNITY GRAPHICS
                 var renderMeshDescription = new RenderMeshDescription(ShadowCastingMode.Off);
                 var mesh = new Mesh() {
@@ -214,14 +263,14 @@ namespace Selection.MonoBehaviours {
                     MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0)
                 );
             }
-            
+
             var physicsMaterial = Unity.Physics.Material.Default;
             physicsMaterial.CollisionResponse = CollisionResponsePolicy.RaiseTriggerEvents;
             var collisionFilter = new CollisionFilter {
                 BelongsTo = belongsTo.Value,
                 CollidesWith = collidesWith.Value
             };
-            
+
             var selectionCollider = ConvexCollider.Create(nVertices, ConvexHullGenerationParameters.Default, collisionFilter, physicsMaterial);
             _world.EntityManager.AddComponentData(entity, new PhysicsCollider() { Value = selectionCollider });
             _world.EntityManager.AddComponentData(entity, new SelectionColliderDataComponent());
@@ -243,6 +292,10 @@ namespace Selection.MonoBehaviours {
 
                 if (_world.EntityManager.Exists(_meshVerticesBuffer)) {
                     _world.EntityManager.DestroyEntity(_meshVerticesBuffer);
+                }
+
+                if (_world.EntityManager.Exists(_meshBoxBuffer)) {
+                    _world.EntityManager.DestroyEntity(_meshBoxBuffer);
                 }
             }
         }

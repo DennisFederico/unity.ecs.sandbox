@@ -5,6 +5,7 @@ using Unity.Entities;
 
 namespace AStar.Systems {
 
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     [UpdateAfter(typeof(MovePathFollowerSystem))]
     [RequireMatchingQueriesForUpdate]

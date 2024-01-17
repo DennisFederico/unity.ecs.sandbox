@@ -7,7 +7,7 @@ using Unity.Transforms;
 
 namespace Selection.Systems {
     
-    [DisableAutoCreation]
+    // [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
     [BurstCompile]

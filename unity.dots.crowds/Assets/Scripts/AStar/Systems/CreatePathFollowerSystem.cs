@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace AStar.Systems {
     
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateBefore(typeof(PathfindingSystem))]
     public partial struct CreatePathFollowerSystem : ISystem {
