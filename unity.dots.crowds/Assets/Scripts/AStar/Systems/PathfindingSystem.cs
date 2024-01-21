@@ -6,7 +6,6 @@ using Utils.Narkdagas.PathFinding;
 
 namespace AStar.Systems {
 
-    [DisableAutoCreation]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [BurstCompile]
     public partial struct PathfindingSystem : ISystem {

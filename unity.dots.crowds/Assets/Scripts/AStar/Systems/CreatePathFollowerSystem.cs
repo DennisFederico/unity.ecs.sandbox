@@ -3,11 +3,9 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace AStar.Systems {
-    
-    [DisableAutoCreation]
+
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateBefore(typeof(PathfindingSystem))]
     public partial struct CreatePathFollowerSystem : ISystem {

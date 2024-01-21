@@ -4,7 +4,6 @@ using PathFollowerAspect = TowerDefense.Aspects.PathFollowerAspect;
 
 namespace TowerDefense.Systems {
     
-    [DisableAutoCreation]
     public partial struct MoveByAspectSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace TowerDefense.Systems {
     
-    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
     [BurstCompile]
@@ -30,7 +29,7 @@ namespace TowerDefense.Systems {
             foreach (var placementInput in SystemAPI.Query<DynamicBuffer<TowerPlacementInputData>>()) {
                 foreach (var input in placementInput) {
                     if (pws.PhysicsWorld.CastRay(input.Value, out var hit)) {
-                        Debug.Log($"Hit {hit.Position}");
+                        // Debug.Log($"Hit {hit.Position}");
                         var towerPos = hit.Position + math.up();
                         NativeList<DistanceHit> hits = new NativeList<DistanceHit>(Allocator.Temp);
                         if (!pws.OverlapSphere(towerPos + math.up(), 1f, ref hits, CollisionFilter.Default)) {
@@ -43,7 +42,6 @@ namespace TowerDefense.Systems {
                         }
                     }
                 }
-                
                 placementInput.Clear();
             }
         }

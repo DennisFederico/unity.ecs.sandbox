@@ -59,17 +59,50 @@ namespace Selection.MonoBehaviours {
             }
 
             if (Input.GetMouseButton(0) && !_isDragging) {
-                if (math.distance(_mouseStartPos, Input.mousePosition) > 25) {
+                if (math.distance(_mouseStartPos, Input.mousePosition) > 5) {
                     _isDragging = true;
                 }
             }
+            
+            // if (Input.GetMouseButton(0) && _isDragging) {
+            //     var topLeft = math.min(_mouseStartPos, Input.mousePosition);
+            //     var botRight = math.max(_mouseStartPos, Input.mousePosition);
+            //     var rect = Rect.MinMaxRect(topLeft.x, topLeft.y, botRight.x, botRight.y);
+            //     Debug.Log($"rect: {rect}");
+            //     Debug.Log($"rectCenter: {rect.center} | rectMin: {rect.min} | rectMax: {rect.max}");
+            //     var lb = mainCamera.ScreenToWorldPoint(rect.min);
+            //     var rt = mainCamera.ScreenToWorldPoint(rect.max);
+            //     var distance = rt- lb;
+            //     Debug.Log($"lb: {lb} | rt: {rt} | lb-rt: {distance.x} : {distance.y}");
+            //     
+            //     lb = mainCamera.ScreenToWorldPoint(new Vector3(rect.min.x, rect.min.y, mainCamera.farClipPlane));
+            //     rt = mainCamera.ScreenToWorldPoint(new Vector3(rect.max.x, rect.max.y, mainCamera.farClipPlane));
+            //     distance = rt- lb;
+            //     Debug.Log($"lbFar: {lb} | rt: {rt} | lb-rt: {distance.x} : {distance.y}");
+            //     
+            //     lb = mainCamera.ScreenToWorldPoint(new Vector3(rect.min.x, rect.min.y, mainCamera.nearClipPlane));
+            //     rt = mainCamera.ScreenToWorldPoint(new Vector3(rect.max.x, rect.max.y, mainCamera.nearClipPlane));
+            //     distance = rt- lb;
+            //     Debug.Log($"lbNear: {lb} | rt: {rt} | lb-rt: {distance.x} : {distance.y}");
+            //     
+            //     
+            //     // //Using farClip
+            //     // var posX1Far = new Vector3(Input.mousePosition.x, rect.center.y, mainCamera.farClipPlane);
+            //     // var posX2Far = new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane);
+            //     // //Using nearClip
+            //     //
+            //     //
+            //     // var screenToWorldPoint1 = mainCamera.ScreenToWorldPoint(pos1);
+            //     // var screenToWorldPoint2 = mainCamera.ScreenToWorldPoint(pos2);
+            //     // Debug.Log($"pos1: {pos1}, screenToWorldPoint1: {screenToWorldPoint1}, pos2: {pos2}, screenToWorldPoint2: {screenToWorldPoint2}");
+            // }
 
             if (Input.GetMouseButtonUp(0)) {
                 if (!_isDragging) {
                     SelectSingleUnit();
                 } else {
-                    // SelectMultipleUnitsUsingPrism();
-                    SelectMultipleUnitsUsingBox();
+                    SelectMultipleUnitsUsingPrism();
+                    // SelectMultipleUnitsUsingBox();
                     _isDragging = false;
                 }
             }
@@ -95,20 +128,19 @@ namespace Selection.MonoBehaviours {
             Debug.Log("Send Box Data for multiple units selection");
             var topLeft = math.min(_mouseStartPos, Input.mousePosition);
             var botRight = math.max(_mouseStartPos, Input.mousePosition);
-
-            //Need a float3 for center
-            //The orientation as a quaternion (Look at)
-            //The size as float3
-
             var rect = Rect.MinMaxRect(topLeft.x, topLeft.y, botRight.x, botRight.y);
-            var xCenter = (rect.xMax - rect.xMin) / 2 + rect.xMin;
-            var yCenter = (rect.yMax - rect.yMin) / 2 + rect.yMin;
-            var centerRay = mainCamera.ScreenPointToRay(new Vector2(xCenter, yCenter));
-
+            
             var zSize = mainCamera.farClipPlane - mainCamera.nearClipPlane;
-            var xSize = rect.xMax - rect.xMin;
-            var ySize = rect.yMax - rect.yMin;
+            var centerRay = mainCamera.ScreenPointToRay(rect.center);
             var boxCenter = centerRay.GetPoint(zSize / 2);
+
+            //Using nearClip "smaller" box
+            var leftBottom = mainCamera.ScreenToWorldPoint(new Vector3(rect.min.x, rect.min.y, mainCamera.farClipPlane));
+            var rightTop = mainCamera.ScreenToWorldPoint(new Vector3(rect.max.x, rect.max.y, mainCamera.farClipPlane));
+            var distance = leftBottom - rightTop;
+            var xSize = math.abs(distance.x);
+            var ySize = math.abs(distance.y);
+                
             //Center adjustment?
             //boxCenter -= mainCamera.transform.forward * mainCamera.nearClipPlane;
             var transformPosition = boxCenter - mainCamera.transform.position;
@@ -129,7 +161,7 @@ namespace Selection.MonoBehaviours {
         //DebugBoxMesh(boxCenter, new float3(xSize, ySize, zSize), orientation);
 
         private void SelectMultipleUnitsUsingPrism() {
-            Debug.Log("Send Selection for multiple units");
+            // Debug.Log("Send Selection for multiple units");
             var topLeft = math.min(_mouseStartPos, Input.mousePosition);
             var botRight = math.max(_mouseStartPos, Input.mousePosition);
 

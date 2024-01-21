@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Transforms;
 
 namespace Recap101.Systems {
-    [DisableAutoCreation]
+
     public partial struct SyncVisualGameObjectSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

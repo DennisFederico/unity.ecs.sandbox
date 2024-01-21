@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace TowerDefense.Systems {
     
-    [DisableAutoCreation]
     public partial struct CleanVisualGameObjectSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

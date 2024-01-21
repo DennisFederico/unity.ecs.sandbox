@@ -5,7 +5,6 @@ using Unity.Transforms;
 
 namespace Recap101.Systems {
     
-    [DisableAutoCreation]
     public partial class MoveSystem : SystemBase {
         protected override void OnUpdate() {
             var timeDeltaTime = SystemAPI.Time.DeltaTime;

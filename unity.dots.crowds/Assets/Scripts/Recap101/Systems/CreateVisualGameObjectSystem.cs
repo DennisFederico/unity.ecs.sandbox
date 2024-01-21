@@ -4,7 +4,7 @@ using Unity.Entities;
 using UnityEngine;
 
 namespace Recap101.Systems {
-    [DisableAutoCreation]
+
     public partial struct CreateVisualGameObjectSystem : ISystem {
 
         public void OnCreate(ref SystemState state) {

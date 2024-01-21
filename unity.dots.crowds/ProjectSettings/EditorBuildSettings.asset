@@ -6,7 +6,37 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/CrowdsScene.unity
+    path: Assets/Scenes/MainMenuScene.unity
+    guid: ce8e10c14c64a4adb848f1e6a6dd6367
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 8588aaab6781dc246b0350b3d77dc6d2
+  - enabled: 1
+    path: Assets/Scenes/SystemsLoaderTest.unity
+    guid: 92afc82cb7b784b04a9e83fdab081b50
+  - enabled: 1
+    path: Assets/Scenes/AStarPathfindingEcs.unity
+    guid: eb38256e8656741feb665a9c7496677c
+  - enabled: 1
+    path: Assets/Scenes/AStarPathfindingJobs.unity
+    guid: bd5bb94fecc4e40bfbd60e9a4bfe6531
+  - enabled: 1
+    path: Assets/Scenes/SimpleCrowdsSpawner.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/EcsSelectionSandbox.unity
+    guid: 2f423918a16e445319272adbf7545ca1
+  - enabled: 1
+    path: Assets/Scenes/SwarmSpawnerScene.unity
+    guid: 762a5926a9f774b5ebfc12e47aea1919
+  - enabled: 1
+    path: Assets/Scenes/TeamSwitchSceneTest.unity
+    guid: f2639aaf172d24967af8da3b52e78be4
+  - enabled: 1
+    path: Assets/Scenes/FormationChangeScene.unity
+    guid: 1ea16f54289334369b67ff2814b7ecd5
+  - enabled: 1
+    path: Assets/Scenes/TowerDefenseScene.unity
+    guid: 108e3e2cba24640acb698f477b979e24
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

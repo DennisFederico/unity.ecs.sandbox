@@ -5,7 +5,6 @@ using Unity.Transforms;
 
 namespace TowerDefense.Systems {
     
-    [DisableAutoCreation]
     public partial struct SyncVisualGameObjectSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

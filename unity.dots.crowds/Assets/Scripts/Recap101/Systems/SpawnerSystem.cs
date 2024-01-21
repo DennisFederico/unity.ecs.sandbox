@@ -3,7 +3,7 @@ using Unity.Burst;
 using Unity.Entities;
 
 namespace Recap101.Systems {
-    [DisableAutoCreation]
+
     public partial struct SpawnerSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

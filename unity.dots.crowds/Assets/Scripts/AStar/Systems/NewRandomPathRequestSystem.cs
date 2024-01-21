@@ -10,7 +10,6 @@ using Utils.Narkdagas.PathFinding;
 
 namespace AStar.Systems {
 
-    [DisableAutoCreation]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateBefore(typeof(PathfindingSystem))]
     [RequireMatchingQueriesForUpdate]

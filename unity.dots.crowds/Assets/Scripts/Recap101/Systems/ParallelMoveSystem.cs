@@ -6,7 +6,6 @@ using Unity.Transforms;
 
 namespace Recap101.Systems {
     
-    [DisableAutoCreation]
     public partial struct ParallelMoveSystem : ISystem {
         
         [BurstCompile]

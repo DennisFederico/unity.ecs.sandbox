@@ -10,14 +10,14 @@ using Unity.Transforms;
 
 namespace TowerDefense.Systems {
 
-    // [BurstCompile]
+    [BurstCompile]
     public partial struct ShootProjectileJob : IJobEntity {
 
         [ReadOnly] public float DeltaTime;
         [ReadOnly] public PhysicsWorldSingleton PhysicsWorld;
         public EntityCommandBuffer.ParallelWriter EntityBuffer;
         
-        // [BurstCompile]
+        [BurstCompile]
         private void Execute(ref TowerDataComponent towerData, in TowerConfigAsset configAsset, in LocalToWorld towerPos) {
             towerData.ShootTimer -= DeltaTime;
             if (towerData.ShootTimer <= 0) {
@@ -111,7 +111,6 @@ namespace TowerDefense.Systems {
         }
     }
     
-    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
     [BurstCompile]
