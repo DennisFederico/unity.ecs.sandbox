@@ -582,15 +582,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de320ccc8148473aa6f178c0d548caea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  systemsLoaderButton: {fileID: 1084031714}
-  aStarSceneEcsButton: {fileID: 855878415}
-  aStarSceneJobsButton: {fileID: 1504676855}
-  simpleCrowdsSpawnerButton: {fileID: 1382895768}
-  ecsSelectionSandboxButton: {fileID: 547973785}
-  swarmSpawnerSceneButton: {fileID: 357333745}
-  teamSwitchSceneButton: {fileID: 1814500364}
-  formationChangeSceneButton: {fileID: 1255717689}
-  towerDefenseSceneButton: {fileID: 1408586930}
+  systemsLoaderButton: {fileID: 1084031711}
+  aStarSceneEcsButton: {fileID: 855878416}
+  aStarSceneJobsButton: {fileID: 1504676856}
+  simpleCrowdsSpawnerButton: {fileID: 1382895769}
+  ecsSelectionSandboxButton: {fileID: 547973786}
+  swarmSpawnerSceneButton: {fileID: 357333746}
+  teamSwitchSceneButton: {fileID: 1814500365}
+  formationChangeSceneButton: {fileID: 1255717690}
+  towerDefenseSceneButton: {fileID: 1408586931}
 --- !u!1 &547973783
 GameObject:
   m_ObjectHideFlags: 0
@@ -1214,7 +1214,7 @@ MonoBehaviour:
     m_Right: 25
     m_Top: 30
     m_Bottom: 30
-  m_ChildAlignment: 1
+  m_ChildAlignment: 4
   m_Spacing: 20
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0

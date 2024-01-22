@@ -1,19 +1,19 @@
-using CodeMonkey.Utils;
 using UnityEngine;
+using UnityEngine.UI;
 using Utils.Narkdagas.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour {
 
-    [SerializeField] private Button_UI systemsLoaderButton;
-    [SerializeField] private Button_UI aStarSceneEcsButton;
-    [SerializeField] private Button_UI aStarSceneJobsButton;
-    [SerializeField] private Button_UI simpleCrowdsSpawnerButton;
-    [SerializeField] private Button_UI ecsSelectionSandboxButton;
-    [SerializeField] private Button_UI swarmSpawnerSceneButton;
-    [SerializeField] private Button_UI teamSwitchSceneButton;
-    [SerializeField] private Button_UI formationChangeSceneButton;
-    [SerializeField] private Button_UI towerDefenseSceneButton;
-    
+    [SerializeField] private Button systemsLoaderButton;
+    [SerializeField] private Button aStarSceneEcsButton;
+    [SerializeField] private Button aStarSceneJobsButton;
+    [SerializeField] private Button simpleCrowdsSpawnerButton;
+    [SerializeField] private Button ecsSelectionSandboxButton;
+    [SerializeField] private Button swarmSpawnerSceneButton;
+    [SerializeField] private Button teamSwitchSceneButton;
+    [SerializeField] private Button formationChangeSceneButton;
+    [SerializeField] private Button towerDefenseSceneButton;
+
     public enum Scenes {
         SystemsLoaderTest,
         AStarPathfindingEcs,
@@ -25,43 +25,43 @@ public class MainMenuManager : MonoBehaviour {
         FormationChangeScene,
         TowerDefenseScene
     }
-    
+
     private void Awake() {
-        systemsLoaderButton.ClickFunc = () => {
+        systemsLoaderButton.onClick.AddListener(() => {
             Debug.Log("Loading SystemsLoaderScene");
-            SceneLoader.Load(MainMenuManager.Scenes.SystemsLoaderTest);
-        };
-        aStarSceneEcsButton.ClickFunc = () => {
+            SceneLoader.Load(Scenes.SystemsLoaderTest);
+        });
+        aStarSceneEcsButton.onClick.AddListener(() => {
             Debug.Log("Loading AStarScene ECS");
-            SceneLoader.Load(MainMenuManager.Scenes.AStarPathfindingEcs);
-        };
-        aStarSceneJobsButton.ClickFunc = () => {
+            SceneLoader.Load(Scenes.AStarPathfindingEcs);
+        });
+        aStarSceneJobsButton.onClick.AddListener(() => {
             Debug.Log("Loading AStarScene Mono+Jobs");
-            SceneLoader.Load(MainMenuManager.Scenes.AStarPathfindingJobs);
-        };
-        simpleCrowdsSpawnerButton.ClickFunc = () => {
+            SceneLoader.Load(Scenes.AStarPathfindingJobs);
+        });
+        simpleCrowdsSpawnerButton.onClick.AddListener(() => {
             Debug.Log("Loading SimpleCrowdsSpawnerScene");
-            SceneLoader.Load(MainMenuManager.Scenes.SimpleCrowdsSpawner);
-        };
-        ecsSelectionSandboxButton.ClickFunc = () => {
+            SceneLoader.Load(Scenes.SimpleCrowdsSpawner);
+        });
+        ecsSelectionSandboxButton.onClick.AddListener(() => {
             Debug.Log("Loading EcsSelectionSandbox");
-            SceneLoader.Load(MainMenuManager.Scenes.EcsSelectionSandbox);
-        };
-        swarmSpawnerSceneButton.ClickFunc = () => {
+            SceneLoader.Load(Scenes.EcsSelectionSandbox);
+        });
+        swarmSpawnerSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading SwarmSpawnerScene");
-            SceneLoader.Load(MainMenuManager.Scenes.SwarmSpawnerScene);
-        };
-        teamSwitchSceneButton.ClickFunc = () => {
+            SceneLoader.Load(Scenes.SwarmSpawnerScene);
+        });
+        teamSwitchSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading TeamSwitchSceneTest");
-            SceneLoader.Load(MainMenuManager.Scenes.TeamSwitchSceneTest);
-        };
-        formationChangeSceneButton.ClickFunc = () => {
+            SceneLoader.Load(Scenes.TeamSwitchSceneTest);
+        });
+        formationChangeSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading FormationChangeScene");
-            SceneLoader.Load(MainMenuManager.Scenes.FormationChangeScene);
-        };
-        towerDefenseSceneButton.ClickFunc = () => {
+            SceneLoader.Load(Scenes.FormationChangeScene);
+        });
+        towerDefenseSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading TowerDefenseScene");
-            SceneLoader.Load(MainMenuManager.Scenes.TowerDefenseScene);
-        };
+            SceneLoader.Load(Scenes.TowerDefenseScene);
+        });
     }
 }

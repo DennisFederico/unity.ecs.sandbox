@@ -1,29 +1,23 @@
-using CodeMonkey.Utils;
 using SystemLoader.Components;
 using SystemLoader.Systems;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using Utils.Narkdagas.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using SpawnBallSystem = SystemLoader.Systems.SpawnBallSystem;
 
 namespace SystemLoader {
     public class ActionMenuManager : MonoBehaviour {
-        [SerializeField] private Button_UI startSystemsButton;
-        [SerializeField] private Button_UI stopSystemsButton;
-        [SerializeField] private Button_UI mainMenuButton;
+        [SerializeField] private Button startSystemsButton;
+        [SerializeField] private Button stopSystemsButton;
         private World _world;
         private bool _started;
 
         private void OnEnable() {
             _world = World.DefaultGameObjectInjectionWorld;
-            startSystemsButton.ClickFunc = StartSystems;
-            stopSystemsButton.ClickFunc = StopSystems;
-            mainMenuButton.ClickFunc = () => {
-                Debug.Log("Loading MainMenuScene");
-                SceneLoader.Load(SceneLoader.Scenes.MainMenuScene);
-            };
+            startSystemsButton.onClick.AddListener(StartSystems);
+            stopSystemsButton.onClick.AddListener(StopSystems);
         }
 
         private void StartSystems() {
@@ -70,9 +64,8 @@ namespace SystemLoader {
         }
 
         private void OnDisable() {
-            startSystemsButton.ClickFunc -= StartSystems;
-            stopSystemsButton.ClickFunc -= StopSystems;
-            mainMenuButton.ClickFunc = null;
+            startSystemsButton.onClick.RemoveListener(StartSystems);
+            stopSystemsButton.onClick.RemoveListener(StopSystems);
         }
     }
 }
