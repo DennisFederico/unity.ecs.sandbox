@@ -13,7 +13,7 @@ namespace Utils {
         
         private void GoToMenu() {
             Debug.Log("Loading MainMenuScene");
-            SceneLoader.Load(SceneLoader.Scenes.MainMenuScene);
+            SceneLoader.Load(SceneLoader.Scenes.MainMenuScene, true);
         }
 
         private void OnDisable() {

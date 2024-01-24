@@ -1008,8 +1008,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af78c1a0506d4e5781a5ef7862be72c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startSystemsButton: {fileID: 0}
-  stopSystemsButton: {fileID: 0}
+  startSystemsButton: {fileID: 581017885}
+  stopSystemsButton: {fileID: 287995780}
 --- !u!1 &1584635286
 GameObject:
   m_ObjectHideFlags: 0

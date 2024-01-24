@@ -481,7 +481,7 @@ GameObject:
   - component: {fileID: 368260863}
   - component: {fileID: 368260867}
   m_Layer: 5
-  m_Name: Menu
+  m_Name: UIMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3183,7 +3183,7 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 368260866}
   - {fileID: 947521810}
   - {fileID: 1001325966}
-  - {fileID: 368260866}
   - {fileID: 124751403}

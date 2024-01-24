@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils.Narkdagas.SceneManagement;
@@ -29,39 +30,43 @@ public class MainMenuManager : MonoBehaviour {
     private void Awake() {
         systemsLoaderButton.onClick.AddListener(() => {
             Debug.Log("Loading SystemsLoaderScene");
-            SceneLoader.Load(Scenes.SystemsLoaderTest);
+            SceneLoader.Load(Scenes.SystemsLoaderTest, true);
         });
         aStarSceneEcsButton.onClick.AddListener(() => {
             Debug.Log("Loading AStarScene ECS");
-            SceneLoader.Load(Scenes.AStarPathfindingEcs);
+            SceneLoader.LoadAsync(Scenes.AStarPathfindingEcs, true);
         });
         aStarSceneJobsButton.onClick.AddListener(() => {
             Debug.Log("Loading AStarScene Mono+Jobs");
-            SceneLoader.Load(Scenes.AStarPathfindingJobs);
+            SceneLoader.LoadAsync(Scenes.AStarPathfindingJobs, true);
         });
         simpleCrowdsSpawnerButton.onClick.AddListener(() => {
             Debug.Log("Loading SimpleCrowdsSpawnerScene");
-            SceneLoader.Load(Scenes.SimpleCrowdsSpawner);
+            SceneLoader.Load(Scenes.SimpleCrowdsSpawner, true);
         });
         ecsSelectionSandboxButton.onClick.AddListener(() => {
             Debug.Log("Loading EcsSelectionSandbox");
-            SceneLoader.Load(Scenes.EcsSelectionSandbox);
+            SceneLoader.Load(Scenes.EcsSelectionSandbox, true);
         });
         swarmSpawnerSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading SwarmSpawnerScene");
-            SceneLoader.Load(Scenes.SwarmSpawnerScene);
+            SceneLoader.Load(Scenes.SwarmSpawnerScene, true);
         });
         teamSwitchSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading TeamSwitchSceneTest");
-            SceneLoader.Load(Scenes.TeamSwitchSceneTest);
+            SceneLoader.Load(Scenes.TeamSwitchSceneTest, true);
         });
         formationChangeSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading FormationChangeScene");
-            SceneLoader.Load(Scenes.FormationChangeScene);
+            SceneLoader.Load(Scenes.FormationChangeScene, true);
         });
         towerDefenseSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading TowerDefenseScene");
-            SceneLoader.Load(Scenes.TowerDefenseScene);
+            SceneLoader.Load(Scenes.TowerDefenseScene, true);
         });
     }
+
+    // private void Start() {
+    //     TransitionManager.Instance.EndTransition();
+    // }
 }
