@@ -1,7 +1,9 @@
+using System;
 using SystemLoader.Components;
 using SystemLoader.Systems;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -36,20 +38,20 @@ namespace SystemLoader {
                 });
                 _world.EntityManager.AddComponent<RandomSeeder>(spawnBallSystemHandle);
                 _world.EntityManager.SetComponentData(spawnBallSystemHandle, new RandomSeeder {
-                    Value = new Unity.Mathematics.Random((uint) Random.Range(1, uint.MaxValue))
+                    Value = new Unity.Mathematics.Random((uint)Random.Range(1, uint.MaxValue))
                 });
 
                 //CREATE TTL SYSTEM Only if it does not exist
                 if (_world.GetExistingSystem<TimeToLiveSystem>() == SystemHandle.Null) {
-                    simulationSystemGroup.AddSystemToUpdateList(_world.CreateSystem<TimeToLiveSystem>());                    
+                    simulationSystemGroup.AddSystemToUpdateList(_world.CreateSystem<TimeToLiveSystem>());
                 }
             }
+
             _started = true;
         }
-        
+
         private void StopSystems() {
-            
-            if (_started && _world.IsCreated) {
+            if (_started && _world != null && _world.IsCreated) {
                 Debug.Log("Stopping Systems");
                 var simulationSystemGroup = _world.GetExistingSystemManaged<SimulationSystemGroup>();
                 var spawnBallSystemHandle = _world.GetExistingSystem<SpawnBallSystem>();
@@ -60,12 +62,17 @@ namespace SystemLoader {
                 simulationSystemGroup.RemoveSystemFromUpdateList(ttlSystem);
                 _world.DestroySystem(ttlSystem);
             }
+
             _started = false;
         }
 
         private void OnDisable() {
             startSystemsButton.onClick.RemoveListener(StartSystems);
             stopSystemsButton.onClick.RemoveListener(StopSystems);
+        }
+
+        private void OnDestroy() {
+            StopSystems();
         }
     }
 }
