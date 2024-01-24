@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils.Narkdagas.SceneManagement;
@@ -65,8 +64,4 @@ public class MainMenuManager : MonoBehaviour {
             SceneLoader.Load(Scenes.TowerDefenseScene, true);
         });
     }
-
-    // private void Start() {
-    //     TransitionManager.Instance.EndTransition();
-    // }
 }

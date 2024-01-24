@@ -71,6 +71,17 @@ namespace AStar.MonoBehaviors {
             }
         }
 
+        private void OnDestroy() {
+            if (_world == null || !_world.IsCreated) return;
+            var worldName = _world.Name;
+            _world.Dispose();
+            var world = new World(worldName);
+            World.DefaultGameObjectInjectionWorld = world;
+            var systems = DefaultWorldInitialization.GetAllSystems(WorldSystemFilterFlags.Default);
+            DefaultWorldInitialization.AddSystemsToRootLevelSystemGroups(world, systems);
+            ScriptBehaviourUpdateOrder.AppendWorldToCurrentPlayerLoop(world);
+        }
+        
         private void GridOnGridValueChanged(object sender, OnGridValueChangedEventArgs e) {
             //Notify the system about changes in the grid
             if (_world.IsCreated && _world.EntityManager.Exists(_theGrid)) {
@@ -87,7 +98,7 @@ namespace AStar.MonoBehaviors {
 
         private void InjectGridIntoEcsSystem() {
             if (_world.IsCreated) {
-                _theGrid = _world.EntityManager.CreateSingleton<GridSingletonComponent>(new GridSingletonComponent {
+                _theGrid = _world.EntityManager.CreateSingleton(new GridSingletonComponent {
                     Width = width,
                     Height = height,
                     CellSize = cellSize,

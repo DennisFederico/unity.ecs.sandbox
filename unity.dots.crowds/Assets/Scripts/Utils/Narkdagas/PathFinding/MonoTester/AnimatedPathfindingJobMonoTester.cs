@@ -59,7 +59,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
             jobHandle.Complete();
 
             if (jobHandle.IsCompleted) {
-                var path3 = TransformPath(resultPath, cellSize);
+                var path3 = TransformPath(resultPath);
                 targetGameObject.SetPath(path3);
                 resultPath.Dispose();
                 gridAsArray.Dispose();
@@ -153,7 +153,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
 
                     if (jobHandle.IsCompleted) {
                         DebugPath(resultPath.AsArray().ToArray());
-                        var path3 = TransformPath(resultPath, cellSize);
+                        var path3 = TransformPath(resultPath);
                         if (!_player) {
                             _player = Instantiate(prefab);
                         }
@@ -198,7 +198,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
 
                 JobHandle.CompleteAll(handlers);
                 for (int i = 0; i < armySize; i++) {
-                    var path3 = TransformPath(results[i], cellSize);
+                    var path3 = TransformPath(results[i]);
                     results[i].Dispose();
                     platoon[i].SetPath(path3, this.NewGridPathRequestEvent);
                 }
@@ -213,11 +213,11 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
             }
         }
 
-        private Vector3[] TransformPath(NativeList<int2> path, float gridCellSize) {
+        private Vector3[] TransformPath(NativeList<int2> path) {
             var path3 = new Vector3[path.Length];
             int index = 0;
             foreach (var step in path) {
-                path3[index++] = _grid.GetWorldPosition(step.x, step.y) + new Vector3(gridCellSize / 2, gridCellSize / 2, 0);
+                path3[index++] = _grid.GetWorldPosition(step.x, step.y);
             }
             return path3;
         }
@@ -237,5 +237,4 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
             }
         }
     }
-
 }

@@ -12,7 +12,6 @@ namespace Utils {
         }
         
         private void GoToMenu() {
-            Debug.Log("Loading MainMenuScene");
             SceneLoader.Load(SceneLoader.Scenes.MainMenuScene, true);
         }
 
