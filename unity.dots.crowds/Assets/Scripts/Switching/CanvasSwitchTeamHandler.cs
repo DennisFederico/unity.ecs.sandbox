@@ -1,6 +1,7 @@
 using System;
 using Switching.Systems;
 using TMPro;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -13,10 +14,10 @@ namespace Switching {
         
         private World _world;
         private DebugLogSystem _debugLogSystem;
-        private bool _isBlueTeamActive;
-        private float _timer;
-        private float _waitTime = 2f;
-        private int _counter = 0;
+        // private bool _isBlueTeamActive;
+        // private float _timer;
+        // private float _waitTime = 2f;
+        // private int _counter = 0;
 
         private void OnEnable() {
             _world = World.DefaultGameObjectInjectionWorld;
@@ -27,19 +28,19 @@ namespace Switching {
             }
         }
 
-        private void OnDebugLogEvent(object sender, EventArgs e) {
-            Debug.Log($"Event Received: {sender}");
-            _counter++;
-            _timer = _waitTime;
-            _isBlueTeamActive = !_isBlueTeamActive;
-            if (_isBlueTeamActive) {    
-                blueTeamImage.SetActive(true);
-                redTeamImage.SetActive(false);
-            } else {
-                blueTeamImage.SetActive(false);
-                redTeamImage.SetActive(true);
-            }
-            scoreText.text = $"{_counter}";
+        private static void OnDebugLogEvent(object sender, FixedString128Bytes msg) {
+            Debug.Log($"Event Received: {sender}:{msg}");
+            // _counter++;
+            // _timer = _waitTime;
+            // _isBlueTeamActive = !_isBlueTeamActive;
+            // if (_isBlueTeamActive) {    
+            //     blueTeamImage.SetActive(true);
+            //     redTeamImage.SetActive(false);
+            // } else {
+            //     blueTeamImage.SetActive(false);
+            //     redTeamImage.SetActive(true);
+            // }
+            // scoreText.text = $"{_counter}";
         }
 
         private void OnDisable() {
@@ -48,11 +49,11 @@ namespace Switching {
             }
         }
         
-        private void Update() {
-            _timer -= Time.deltaTime;
-            if (_timer < 0f && _counter != 0) {
-                _counter = 0;
-            }
-        }
+        // private void Update() {
+        //     _timer -= Time.deltaTime;
+        //     if (_timer < 0f && _counter != 0) {
+        //         _counter = 0;
+        //     }
+        // }
     }
 }

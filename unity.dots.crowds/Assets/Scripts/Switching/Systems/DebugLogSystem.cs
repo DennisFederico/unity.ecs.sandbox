@@ -1,7 +1,6 @@
 using System;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
 
 namespace Switching.Systems {
     
@@ -14,7 +13,7 @@ namespace Switching.Systems {
             public FixedString64Bytes Message;
         }
         
-        public event EventHandler DebugLogEvent;
+        public event EventHandler<FixedString128Bytes> DebugLogEvent;
         
         protected override void OnUpdate() {
             var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(World.Unmanaged);
@@ -23,8 +22,8 @@ namespace Switching.Systems {
                 .WithoutBurst()
                 .WithAll<DebugLogDataComponent>()
                 .ForEach((Entity entity, in DebugLogDataComponent debugLogData) => {
-                    Debug.Log($"{debugLogData.ElapsedTime} -> {debugLogData.Message}");
-                    DebugLogEvent?.Invoke(this, EventArgs.Empty);   
+                    FixedString128Bytes message = $"{debugLogData.ElapsedTime} -> {debugLogData.Message}";
+                    DebugLogEvent?.Invoke(this, message);   
                     ecb.DestroyEntity(entity);
                 }).Run();
         }

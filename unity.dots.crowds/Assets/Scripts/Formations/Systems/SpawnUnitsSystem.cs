@@ -2,6 +2,7 @@ using Formations.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 
 namespace Formations.Systems {
@@ -49,8 +50,10 @@ namespace Formations.Systems {
                     var relativePosition = formation.Position(tower.ValueRO.Radius, fraction);
                     // ReSharper disable once PossiblyImpureMethodCallOnReadonlyVariable
                     var worldPosition = transform.ValueRO.TransformPoint(relativePosition);
-                    
-                    // ecb.AddSharedComponent(unitEntity, parentEntityReferenceComponent);
+
+                    ecb.AddComponent(unitEntity, new URPMaterialPropertyBaseColor() {
+                        Value = prefab.ValueRO.Color
+                    });
                     ecb.AddSharedComponent(unitEntity, sharedParent);
                     
                     ecb.AddComponent(unitEntity, new FormationComponent {

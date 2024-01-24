@@ -23,6 +23,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
         [SerializeField] private int armySize;
 
         public event EventHandler<NewGridPathRequestEvent> NewGridPathRequestEvent;
+        public event EventHandler<int> NewArmySizeEvent; 
 
         private Camera _camera;
         private Mesh _mesh;
@@ -93,41 +94,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
         private Vector3 _startDragPosition;
 
         private void Update() {
-            if (Input.GetKeyDown(KeyCode.D)) {
-                int numJobs = 500;
-                var startTime = Time.realtimeSinceStartup;
-                Debug.Log($"Start {numJobs} jobs at {startTime}");
-                var gridAsArray = _grid.GetGridAsArray(Allocator.TempJob);
-
-                var results = new NativeArray<NativeList<int2>>(numJobs, Allocator.TempJob);
-                var handlers = new NativeArray<JobHandle>(numJobs, Allocator.TempJob);
-                for (int i = 0; i < numJobs; i++) {
-                    results[i] = new NativeList<int2>(numJobs, Allocator.TempJob);
-                    var startPos = _random.NextInt2(int2.zero, new int2(width / 4, height / 4));
-                    var endPos = _random.NextInt2(new int2(width / 2, height / 2), new int2(width - 1, height - 1));
-                    var jobHandle = new PathfindingJob() {
-                        GridArray = gridAsArray,
-                        GridSize = new int2(width, height),
-                        FromPosition = startPos,
-                        ToPosition = endPos,
-                        ResultPath = results[i]
-                    }.Schedule();
-                    handlers[i] = jobHandle;
-                }
-
-                JobHandle.CompleteAll(handlers);
-                foreach (var result in results) {
-                    result.Dispose();
-                }
-
-                results.Dispose();
-                handlers.Dispose();
-                gridAsArray.Dispose();
-
-                var endTime = Time.realtimeSinceStartup;
-                Debug.Log($"End {numJobs} jobs at {endTime} in {endTime - startTime}s");
-            }
-
+            
             if (Input.GetMouseButtonDown(0)) {
                 _startDragPosition = _camera.ScreenToWorldPoint(Input.mousePosition);
             }
@@ -172,47 +139,66 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
                 _grid.SetGridObject(x, y, node);
             }
 
-            if (Input.GetKeyDown(KeyCode.A)) {
-                var startTime = Time.realtimeSinceStartup;
-                Debug.Log($"Building an platoon of {armySize} jobs at {startTime}");
+            if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
+                SpawnArmy();
+            }
             
-                var platoon = new PathfindingMovement[armySize];
-                var gridAsArray = _grid.GetGridAsArray(Allocator.TempJob);
-                var results = new NativeArray<NativeList<int2>>(armySize, Allocator.TempJob);
-                var handlers = new NativeArray<JobHandle>(armySize, Allocator.TempJob);
-                var random = Random.CreateFromIndex((uint)Time.frameCount);
-                for (int i = 0; i < armySize; i++) {
-                    platoon[i] = Instantiate(prefab);
-                    results[i] = new NativeList<int2>(armySize, Allocator.TempJob);
-                    var startPos = random.NextInt2(new int2(0, 0), new int2(width - 1, height - 1));
-                    var endPos = random.NextInt2(new int2(0, 0), new int2(width - 1, height - 1));
-                    var jobHandle = new PathfindingJob() {
-                        GridArray = gridAsArray,
-                        GridSize = new int2(width, height),
-                        FromPosition = startPos,
-                        ToPosition = endPos,
-                        ResultPath = results[i]
-                    }.Schedule();
-                    handlers[i] = jobHandle;
-                }
-
-                JobHandle.CompleteAll(handlers);
-                for (int i = 0; i < armySize; i++) {
-                    var path3 = TransformPath(results[i]);
-                    results[i].Dispose();
-                    platoon[i].SetPath(path3, this.NewGridPathRequestEvent);
-                }
-                
-                results.Dispose();
-                handlers.Dispose();
-                gridAsArray.Dispose();
-                _army.AddRange(platoon);
-                
-                var endTime = Time.realtimeSinceStartup;
-                Debug.Log($"Added {armySize} to the army for {_army.Count} it total - at {endTime} in {endTime - startTime}s");
+            if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
+                DeSpawnArmy();
             }
         }
 
+        public void SpawnArmy() {
+            var startTime = Time.realtimeSinceStartup;
+                
+            var platoon = new PathfindingMovement[armySize];
+            var gridAsArray = _grid.GetGridAsArray(Allocator.TempJob);
+            var results = new NativeArray<NativeList<int2>>(armySize, Allocator.TempJob);
+            var handlers = new NativeArray<JobHandle>(armySize, Allocator.TempJob);
+            var random = Random.CreateFromIndex((uint)Time.frameCount);
+            for (int i = 0; i < armySize; i++) {
+                platoon[i] = Instantiate(prefab);
+                results[i] = new NativeList<int2>(armySize, Allocator.TempJob);
+                var startPos = random.NextInt2(new int2(0, 0), new int2(width - 1, height - 1));
+                var endPos = random.NextInt2(new int2(0, 0), new int2(width - 1, height - 1));
+                var jobHandle = new PathfindingJob() {
+                    GridArray = gridAsArray,
+                    GridSize = new int2(width, height),
+                    FromPosition = startPos,
+                    ToPosition = endPos,
+                    ResultPath = results[i]
+                }.Schedule();
+                handlers[i] = jobHandle;
+            }
+
+            JobHandle.CompleteAll(handlers);
+            for (int i = 0; i < armySize; i++) {
+                var path3 = TransformPath(results[i]);
+                results[i].Dispose();
+                platoon[i].SetPath(path3, this.NewGridPathRequestEvent);
+            }
+                
+            results.Dispose();
+            handlers.Dispose();
+            gridAsArray.Dispose();
+            _army.AddRange(platoon);
+
+            NewArmySizeEvent?.Invoke(this, _army.Count);
+            Debug.Log($"Added {armySize} to the army for {_army.Count} it total in {Time.realtimeSinceStartup - startTime}s");
+        }
+
+        public void DeSpawnArmy() {
+            var startTime = Time.realtimeSinceStartup;
+            var toRemove = Math.Min(_army.Count, armySize);
+            for (int i = 0; i < toRemove; i++) {
+                var index = _random.NextInt(0, _army.Count);
+                Destroy(_army[index].gameObject);
+                _army.RemoveAt(index);
+            }
+            NewArmySizeEvent?.Invoke(this, _army.Count);
+            Debug.Log($"Removed {_army.Count} from the army in {Time.realtimeSinceStartup - startTime}s");
+        }
+        
         private Vector3[] TransformPath(NativeList<int2> path) {
             var path3 = new Vector3[path.Length];
             int index = 0;

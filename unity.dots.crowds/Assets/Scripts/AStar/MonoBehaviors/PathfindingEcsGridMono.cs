@@ -32,6 +32,7 @@ namespace AStar.MonoBehaviors {
         private World _world; //Used to inject the Grid into the ECS system
         private Entity _theGrid;
         private Entity _createFollowerBufferEntity;
+        private Entity _removeFollowerBufferEntity;
 
         private void Awake() {
             _camera = Camera.main;
@@ -62,6 +63,9 @@ namespace AStar.MonoBehaviors {
             if (_world.IsCreated && !_world.EntityManager.Exists(_createFollowerBufferEntity)) {
                 _createFollowerBufferEntity = _world.EntityManager.CreateSingletonBuffer<CreateNewPathFollowerRequest>("CreateNewPathFollowerBuffer");
             }
+            if (_world.IsCreated && !_world.EntityManager.Exists(_removeFollowerBufferEntity)) {
+                _removeFollowerBufferEntity = _world.EntityManager.CreateSingletonBuffer<RemovePathFollowerRequest>("RemovePathFollowerBuffer");
+            }
         }
         
         private void OnDisable() {
@@ -69,17 +73,9 @@ namespace AStar.MonoBehaviors {
             if (_world.IsCreated && _world.EntityManager.Exists(_createFollowerBufferEntity)) {
                 _world.EntityManager.DestroyEntity(_createFollowerBufferEntity);
             }
-        }
-
-        private void OnDestroy() {
-            if (_world == null || !_world.IsCreated) return;
-            var worldName = _world.Name;
-            _world.Dispose();
-            var world = new World(worldName);
-            World.DefaultGameObjectInjectionWorld = world;
-            var systems = DefaultWorldInitialization.GetAllSystems(WorldSystemFilterFlags.Default);
-            DefaultWorldInitialization.AddSystemsToRootLevelSystemGroups(world, systems);
-            ScriptBehaviourUpdateOrder.AppendWorldToCurrentPlayerLoop(world);
+            if (_world.IsCreated && _world.EntityManager.Exists(_removeFollowerBufferEntity)) {
+                _world.EntityManager.DestroyEntity(_removeFollowerBufferEntity);
+            }
         }
         
         private void GridOnGridValueChanged(object sender, OnGridValueChangedEventArgs e) {
@@ -145,27 +141,42 @@ namespace AStar.MonoBehaviors {
                 }
             }
             
-            if (Input.GetKeyDown(KeyCode.A)) {
-                var startTime = Time.realtimeSinceStartup;
-                Debug.Log($"Building an platoon of {armySize} jobs at {startTime}");
-                
-                if (_world.IsCreated && _createFollowerBufferEntity != Entity.Null) {
-                    var buffer = _world.EntityManager.GetBuffer<CreateNewPathFollowerRequest>(_createFollowerBufferEntity);
-                    for (int i = 0; i < armySize; i++) {
-                        var startPos = GetRandomWalkablePosition();
-                        var endPos = GetRandomWalkablePosition();
-                        
-                        buffer.Add(new CreateNewPathFollowerRequest {
-                            StartPosition = _grid.GetWorldPosition(startPos),
-                            EndPosition = _grid.GetWorldPosition(endPos)
-                        });
-                    }
-                }
+            if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
+                SpawnArmy();
+            }
+            
+            if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
+                DeSpawnArmy();
             }
         }
 
         private void LateUpdate() {
             _gridVisual.LateUpdateVisual();
+        }
+
+        public void SpawnArmy() {
+            var startTime = Time.realtimeSinceStartup;
+            if (_world.IsCreated && _createFollowerBufferEntity != Entity.Null) {
+                var buffer = _world.EntityManager.GetBuffer<CreateNewPathFollowerRequest>(_createFollowerBufferEntity);
+                for (int i = 0; i < armySize; i++) {
+                    buffer.Add(new CreateNewPathFollowerRequest {
+                        StartPosition = _grid.GetWorldPosition(GetRandomWalkablePosition()),
+                        EndPosition = _grid.GetWorldPosition(GetRandomWalkablePosition())
+                    });
+                }
+            }
+            Debug.Log($"Request to spawn a platoon of {armySize} in {Time.realtimeSinceStartup - startTime}");
+        }
+        
+        public void DeSpawnArmy() {
+            var startTime = Time.realtimeSinceStartup;
+            if (_world.IsCreated && _removeFollowerBufferEntity != Entity.Null) {
+                var buffer = _world.EntityManager.GetBuffer<RemovePathFollowerRequest>(_removeFollowerBufferEntity);
+                buffer.Add(new RemovePathFollowerRequest() {
+                        Value = armySize
+                });
+            }
+            Debug.Log($"Request to spawn a platoon of {armySize} in {Time.realtimeSinceStartup - startTime}");
         }
         
         private int2 GetRandomWalkablePosition() {

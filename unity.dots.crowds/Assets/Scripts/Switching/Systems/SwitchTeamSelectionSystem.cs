@@ -159,7 +159,6 @@ namespace Switching.Systems {
                 ChildBuffer = _childBuffer,
                 VisualRepresentationLookup = _visualRepresentationLookup,
                 DeltaTime = SystemAPI.Time.DeltaTime,
-                //DebugLogArchetype = DebugLogSystem.DebugDataArchetype
             }.Schedule(_unSelectedActivePlayersQuery, state.Dependency);
             
             // Print enabled entities
