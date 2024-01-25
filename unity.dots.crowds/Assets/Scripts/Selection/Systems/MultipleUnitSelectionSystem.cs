@@ -1,5 +1,7 @@
+using System;
 using Selection.Components;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
 using Unity.Physics.Systems;
@@ -7,18 +9,15 @@ using Unity.Transforms;
 using UnityEngine;
 
 namespace Selection.Systems {
-    
+
     // [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
     [BurstCompile]
     public partial struct SelectMultipleUnitsSystem : ISystem {
-        //TODO - Evaluate or measure the performance against using Enable/disable tags instead of adding/removing components
-        //TODO - Also we could have a single query over those components to work trigger results
         
-        //private ComponentLookup<SelectedUnitTag> _positionLookup;
-        // private ComponentLookup<HealthComponent> _enemyHealthLookup;
-        
+        private EntityQuery _selectedUnits;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<SelectionColliderDataComponent>();
@@ -26,25 +25,33 @@ namespace Selection.Systems {
             state.RequireForUpdate<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<PhysicsWorldSingleton>();
             state.RequireForUpdate<SelectedVisualPrefabComponent>();
+
+            //NOT REQUIRED FOR UPDATE - ONLY THE SELECTION COLLIDER
+            _selectedUnits = SystemAPI.QueryBuilder()
+                .WithAll<SelectedUnitTag>()
+                .Build();
         }
-        
+
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            // Debug.Log("System - SelectMultipleUnitsSystem - Update");
-            state.CompleteDependency(); //NOTE because we are in the main thread, probably not required when using ITriggerEventsJob
-            
+            //TODO move to an ITriggerEventsJob
+            //NOTE because we are in the main thread, probably not required when using ITriggerEventsJob
+            //But it seems that there are more than one collider in the scene and we need to wait for all of them to be processed
+            //It might be the Buffer used to creat and the system group in which we are updating
+            state.CompleteDependency();
+
             var ecb = SystemAPI.GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
             var simulationSingleton = SystemAPI.GetSingleton<SimulationSingleton>();
             var simulation = simulationSingleton.AsSimulation();
             
             //NOTE This could be a hack to early filter the collisions we are interested in, then we can "lookup" the component
             var pws = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
-            
+
             var selectedPrefab = SystemAPI.GetSingleton<SelectedVisualPrefabComponent>();
             var selectionData = SystemAPI.GetSingleton<SelectionColliderDataComponent>();
             var compoundBelong = selectionData.BelongsTo.Value | selectionData.CollidesWith.Value;
-            
-            //NOTE Triggers are "streamed", thus we don't know the number beforehand, perfect for jobs in parallel
+
+            var newlySelectedUnits = new NativeHashSet<Entity>(16, Allocator.Temp);
             foreach (var triggerEvent in simulation.TriggerEvents) {
                 // Debug.Log($"Trigger Event - Collision between {state.EntityManager.GetName(triggerEvent.EntityA)} and {state.EntityManager.GetName(triggerEvent.EntityB)}");
                 //SHOULD USE A SINGLE LAYER CALLED SELECTABLE OR COMPONENT TAG... WHAT WOULD BE BETTER???
@@ -54,45 +61,82 @@ namespace Selection.Systems {
                     Debug.Log("Unexpected collision - either both have the same filter or not in the expected filters");
                     continue;
                 }
-
                 // Select the unit that "collidesWidth"
                 var entity = selectionData.CollidesWith.Value == belongsA ? triggerEvent.EntityA : triggerEvent.EntityB;
-                SelectUnit(ref state, ecb, entity, selectedPrefab.Value);
-                
-                // WE COULD USE LOOKUPS TO CHECK FOR TAG COMPONENTS BUT NOT SURE WHAT IS THE MOST PERFORMANT APPROACH ONLY KNOW THAT
-                // YOU ARE FORCED TO CREATE A TAG COMPONENT WHICH ON THE OTHER HAND MIGHT BE THE MOST CONVENIENT APPROACH ALIGNED WITH THE ECS SPIRIT
-                // //var type1Lookup = SystemAPI.GetComponentLookup<Type1>(true);
-                // //var type1Lookup = SystemAPI.GetComponentLookup<Type2>(true);
-                // if (ProjectileImpactLookup.TryGetComponent(triggerEvent.EntityA, out var projectileVfx) && HealthLookup.TryGetComponent(triggerEvent.EntityB, out enemyHealth)) {
-                //     projectileEntity = triggerEvent.EntityA;
-                //     enemyEntity = triggerEvent.EntityB;
-                // } else if (ProjectileImpactLookup.TryGetComponent(triggerEvent.EntityB, out projectileVfx) && HealthLookup.TryGetComponent(triggerEvent.EntityA, out enemyHealth)) {
-                //     projectileEntity = triggerEvent.EntityB;
-                //     enemyEntity = triggerEvent.EntityA;
+                newlySelectedUnits.Add(entity);
+                //SelectUnit(ref state, ecb, entity, selectedPrefab.Value);
             }
-            
-            //TODO handle Additivity (if not additive, deselect all units)
-            //This may need a couple of queries to "selected" tag <-- Could be a enabled/disabled component tag
-            
             //Destroy the selection collider
             DestroySelectionCollider(ecb);
+
+            //PROCESS SELECTION CASES
+            var entityArray = _selectedUnits.ToEntityArray(Allocator.Temp);
+            
+            //NO UNITS SELECTED
+            if (newlySelectedUnits.IsEmpty) {
+                if (!selectionData.Additive && !_selectedUnits.IsEmpty) {
+                    foreach (var currentlySelectedUnit in entityArray) {
+                        DeselectUnit(ref state, ecb, currentlySelectedUnit);
+                    }             
+                }
+                return;
+            }
+            
+            //SOMETHING WAS SELECTED
+            if (_selectedUnits.IsEmpty) {
+                //Select all the units that are in the selection
+                foreach (var entity in newlySelectedUnits) {
+                    SelectUnit(ref state, ecb, entity, selectedPrefab.Value);
+                }
+                return;
+            }
+            
+            //Filter the selection to only the newly selected units
+            foreach (var currentlySelectedUnit in entityArray) {
+                if (!newlySelectedUnits.Contains(currentlySelectedUnit)) {
+                    newlySelectedUnits.Remove(currentlySelectedUnit);
+                }
+            }
+            foreach (var entity in newlySelectedUnits) {
+                SelectUnit(ref state, ecb, entity, selectedPrefab.Value);
+            }
+            
+            // Deselect all the units that are not in the current selection
+            if (!selectionData.Additive) {
+                foreach (var currentlySelectedUnit in entityArray) {
+                    if (!newlySelectedUnits.Contains(currentlySelectedUnit)) {
+                        DeselectUnit(ref state, ecb, currentlySelectedUnit);
+                    }
+                }
+            }
         }
 
         private void DestroySelectionCollider(EntityCommandBuffer ecb) {
             var selectionCollider = SystemAPI.GetSingletonEntity<SelectionColliderDataComponent>();
             ecb.DestroyEntity(selectionCollider);
-            // Debug.Log("System - SelectMultipleUnitsSystem - Should Stop");
         }
-        
+
         private void SelectUnit(ref SystemState state, EntityCommandBuffer ecb, Entity entity, Entity selectedVisual) {
             if (SystemAPI.HasComponent<SelectedUnitTag>(entity)) return;
-            //TODO BOLLOCKS ... Adding a components rearranges the memory, What if we use a enable/disable component?
+            //TODO ... Adding a components rearranges the memory, Use a enable/disable component tag instead
             ecb.AddComponent<SelectedUnitTag>(entity);
             // Add the Visual
             var ring = ecb.Instantiate(selectedVisual);
             ecb.AddComponent(ring, new Parent() {
                 Value = entity
             });
+        }
+        
+        private void DeselectUnit(ref SystemState state, EntityCommandBuffer ecb, Entity entity) {
+            ecb.RemoveComponent<SelectedUnitTag>(entity);
+            if (SystemAPI.HasBuffer<Child>(entity)) {
+                var childBuffer = SystemAPI.GetBuffer<Child>(entity);
+                foreach (var child in childBuffer) {
+                    if (SystemAPI.HasComponent<DecalComponentTag>(child.Value)) {
+                        ecb.DestroyEntity(child.Value);
+                    }
+                }
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using Switching.Components;
 using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
 
 namespace Switching.Systems {
 
@@ -10,8 +11,6 @@ namespace Switching.Systems {
     /// It fires events on state changes.
     /// </summary>
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
-    //[UpdateAfter(typeof(SwitchTeamSelectionSystem))]
-    [RequireMatchingQueriesForUpdate]
     public partial class StateEventDispatcherSystem : SystemBase {
 
         public struct SimulationState {
@@ -25,7 +24,8 @@ namespace Switching.Systems {
         private EntityQuery _selectedPlayerQuery;
 
         protected override void OnCreate() {
-            _simulationState = new SimulationState() {
+            
+            _simulationState = new SimulationState {
                 SelectedTeam = Team.None,
                 SelectedCounter = 0
             };
@@ -37,8 +37,10 @@ namespace Switching.Systems {
                 .WithAll<TeamMemberComponent>()
                 .Build();
         }
-
+        
         protected override void OnUpdate() {
+            //NOTE There are some "hidden" players (benched) with disabled IsPlayingComponentTag, EntityQuery still matches them
+            if (_selectedPlayerQuery.IsEmpty) return;
             var selectedCounter = _selectedPlayerQuery.CalculateEntityCount();
             var selectedTeam = _selectedPlayerQuery.ToComponentDataArray<TeamMemberComponent>(Allocator.Temp)[0].Team;
             if (selectedCounter != _simulationState.SelectedCounter || selectedTeam != _simulationState.SelectedTeam) {

@@ -10,6 +10,7 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField] private Button simpleCrowdsSpawnerButton;
     [SerializeField] private Button ecsSelectionSandboxButton;
     [SerializeField] private Button swarmSpawnerSceneButton;
+    [SerializeField] private Button colliderTestSceneButton;
     [SerializeField] private Button teamSwitchSceneButton;
     [SerializeField] private Button formationChangeSceneButton;
     [SerializeField] private Button towerDefenseSceneButton;
@@ -21,6 +22,7 @@ public class MainMenuManager : MonoBehaviour {
         SimpleCrowdsSpawner,
         EcsSelectionSandbox,
         SwarmSpawnerScene,
+        ColliderTest, 
         TeamSwitchSceneTest,
         FormationChangeScene,
         TowerDefenseScene
@@ -50,6 +52,10 @@ public class MainMenuManager : MonoBehaviour {
         swarmSpawnerSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading SwarmSpawnerScene");
             SceneLoader.Load(Scenes.SwarmSpawnerScene, true);
+        });
+        colliderTestSceneButton.onClick.AddListener(() => {
+            Debug.Log("Loading ColliderTest");
+            SceneLoader.Load(Scenes.ColliderTest, true);
         });
         teamSwitchSceneButton.onClick.AddListener(() => {
             Debug.Log("Loading TeamSwitchSceneTest");

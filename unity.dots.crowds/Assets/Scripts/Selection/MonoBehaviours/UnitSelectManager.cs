@@ -1,4 +1,6 @@
 using Selection.Components;
+using Selection.Systems;
+using TMPro;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -17,9 +19,10 @@ namespace Selection.MonoBehaviours {
         [SerializeField] private PhysicsCategoryTags belongsTo;
         [SerializeField] private PhysicsCategoryTags collidesWith;
         [SerializeField] private Material debugMaterial;
-        // [SerializeField] private bool debugMesh;
+        [SerializeField] private TextMeshProUGUI counterText;
 
         private World _world;
+        private SelectedCountEventSystem _selectedCountEventSystem;
         private float3 _mouseStartPos;
         private bool _isDragging;
 
@@ -33,7 +36,7 @@ namespace Selection.MonoBehaviours {
             _world = World.DefaultGameObjectInjectionWorld;
 
             if (debugMaterial == null) {
-                debugMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit")) {
+                debugMaterial = new Material(Shader.Find($"Universal Render Pipeline/Unlit")) {
                     color = new Color(1f, 150 / 255f, 0f, 145 / 255f)
                 };
             }
@@ -50,7 +53,34 @@ namespace Selection.MonoBehaviours {
                 if (!_world.EntityManager.Exists(_meshBoxBuffer)) {
                     _meshBoxBuffer = _world.EntityManager.CreateSingletonBuffer<SelectionBoxBufferComponent>();
                 }
+
+                _selectedCountEventSystem = _world.GetOrCreateSystemManaged<SelectedCountEventSystem>();
+                _selectedCountEventSystem.OnSelectedCountChanged += OnSelectedCountChanged;
             }
+        }
+        
+        private void OnDisable() {
+            if (_world.IsCreated) {
+                if (_world.EntityManager.Exists(_rayCastBuffer)) {
+                    _world.EntityManager.DestroyEntity(_rayCastBuffer);
+                }
+
+                if (_world.EntityManager.Exists(_meshVerticesBuffer)) {
+                    _world.EntityManager.DestroyEntity(_meshVerticesBuffer);
+                }
+
+                if (_world.EntityManager.Exists(_meshBoxBuffer)) {
+                    _world.EntityManager.DestroyEntity(_meshBoxBuffer);
+                }
+                
+                if (_selectedCountEventSystem != null) {
+                    _selectedCountEventSystem.OnSelectedCountChanged -= OnSelectedCountChanged;
+                }
+            }
+        }
+
+        private void OnSelectedCountChanged(int count) {
+            counterText.text = $"Selected: {count}";
         }
 
         private void Update() {
@@ -63,52 +93,19 @@ namespace Selection.MonoBehaviours {
                     _isDragging = true;
                 }
             }
-            
-            // if (Input.GetMouseButton(0) && _isDragging) {
-            //     var topLeft = math.min(_mouseStartPos, Input.mousePosition);
-            //     var botRight = math.max(_mouseStartPos, Input.mousePosition);
-            //     var rect = Rect.MinMaxRect(topLeft.x, topLeft.y, botRight.x, botRight.y);
-            //     Debug.Log($"rect: {rect}");
-            //     Debug.Log($"rectCenter: {rect.center} | rectMin: {rect.min} | rectMax: {rect.max}");
-            //     var lb = mainCamera.ScreenToWorldPoint(rect.min);
-            //     var rt = mainCamera.ScreenToWorldPoint(rect.max);
-            //     var distance = rt- lb;
-            //     Debug.Log($"lb: {lb} | rt: {rt} | lb-rt: {distance.x} : {distance.y}");
-            //     
-            //     lb = mainCamera.ScreenToWorldPoint(new Vector3(rect.min.x, rect.min.y, mainCamera.farClipPlane));
-            //     rt = mainCamera.ScreenToWorldPoint(new Vector3(rect.max.x, rect.max.y, mainCamera.farClipPlane));
-            //     distance = rt- lb;
-            //     Debug.Log($"lbFar: {lb} | rt: {rt} | lb-rt: {distance.x} : {distance.y}");
-            //     
-            //     lb = mainCamera.ScreenToWorldPoint(new Vector3(rect.min.x, rect.min.y, mainCamera.nearClipPlane));
-            //     rt = mainCamera.ScreenToWorldPoint(new Vector3(rect.max.x, rect.max.y, mainCamera.nearClipPlane));
-            //     distance = rt- lb;
-            //     Debug.Log($"lbNear: {lb} | rt: {rt} | lb-rt: {distance.x} : {distance.y}");
-            //     
-            //     
-            //     // //Using farClip
-            //     // var posX1Far = new Vector3(Input.mousePosition.x, rect.center.y, mainCamera.farClipPlane);
-            //     // var posX2Far = new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane);
-            //     // //Using nearClip
-            //     //
-            //     //
-            //     // var screenToWorldPoint1 = mainCamera.ScreenToWorldPoint(pos1);
-            //     // var screenToWorldPoint2 = mainCamera.ScreenToWorldPoint(pos2);
-            //     // Debug.Log($"pos1: {pos1}, screenToWorldPoint1: {screenToWorldPoint1}, pos2: {pos2}, screenToWorldPoint2: {screenToWorldPoint2}");
-            // }
 
             if (Input.GetMouseButtonUp(0)) {
                 if (!_isDragging) {
-                    SelectSingleUnit();
+                    SelectSingleUnit(Input.GetKey(KeyCode.LeftShift));
                 } else {
-                    SelectMultipleUnitsUsingPrism();
-                    // SelectMultipleUnitsUsingBox();
-                    _isDragging = false;
+                    SelectMultipleUnitsUsingPrism(Input.GetKey(KeyCode.LeftShift));
+                    // SelectMultipleUnitsUsingBox(Input.GetKey(KeyCode.LeftShift));
                 }
+                _isDragging = false;
             }
         }
 
-        private void SelectSingleUnit() {
+        private void SelectSingleUnit(bool additive = false) {
             // Debug.Log("Send Selection for single unit");
             var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             _world.EntityManager.GetBuffer<RayCastBufferComponent>(_rayCastBuffer).Add(new RayCastBufferComponent() {
@@ -120,11 +117,12 @@ namespace Selection.MonoBehaviours {
                         CollidesWith = collidesWith.Value,
                     }
                 },
-                Additive = Input.GetKey(KeyCode.LeftShift)
+                Additive = additive
             });
         }
 
-        private void SelectMultipleUnitsUsingBox() {
+        // ReSharper disable once UnusedMember.Local
+        private void SelectMultipleUnitsUsingBox(bool additive = false) {
             Debug.Log("Send Box Data for multiple units selection");
             var topLeft = math.min(_mouseStartPos, Input.mousePosition);
             var botRight = math.max(_mouseStartPos, Input.mousePosition);
@@ -152,7 +150,7 @@ namespace Selection.MonoBehaviours {
                 BoxCenter = boxCenter,
                 BoxSize = new float3(xSize, ySize, zSize),
                 BoxOrientation = orientation,
-                Additive = Input.GetKey(KeyCode.LeftShift),
+                Additive = additive,
                 BelongsTo = belongsTo,
                 CollidesWith = collidesWith
             });
@@ -160,7 +158,7 @@ namespace Selection.MonoBehaviours {
 
         //DebugBoxMesh(boxCenter, new float3(xSize, ySize, zSize), orientation);
 
-        private void SelectMultipleUnitsUsingPrism() {
+        private void SelectMultipleUnitsUsingPrism(bool additive = false) {
             // Debug.Log("Send Selection for multiple units");
             var topLeft = math.min(_mouseStartPos, Input.mousePosition);
             var botRight = math.max(_mouseStartPos, Input.mousePosition);
@@ -194,15 +192,16 @@ namespace Selection.MonoBehaviours {
             // PUSH THE DATA TO THE BUFFER
             _world.EntityManager.GetBuffer<SelectionVerticesBufferComponent>(_meshVerticesBuffer).Add(new SelectionVerticesBufferComponent() {
                 Vertices = nVertices,
-                Additive = Input.GetKey(KeyCode.LeftShift),
+                Additive = additive,
                 BelongsTo = belongsTo,
                 CollidesWith = collidesWith
             });
             // nVertices.Dispose();
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void DebugCollisionMeshGo(NativeArray<float3> nVertices) {
-            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit")) {
+            var material = new Material(Shader.Find($"Universal Render Pipeline/Unlit")) {
                 color = Color.yellow
             };
 
@@ -236,28 +235,30 @@ namespace Selection.MonoBehaviours {
             mr.material = material;
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void DebugBoxMesh(float3 center, float3 size, quaternion orientation) {
             GameObject.CreatePrimitive(PrimitiveType.Cube).transform.SetPositionAndRotation(center, orientation);
 
-            // var entity = _world.EntityManager.CreateEntity();
-            // _world.EntityManager.AddSharedComponent(entity, new PhysicsWorldIndex());
-            //
-            // var physicsMaterial = Unity.Physics.Material.Default;
-            // physicsMaterial.CollisionResponse = CollisionResponsePolicy.RaiseTriggerEvents;
-            // var collisionFilter = new CollisionFilter {
-            //     BelongsTo = belongsTo.Value,
-            //     CollidesWith = collidesWith.Value
-            // };
-            // var boxCollider = Unity.Physics.BoxCollider.Create(new BoxGeometry() {
-            //     Orientation = quaternion.identity,
-            //     Size = new float3(1.0f),
-            //     BevelRadius = 0.0f
-            // }, collisionFilter, physicsMaterial);
-            // var colliderComponent = new PhysicsCollider { Value = boxCollider };
-            //
-            // _world.EntityManager.AddComponentData(entity, colliderComponent);
+            var entity = _world.EntityManager.CreateEntity();
+            _world.EntityManager.AddSharedComponent(entity, new PhysicsWorldIndex());
+            
+            var physicsMaterial = Unity.Physics.Material.Default;
+            physicsMaterial.CollisionResponse = CollisionResponsePolicy.RaiseTriggerEvents;
+            var collisionFilter = new CollisionFilter {
+                BelongsTo = belongsTo.Value,
+                CollidesWith = collidesWith.Value
+            };
+            var boxCollider = Unity.Physics.BoxCollider.Create(new BoxGeometry() {
+                Orientation = quaternion.identity,
+                Size = new float3(size),
+                BevelRadius = 0.0f
+            }, collisionFilter, physicsMaterial);
+            var colliderComponent = new PhysicsCollider { Value = boxCollider };
+            
+            _world.EntityManager.AddComponentData(entity, colliderComponent);
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void DebugCollisionMeshEntity(NativeArray<float3> nVertices, bool renderMesh = false) {
             var entity = _world.EntityManager.CreateEntity();
             _world.EntityManager.AddComponentData(entity, new LocalToWorld { Value = float4x4.identity });
@@ -313,22 +314,6 @@ namespace Selection.MonoBehaviours {
                 var rect = SelectionGUI.GetScreenRect(_mouseStartPos, Input.mousePosition);
                 SelectionGUI.DrawScreenRect(rect, new Color(0.8f, 0.8f, 0.95f, 0.1f));
                 SelectionGUI.DrawScreenRectBorder(rect, 1, Color.blue);
-            }
-        }
-
-        private void OnDisable() {
-            if (_world.IsCreated) {
-                if (_world.EntityManager.Exists(_rayCastBuffer)) {
-                    _world.EntityManager.DestroyEntity(_rayCastBuffer);
-                }
-
-                if (_world.EntityManager.Exists(_meshVerticesBuffer)) {
-                    _world.EntityManager.DestroyEntity(_meshVerticesBuffer);
-                }
-
-                if (_world.EntityManager.Exists(_meshBoxBuffer)) {
-                    _world.EntityManager.DestroyEntity(_meshBoxBuffer);
-                }
             }
         }
     }
