@@ -1,4 +1,5 @@
 using System;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
@@ -6,6 +7,7 @@ namespace Switching.Systems {
     
     // [DisableAutoCreation]
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [RequireMatchingQueriesForUpdate]
     public partial class DebugLogSystem : SystemBase {
         
         public struct DebugLogDataComponent : IComponentData {
@@ -13,8 +15,9 @@ namespace Switching.Systems {
             public FixedString64Bytes Message;
         }
         
-        public event EventHandler<FixedString128Bytes> DebugLogEvent;
+        public event Action<FixedString128Bytes> DebugLogEvent;
         
+        [BurstDiscard]
         protected override void OnUpdate() {
             var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(World.Unmanaged);
             
@@ -23,7 +26,8 @@ namespace Switching.Systems {
                 .WithAll<DebugLogDataComponent>()
                 .ForEach((Entity entity, in DebugLogDataComponent debugLogData) => {
                     FixedString128Bytes message = $"{debugLogData.ElapsedTime} -> {debugLogData.Message}";
-                    DebugLogEvent?.Invoke(this, message);   
+                    // ReSharper disable once Unity.BurstLoadingManagedType
+                    DebugLogEvent?.Invoke(message);   
                     ecb.DestroyEntity(entity);
                 }).Run();
         }

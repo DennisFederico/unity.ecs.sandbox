@@ -1,4 +1,5 @@
 using System;
+using Switching.Components;
 using Switching.Systems;
 using TMPro;
 using Unity.Collections;
@@ -10,50 +11,59 @@ namespace Switching {
 
         [SerializeField] private GameObject blueTeamImage;
         [SerializeField] private GameObject redTeamImage;
-        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private TextMeshProUGUI counterText;
         
         private World _world;
+        private StateEventDispatcherSystem _stateEventDispatcherSystem;
         private DebugLogSystem _debugLogSystem;
-        // private bool _isBlueTeamActive;
-        // private float _timer;
-        // private float _waitTime = 2f;
-        // private int _counter = 0;
+        private bool _firstUpdate;
 
         private void OnEnable() {
             _world = World.DefaultGameObjectInjectionWorld;
-            
             if (_world.IsCreated) {
+                _stateEventDispatcherSystem = _world.GetOrCreateSystemManaged<StateEventDispatcherSystem>();
+                _stateEventDispatcherSystem.SimulationStateChangedEvent += OnSimulationStateChangedEvent;
                 _debugLogSystem = _world.GetOrCreateSystemManaged<DebugLogSystem>();
                 _debugLogSystem.DebugLogEvent += OnDebugLogEvent;
             }
         }
 
-        private static void OnDebugLogEvent(object sender, FixedString128Bytes msg) {
-            Debug.Log($"Event Received: {sender}:{msg}");
-            // _counter++;
-            // _timer = _waitTime;
-            // _isBlueTeamActive = !_isBlueTeamActive;
-            // if (_isBlueTeamActive) {    
-            //     blueTeamImage.SetActive(true);
-            //     redTeamImage.SetActive(false);
-            // } else {
-            //     blueTeamImage.SetActive(false);
-            //     redTeamImage.SetActive(true);
-            // }
-            // scoreText.text = $"{_counter}";
+        private void OnSimulationStateChangedEvent(StateEventDispatcherSystem.SimulationState state) {
+            //HACK Skip the first update, because the state might not yet initialized
+            if (!_firstUpdate) {
+                _firstUpdate = true;
+                return;
+            }
+            switch (state.SelectedTeam) {
+                case Team.Blue:
+                    blueTeamImage.SetActive(true);
+                    redTeamImage.SetActive(false);
+                    break;
+                case Team.Red:
+                    blueTeamImage.SetActive(false);
+                    redTeamImage.SetActive(true);
+                    break;
+                case Team.None:
+                    blueTeamImage.SetActive(false);
+                    redTeamImage.SetActive(false);
+                    break;
+            }
+            counterText.text = state.SelectedCounter.ToString();
+        }
+
+        private static void OnDebugLogEvent(FixedString128Bytes msg) {
+            Debug.Log($"Event Received: {msg}");
         }
 
         private void OnDisable() {
-            if (_world.IsCreated) {
-                _debugLogSystem.DebugLogEvent -= OnDebugLogEvent;
+            if (_world is { IsCreated: true }) {
+                if (_debugLogSystem != null) {
+                    _debugLogSystem.DebugLogEvent -= OnDebugLogEvent;
+                }
+                if (_stateEventDispatcherSystem != null) {
+                    _stateEventDispatcherSystem.SimulationStateChangedEvent -= OnSimulationStateChangedEvent;
+                }
             }
         }
-        
-        // private void Update() {
-        //     _timer -= Time.deltaTime;
-        //     if (_timer < 0f && _counter != 0) {
-        //         _counter = 0;
-        //     }
-        // }
     }
 }

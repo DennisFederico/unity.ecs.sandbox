@@ -7,16 +7,18 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
+using ISystemStartStop = Unity.Entities.ISystemStartStop;
 
 namespace Switching.Systems {
     
     [UpdateBefore(typeof(LateSimulationSystemGroup))]
-    public partial struct SwitchTeamSelectionSystem : ISystem {
+    // ReSharper disable once RedundantExtendsListEntry
+    public partial struct SwitchTeamSelectionSystem : ISystem, ISystemStartStop {
         private Handles _handles;
         private EntityQuery _selectedActivePlayersQuery;
         private EntityQuery _unSelectedActivePlayersQuery;
-        private EntityQuery _benchedPlayersQuery;
-        private EntityQuery _nonBenchedPlayersQuery;
+        // private EntityQuery _benchedPlayersQuery;
+        // private EntityQuery _nonBenchedPlayersQuery;
         private EntityQuery _playingColorablePlayersQuery;
         private BufferLookup<Child> _childBuffer;
         private ComponentLookup<VisualComponentTag> _visualComponentLookup;
@@ -41,6 +43,8 @@ namespace Switching.Systems {
 
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
+            
+            state.RequireForUpdate<TeamSelectedStateComponent>();
             _handles = new Handles(ref state);
 
             _selectedActivePlayersQuery = new EntityQueryBuilder(Allocator.Temp)
@@ -55,15 +59,15 @@ namespace Switching.Systems {
                 .WithAll<IsPlayingComponentTag>()
                 .Build(ref state);
             
-            _benchedPlayersQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<PlayerNameComponent>()
-                .WithNone<IsPlayingComponentTag>()
-                .Build(ref state);
-            
-            _nonBenchedPlayersQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<PlayerNameComponent>()
-                .WithAll<IsPlayingComponentTag>()
-                .Build(ref state);
+            // _benchedPlayersQuery = new EntityQueryBuilder(Allocator.Temp)
+            //     .WithAll<PlayerNameComponent>()
+            //     .WithNone<IsPlayingComponentTag>()
+            //     .Build(ref state);
+            //
+            // _nonBenchedPlayersQuery = new EntityQueryBuilder(Allocator.Temp)
+            //     .WithAll<PlayerNameComponent>()
+            //     .WithAll<IsPlayingComponentTag>()
+            //     .Build(ref state);
             
             _playingColorablePlayersQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<PlayerNameComponent>()
@@ -86,13 +90,13 @@ namespace Switching.Systems {
                 [2] = ComponentType.ReadWrite<IsSelectedComponentTag>(),
                 [3] = ComponentType.ReadWrite<IsPlayingComponentTag>()
             };
-            var entityArchetype = state.EntityManager.CreateArchetype(components);
+            var playerArchetype = state.EntityManager.CreateArchetype(components);
             components.Dispose();
 
             // Active Entities are Authored from the scene
             // Inactive (benched) Entities - Blue Team (Selected by default)
             for (int i = 0; i < 5; ++i) {
-                Entity entity = state.EntityManager.CreateEntity(entityArchetype);
+                Entity entity = state.EntityManager.CreateEntity(playerArchetype);
                 state.EntityManager.SetComponentData(entity, new PlayerNameComponent() {
                     PlayerNameValue = $"Bench {i + 1} Blue"
                 });
@@ -103,7 +107,7 @@ namespace Switching.Systems {
 
             // Inactive (benched) entities - Red Team
             for (int i = 5; i < 8; ++i) {
-                Entity entity = state.EntityManager.CreateEntity(entityArchetype);
+                Entity entity = state.EntityManager.CreateEntity(playerArchetype);
                 
                 state.EntityManager.SetComponentData(entity, new PlayerNameComponent() {
                     PlayerNameValue = $"Bench {i + 1} Red"
@@ -114,14 +118,41 @@ namespace Switching.Systems {
             }
         }
 
+        public void OnStartRunning(ref SystemState state) {
+            Debug.Log("Start Running"); 
+            
+            //Get the TeamSelectedStateComponent singleton that has been authored in the scene
+            var selectedTeam = SystemAPI.GetSingleton<TeamSelectedStateComponent>().Team;
+
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            //Make sure all the initially selected players are properly selected
+            foreach (var (name, isPlaying, memberOf, entity) in 
+                     SystemAPI.Query<RefRO<PlayerNameComponent>,RefRO<IsPlayingComponentTag>, RefRO<TeamMemberComponent>>()
+                         .WithDisabled<IsSelectedComponentTag>()
+                         .WithEntityAccess()) {
+                if (memberOf.ValueRO.Team == selectedTeam) {
+                    ecb.SetComponentEnabled<IsSelectedComponentTag>(entity, true);
+                }
+            }
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
+        }
+
+        public void OnStopRunning(ref SystemState state) {
+            
+        }
+
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             if (!Input.GetMouseButtonDown(0)) {
                 return;
             }
+            ProcessUpdate(ref state);
+        }
 
-            var visualPrefab = SystemAPI.GetSingleton<PrefabHolderComponent>();
+        private void ProcessUpdate(ref SystemState state) {
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
+            var selectedVisualPrefab = SystemAPI.GetSingleton<PrefabHolderComponent>();
             _handles.Update(ref state);
             
             // Toggle enabled players
@@ -133,7 +164,7 @@ namespace Switching.Systems {
             // Handle Selected Visuals
             state.Dependency = new AddSelectedVisualJobEntity() {
                 ECB = ecb,
-                VisualPrefab = visualPrefab.Prefab
+                VisualPrefab = selectedVisualPrefab.Prefab
             }.Schedule(_selectedActivePlayersQuery, state.Dependency);
             
             _childBuffer.Update(ref state);
@@ -180,7 +211,7 @@ namespace Switching.Systems {
 
         [BurstCompile]
         public void OnDestroy(ref SystemState state) { }
-
+        
         [BurstCompile]
         private struct TogglePlayerSelectedJob : IJobChunk {
             public ComponentTypeHandle<IsSelectedComponentTag> IsSelectedType;
@@ -194,18 +225,18 @@ namespace Switching.Systems {
             }
         }
 
-        [BurstCompile]
-        private struct PrintActivePlayerNames : IJobChunk {
-            [ReadOnly] public ComponentTypeHandle<PlayerNameComponent> PlayerNameType;
-
-            public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask) {
-                NativeArray<PlayerNameComponent> players = chunk.GetNativeArray(ref PlayerNameType);
-                ChunkEntityEnumerator enumerator = new(useEnabledMask, chunkEnabledMask, chunk.Count);
-                while (enumerator.NextEntityIndex(out int i)) {
-                    Debug.Log($"Playing: {players[i].PlayerNameValue}");
-                }
-            }
-        }
+        // [BurstCompile]
+        // private struct PrintActivePlayerNames : IJobChunk {
+        //     [ReadOnly] public ComponentTypeHandle<PlayerNameComponent> PlayerNameType;
+        //
+        //     public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask) {
+        //         NativeArray<PlayerNameComponent> players = chunk.GetNativeArray(ref PlayerNameType);
+        //         ChunkEntityEnumerator enumerator = new(useEnabledMask, chunkEnabledMask, chunk.Count);
+        //         while (enumerator.NextEntityIndex(out int i)) {
+        //             Debug.Log($"Playing: {players[i].PlayerNameValue}");
+        //         }
+        //     }
+        // }
 
         [BurstCompile]
         private partial struct PrintPlayerNames : IJobEntity {

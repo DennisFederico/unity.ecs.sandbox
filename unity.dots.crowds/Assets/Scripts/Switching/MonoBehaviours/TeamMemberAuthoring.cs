@@ -19,7 +19,7 @@ namespace Switching.MonoBehaviours {
                 AddComponent(entity, new PlayerNameComponent() { PlayerNameValue = authoring.playerName });
                 AddComponent(entity, new TeamMemberComponent() { Team = authoring.team });
                 AddComponent<IsSelectedComponentTag>(entity);
-                SetComponentEnabled<IsSelectedComponentTag>(entity, authoring.team == Team.Blue);
+                SetComponentEnabled<IsSelectedComponentTag>(entity, false);
                 AddComponent<IsPlayingComponentTag>(entity);
                 SetComponentEnabled<IsPlayingComponentTag>(entity, authoring.isPlaying);
             }
