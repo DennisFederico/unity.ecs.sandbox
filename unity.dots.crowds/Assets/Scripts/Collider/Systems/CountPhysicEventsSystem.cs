@@ -5,8 +5,9 @@ using Unity.Physics;
 using Unity.Physics.Systems;
 using UnityEngine;
 
-namespace TowerDefense.Systems {
+namespace Collider.Systems {
     
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))] // We are updating after `PhysicsSimulationGroup` - this means that we will get the events of the current frame.
     //[UpdateAfter(typeof(PhysicsSimulationGroup))] // We are updating after `PhysicsSimulationGroup` - this means that we will get the events of the current frame.
@@ -50,14 +51,10 @@ namespace TowerDefense.Systems {
             state.Dependency.Complete();
             triggerHandle.Complete();
             collisionHandle.Complete();
-            // Debug.Log($"numTriggerEvents: {numTriggerEvents.Value}");
-            // Debug.Log($"numCollisionEvents: {numCollisionEvents.Value}");
+            Debug.Log($"numTriggerEvents: {numTriggerEvents.Value}");
+            Debug.Log($"numCollisionEvents: {numCollisionEvents.Value}");
             numTriggerEvents.Dispose();
             numCollisionEvents.Dispose();
-
-            // foreach (var triggers in SystemAPI.GetSingleton<SimulationSingleton>().AsSimulation().TriggerEvents) {
-            //     
-            // }
         }
 
         [BurstCompile]
