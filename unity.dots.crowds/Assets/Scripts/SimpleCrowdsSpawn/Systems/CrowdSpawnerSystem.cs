@@ -6,6 +6,7 @@ using Utils.Narkdagas.Ecs;
 
 namespace SimpleCrowdsSpawn.Systems {
     
+    [DisableAutoCreation]
     [BurstCompile]
     public partial class CrowdSpawnerSystem : SystemBase {
 
@@ -18,7 +19,7 @@ namespace SimpleCrowdsSpawn.Systems {
         [BurstCompile]
         protected override void OnUpdate() {
             
-            int maxCrowdSize = 10;
+            int maxCrowdSize = 1;
             
             // Check if we have reached the maximum crowd size
             var entityQuery = EntityManager.CreateEntityQuery(typeof(CrowdMemberTag));
@@ -37,7 +38,7 @@ namespace SimpleCrowdsSpawn.Systems {
             var randomSeeder = SystemAPI.GetSingletonRW<RandomSeeder>();
             
             //Queue the instantiation command
-            for (int i = 0; i < 500; i++) {
+            for (int i = 0; i < 1; i++) {
                 var crowdMember = ecb.Instantiate(crowdSpawner.Prefab);
                 // ecb.SetComponent(crowdMember, new RandomComponent() {
                 //     ParentEntity = Unity.Mathematics.Random.CreateFromIndex(randomSeeder.ValueRW.NextSeed.NextUInt())

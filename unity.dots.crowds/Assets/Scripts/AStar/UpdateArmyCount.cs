@@ -7,16 +7,16 @@ namespace AStar {
         [SerializeField] private TMPro.TextMeshProUGUI armyCountText;
 
         private EntityManager _entityManager;
-        private float _maxTimer = 0.5f;
-        private float _timer = 0f;
+        private const float MaxTimer = 0.5f;
+        private float _timer;
         
         private void Start() {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
             
-        private void Update() {
+        private void LateUpdate() {
             _timer += Time.deltaTime;
-            if (_timer < _maxTimer) return;
+            if (_timer < MaxTimer) return;
             _timer = 0f;
             var entityCount = _entityManager.CreateEntityQuery(typeof(PathFindingUserTag)).CalculateEntityCount();
             armyCountText.text = $"Army Count: {entityCount}";

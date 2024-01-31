@@ -95,39 +95,31 @@ namespace Switching.Systems {
 
             // Active Entities are Authored from the scene
             // Inactive (benched) Entities - Blue Team (Selected by default)
-            for (int i = 0; i < 5; ++i) {
-                Entity entity = state.EntityManager.CreateEntity(playerArchetype);
-                state.EntityManager.SetComponentData(entity, new PlayerNameComponent() {
-                    PlayerNameValue = $"Bench {i + 1} Blue"
-                });
-                state.EntityManager.SetComponentData(entity, new TeamMemberComponent() { Team = Team.Blue });
-                state.EntityManager.SetComponentEnabled<IsSelectedComponentTag>(entity, true); //Optional - default is true
-                state.EntityManager.SetComponentEnabled<IsPlayingComponentTag>(entity, false);
-            }
+            CreateBenchedPlayers(ref state, playerArchetype, Team.Blue, 0, true);
+            CreateBenchedPlayers(ref state, playerArchetype, Team.Red, 0);
+        }
 
-            // Inactive (benched) entities - Red Team
-            for (int i = 5; i < 8; ++i) {
+        private static void CreateBenchedPlayers(ref SystemState state, EntityArchetype playerArchetype, Team team, int amount = 1, bool selected = false) {
+            for (int i = 0; i < amount; i++) {
                 Entity entity = state.EntityManager.CreateEntity(playerArchetype);
-                
                 state.EntityManager.SetComponentData(entity, new PlayerNameComponent() {
-                    PlayerNameValue = $"Bench {i + 1} Red"
+                    PlayerNameValue = $"Bench {i + 1} {team}"
                 });
-                state.EntityManager.SetComponentData(entity, new TeamMemberComponent() { Team = Team.Red });
-                state.EntityManager.SetComponentEnabled<IsSelectedComponentTag>(entity, false);
+                state.EntityManager.SetComponentData(entity, new TeamMemberComponent() { Team = team });
+                state.EntityManager.SetComponentEnabled<IsSelectedComponentTag>(entity, selected); //Optional - default is true
                 state.EntityManager.SetComponentEnabled<IsPlayingComponentTag>(entity, false);
             }
         }
 
         public void OnStartRunning(ref SystemState state) {
-            Debug.Log("Start Running"); 
-            
             //Get the TeamSelectedStateComponent singleton that has been authored in the scene
             var selectedTeam = SystemAPI.GetSingleton<TeamSelectedStateComponent>().Team;
 
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             //Make sure all the initially selected players are properly selected
-            foreach (var (name, isPlaying, memberOf, entity) in 
-                     SystemAPI.Query<RefRO<PlayerNameComponent>,RefRO<IsPlayingComponentTag>, RefRO<TeamMemberComponent>>()
+            foreach (var (memberOf, entity) in 
+                     SystemAPI.Query<RefRO<TeamMemberComponent>>()
+                         .WithAll<IsPlayingComponentTag>()
                          .WithDisabled<IsSelectedComponentTag>()
                          .WithEntityAccess()) {
                 if (memberOf.ValueRO.Team == selectedTeam) {
