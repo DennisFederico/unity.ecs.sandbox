@@ -1,120 +1,53 @@
-# unity.dots.sandbox
+# Unity ECS Sandbox
 
-Quick tests with DOTS 1.0.0
+This is a sandbox project for Unity's Entity Component System (ECS) and the C# Job System.
+It is composed of a few simple sample scenes to demonstrate some basics of Unity's ECS, and for me to experiment with the new system and use as a reference for future projects.
 
-## Installation
+**Note** some of these scenes are based or inspired by the Unite talks about ECS, [Code Monkey](https://unitycodemonkey.com/) (Hugo, I'm a big fan), [TurboMakesGames](https://www.youtube.com/c/TurboMakesGames) and [Wayn Games](https://www.youtube.com/@WAYNGames) videos, and other sources.
 
-Use package manager to install the ecs dependencies:
+## Getting Started
 
-* Entities: com.unity.entities
-* Entities Graphics: com.unity.entities.graphics
-* Physics: com.unity.physics
-* Mathematics: com.unity.mathematics
-* Burst: com.unity.burst
 
-## Using SystemBase
+## Scenes
 
-```csharp
-    public partial class MoveSystem : SystemBase {
-        protected override void OnUpdate() {
-            var timeDeltaTime = SystemAPI.Time.DeltaTime;
+### 1. Bootstrap & MainMenu
 
-            Entities.WithName("MovingEntities")
-                .ForEach((ref LocalTransform transform, in MoveMeComponent moveMe) => {
-                    transform.Position += new float3(0, 0, 1) * (moveMe.Speed * timeDeltaTime);
-                })
-                .ScheduleParallel();
-        }
-    }
-```
+The bootstrap it's just a "launcher" to load the scene loader and scene transitions manager, the main menu scene is loaded from here and it's a simple scene with a few buttons to load each test/demo scene in the Sandbox.
 
-But the recommendation nowadys is to use idiomatic foreach instaed of Entities.ForEach
+### 2. Formation Change Demo
 
-### Idiomatic foreach
+--TODO Description
+![formations.gif](webimg%2Fformations.gif)
+[formations.mov](webimg%2Fformations.mov)
+![formations.mov](webimg%2Fformations.mov)
 
-```csharp
-    public partial class MoveSystem : SystemBase {
-        protected override void OnUpdate() {
-            foreach (var (transform, speed, nextWaypoint, waypoints) in
-                     SystemAPI.Query<
-                         RefRW<LocalTransform>,
-                         RefRO<MoveSpeedComponent>,
-                         RefRW<NextWaypointIndexComponent>,
-                         DynamicBuffer<WaypointsComponent>>()) {
-                float3 direction = waypoints[nextWaypoint.ValueRO.Value].Value - transform.ValueRO.Position;
-                if (math.length(direction) < 0.15f) {
-                    nextWaypoint.ValueRW.Value = (nextWaypoint.ValueRO.Value + 1) % waypoints.Length;
-                }
+### 3. Team/Color Switch Demo
+--TODO Description
 
-                transform.ValueRW.Position += math.normalize(direction) * (speed.ValueRO.Value * timeDeltaTime);
-            }
-        }
-    }
-```
+### 4. Pathfinding (MonoBehaviour) Demo
+--TODO Description
 
-Notice that one difference from de idiomatic foreach versus Entities.ForEach is that the first one is not paralellized by default. To paralellize the execution of the system, you need to use the IJobForEach interface.
+### 5. Pathfinding (ECS) Demo
+--TODO Description
 
-But you can nest idiomatic foreach, wereas Entities.ForEach is not allowed to be nested.
+### 6. Load Systems Programatically
+--TODO Description
 
-Idiomatic foreach is not "Bursted" by default, and needs to be used with ISystem and add the [BurstCompile] attribute.
+### 7. Click and Box Selection
+---TODO Description
 
-## Using ISystem
+### 8. Spawner System
+--TODO Description
 
-Another recommendation is to use ISystme instaead of SystemBase
+### 9. Physics Trigger with Particle FX
+--TODO Description
 
-```csharp
-    public partial struct AnotherMoveSystem : ISystem {
-        [BurstCompile]
-        public void OnCreate(ref SystemState state) {
-            
-        }
+### 10. Swarm Magnet Scene
+--TODO Description
 
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state) {
-            
-            var timeDeltaTime = SystemAPI.Time.DeltaTime;
-            
-            foreach (var (transform, speed, nextWaypoint, waypoints) in
-                     SystemAPI.Query<
-                         RefRW<LocalTransform>,
-                         RefRO<MoveSpeedComponent>,
-                         RefRW<NextWaypointIndexComponent>,
-                         DynamicBuffer<WaypointsComponent>>()) {
-                float3 direction = waypoints[nextWaypoint.ValueRO.Value].Value - transform.ValueRO.Position;
-                if (math.length(direction) < 0.15f) {
-                    nextWaypoint.ValueRW.Value = (nextWaypoint.ValueRO.Value + 1) % waypoints.Length;
-                }
+### 11. Tower Defense Scene
+--TODO Description
 
-                transform.ValueRW.Position += math.normalize(direction) * (speed.ValueRO.Value * timeDeltaTime);
-            }
-        }
 
-        [BurstCompile]
-        public void OnDestroy(ref SystemState state) { }
-    }
-```
 
-But to paralellize the execution of the system, you need to use the IJobForEach interface
-
-### IJobForEach
-
-```csharp
-    public struct MoveJob : IJobForEach<LocalTransform, MoveMeComponent> {
-        public float DeltaTime;
-
-        public void Execute(ref LocalTransform transform, [ReadOnly] ref MoveMeComponent moveMe) {
-            transform.Position += new float3(0, 0, 1) * (moveMe.Speed * DeltaTime);
-        }
-    }
-
-    public partial class MoveSystem : SystemBase {
-        protected override void OnUpdate() {
-            var moveJob = new MoveJob() {
-                DeltaTime = SystemAPI.Time.DeltaTime
-            };
-
-            Dependency = moveJob.Schedule(this, Dependency);
-        }
-    }
-```
 
