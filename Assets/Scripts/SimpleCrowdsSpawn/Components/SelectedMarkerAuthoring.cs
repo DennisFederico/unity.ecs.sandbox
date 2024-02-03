@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SimpleCrowdsSpawn.Components {
     
-    public struct SelectedMarker : IComponentData {
+    public struct SelectedMarker : ICleanupComponentData {
     }
     
     public class SelectedMarkerAuthoring : MonoBehaviour {

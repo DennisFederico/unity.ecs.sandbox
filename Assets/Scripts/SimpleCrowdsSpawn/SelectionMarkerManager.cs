@@ -1,10 +1,7 @@
-using System;
 using SimpleCrowdsSpawn.Systems;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace SimpleCrowdsSpawn {
     
@@ -44,6 +41,9 @@ namespace SimpleCrowdsSpawn {
             if (_selectedEntity != Entity.Null && _world.IsCreated && _world.EntityManager.Exists(_selectedEntity)) {
                 if (!_selectionMarkerInstance.activeSelf) _selectionMarkerInstance.SetActive(true);
                 _selectionMarkerInstance.transform.position = _world.EntityManager.GetComponentData<LocalTransform>(_selectedEntity).Position;
+            } else {
+                _selectedEntity = Entity.Null;
+                if (_selectionMarkerInstance.activeSelf) _selectionMarkerInstance.SetActive(false);
             }
         }
 

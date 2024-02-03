@@ -286,10 +286,10 @@ MonoBehaviour:
     <b>Spacebar</b> to Randomly
     mark a unit as Spawn point
 
-    <b>Keypad +</b> to Spawn some (10) Units
+    <b>Enter</b> to Spawn some (10) Units
 
-    <b>Keypad
-    -</b> to DeSpawn some (10) Units
+    <b>Tab</b>
+    to DeSpawn some (10) Units
 
 '
   m_isRightToLeft: 0

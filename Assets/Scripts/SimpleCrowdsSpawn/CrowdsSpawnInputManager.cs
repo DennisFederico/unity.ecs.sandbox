@@ -57,10 +57,17 @@ namespace SimpleCrowdsSpawn {
                     });
             }
 
-            if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
+            if (Input.GetKeyDown(KeyCode.Return)) {
                 _world.EntityManager.GetBuffer<SpawnRequestBuffer>(_spawnRequestBuffer)
                     .Add(new SpawnRequestBuffer() {
                         Amount = 10
+                    });
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Tab)) {
+                _world.EntityManager.GetBuffer<SpawnRequestBuffer>(_spawnRequestBuffer)
+                    .Add(new SpawnRequestBuffer() {
+                        Amount = -10
                     });
             }
         }
