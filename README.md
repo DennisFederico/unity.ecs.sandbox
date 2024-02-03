@@ -3,10 +3,13 @@
 This is a sandbox project for Unity's Entity Component System (ECS) and the C# Job System.
 It is composed of a few simple sample scenes to demonstrate some basics of Unity's ECS, and for me to experiment with the new system and use as a reference for future projects.
 
+**com.unity.entities**: 1.0.16
+**com.unity.physics**: 1.0.16
+
+
 **Note** some of these scenes are based or inspired by the Unite talks about ECS, [Code Monkey](https://unitycodemonkey.com/) (Hugo, I'm a big fan), [TurboMakesGames](https://www.youtube.com/c/TurboMakesGames) and [Wayn Games](https://www.youtube.com/@WAYNGames) videos, and other sources.
 
 ## Getting Started
-
 
 ## Scenes
 
