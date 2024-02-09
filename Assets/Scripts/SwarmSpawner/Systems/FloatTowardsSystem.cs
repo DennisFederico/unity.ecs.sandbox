@@ -15,6 +15,7 @@ namespace SwarmSpawner.Systems {
             state.RequireForUpdate<FloatTargetAreaTag>();
         }
 
+        //TODO WOULD IT BE WORTH IT TO MAKE THE BULK OF THIS SYSTEM A JOB?
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             var targetAreaEntity = SystemAPI.GetSingletonEntity<FloatTargetAreaTag>();
@@ -22,7 +23,8 @@ namespace SwarmSpawner.Systems {
             var targetTransform = SystemAPI.GetComponent<LocalTransform>(targetAreaEntity);
 
             int index = 0;
-            foreach (var (transform, floatTowards, velocity, mass) in SystemAPI.Query<
+            foreach (var (transform, floatTowards, velocity, mass) in 
+                     SystemAPI.Query<
                          RefRW<LocalTransform>,
                          RefRW<FloatTowardsComponentData>,
                          RefRW<PhysicsVelocity>,
@@ -39,7 +41,7 @@ namespace SwarmSpawner.Systems {
                 floatTowards.ValueRW.NextReTargetTime = (float) (SystemAPI.Time.ElapsedTime + floatTowards.ValueRO.ReTargetRate);
                 var vectorArea = targetArea.area / 2f;
                 var targetPoint = floatTowards.ValueRW.Random.NextFloat3(-vectorArea, vectorArea);
-                floatTowards.ValueRW.TargetPoint = targetTransform.TransformPoint(targetPoint);
+                floatTowards.ValueRW.TargetPoint = targetTransform.TransformPoint(targetPoint); //because the target point is relative to the target area's transform
                 
                 //Calculate the direction to the target point
                 var direction = math.normalize(floatTowards.ValueRO.TargetPoint - transform.ValueRO.Position);
