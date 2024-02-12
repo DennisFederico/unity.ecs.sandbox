@@ -12,7 +12,7 @@ namespace Formations.Systems {
     public partial struct UnitMoveSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
-            
+            state.RequireForUpdate<MoveComponent>();
         }
 
         [BurstCompile]
