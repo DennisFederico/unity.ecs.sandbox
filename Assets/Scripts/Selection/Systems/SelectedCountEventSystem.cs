@@ -15,6 +15,7 @@ namespace Selection.Systems {
 
         protected override void OnCreate() {
             base.OnCreate();
+            RequireForUpdate<SelectedUnitTag>();
             _selectedUnitsQuery = SystemAPI.QueryBuilder()
                 .WithAll<SelectedUnitTag>()
                 .Build();

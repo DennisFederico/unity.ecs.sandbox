@@ -28,6 +28,11 @@ namespace SwarmSpawner {
             _inputControl.MagnetControl.Enable();
         }
 
+        private void OnEnable() {
+            _world = World.DefaultGameObjectInjectionWorld;
+            _entityManager = _world.EntityManager;
+        }
+
         private void OnDisable() {
             Cursor.lockState = CursorLockMode.None;
         }
@@ -38,7 +43,15 @@ namespace SwarmSpawner {
 
         private void Start() {
             _speed = speed;
-            _world = World.DefaultGameObjectInjectionWorld;
+            //Create the area entity here since the query for the entity is not reliable
+            if (_world.IsCreated) {
+                var areaTagComponentType = ComponentType.ReadOnly(typeof(FloatTargetAreaTag));
+                var areaDataComponentType = ComponentType.ReadOnly(typeof(AreaComponentData));
+                var areaArchetype = _entityManager.CreateArchetype(areaTagComponentType, areaDataComponentType);
+                _magnetAreaEntity = _entityManager.CreateEntity(areaArchetype);
+                _entityManager.SetComponentData(_magnetAreaEntity, new AreaComponentData { area = gizmoSize });
+                _entityManager.AddComponentData(_magnetAreaEntity, LocalTransform.FromPosition(transform.position));
+            }
         }
 
         private void ProcessMoveInput(Vector3 value) {
@@ -87,9 +100,9 @@ namespace SwarmSpawner {
 
         private void SyncEcsMagnetPosition() {
             //Does this check impacts the performance??
-            if (!_world.IsCreated) return;
-            if (!_entityManager.Exists(_magnetAreaEntity)) {
-                _magnetAreaEntity = _entityManager.CreateEntityQuery(typeof(FloatTargetAreaTag)).GetSingletonEntity();
+            if (!_world.IsCreated || !_entityManager.Exists(_magnetAreaEntity)) {
+                Debug.LogError($"Cannot sync magnet position. World is not created or magnet area entity does not exist.");
+                return;
             }
             _entityManager.SetComponentData(_magnetAreaEntity, LocalTransform.FromPosition(transform.position));
         }

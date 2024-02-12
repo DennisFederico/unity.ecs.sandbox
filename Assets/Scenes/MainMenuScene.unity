@@ -593,6 +593,7 @@ MonoBehaviour:
   teamSwitchSceneButton: {fileID: 1814500365}
   formationChangeSceneButton: {fileID: 1255717690}
   towerDefenseSceneButton: {fileID: 1408586931}
+  exitButton: {fileID: 7392620089776566057}
 --- !u!1 &435398599
 GameObject:
   m_ObjectHideFlags: 0

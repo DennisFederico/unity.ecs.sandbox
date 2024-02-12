@@ -1,10 +1,11 @@
 using SimpleCrowdsSpawn.Components;
+using TMPro;
 using Unity.Entities;
 using UnityEngine;
 
 namespace SimpleCrowdsSpawn {
     public class UpdateCrowdSizeCount : MonoBehaviour {
-        [SerializeField] private TMPro.TextMeshProUGUI crowdSizeText;
+        [SerializeField] private TextMeshProUGUI crowdSizeText;
         
         private EntityManager _entityManager;
         private const float MaxTimer = 0.5f;

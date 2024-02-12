@@ -90,7 +90,7 @@ public partial class @InputControl: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""e7209c82-a9cc-4f6b-a66a-63631ad613c1"",
-                    ""path"": ""<Keyboard>/c"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
