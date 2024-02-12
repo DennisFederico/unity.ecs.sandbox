@@ -17,7 +17,6 @@ namespace AStar.MonoBehaviors {
         [SerializeField] private int width;
         [SerializeField] private int height;
         [SerializeField] private float cellSize;
-        [SerializeField] private bool debugEnabled;
         [SerializeField] private Material gradientMaterial;
         [SerializeField] private PathfindingMovement prefab;
         [SerializeField] private int armySize;
@@ -86,7 +85,7 @@ namespace AStar.MonoBehaviors {
                 if (node.ParentIndex != -1) return .5f;
                 return 0.25f;
             }, originOffset);
-            _grid.PaintDebugGrid();
+            // _grid.PaintDebugGrid();
         }
 
         private Vector3 _startDragPosition;
@@ -94,8 +93,8 @@ namespace AStar.MonoBehaviors {
         private void Update() {
             if (Input.GetKeyDown(KeyCode.D)) {
                 int numJobs = 500;
-                var startTime = Time.realtimeSinceStartup;
-                Debug.Log($"Start {numJobs} jobs at {startTime}");
+                // var startTime = Time.realtimeSinceStartup;
+                // Debug.Log($"Start {numJobs} jobs at {startTime}");
                 var gridAsArray = _grid.GetGridAsArray(Allocator.TempJob);
 
                 var results = new NativeArray<NativeList<int2>>(numJobs, Allocator.TempJob);
@@ -123,8 +122,8 @@ namespace AStar.MonoBehaviors {
                 handlers.Dispose();
                 gridAsArray.Dispose();
 
-                var endTime = Time.realtimeSinceStartup;
-                Debug.Log($"End {numJobs} jobs at {endTime} in {endTime - startTime}s");
+                // var endTime = Time.realtimeSinceStartup;
+                // Debug.Log($"End {numJobs} jobs at {endTime} in {endTime - startTime}s");
             }
 
             if (Input.GetMouseButtonDown(0)) {
@@ -151,7 +150,7 @@ namespace AStar.MonoBehaviors {
                     jobHandle.Complete();
 
                     if (jobHandle.IsCompleted) {
-                        DebugPath(resultPath.AsArray().ToArray());
+                        // DebugPath(resultPath.AsArray().ToArray());
                         var path3 = TransformPath(resultPath);
                         if (!_player) {
                             _player = Instantiate(prefab);
@@ -172,8 +171,8 @@ namespace AStar.MonoBehaviors {
             }
 
             if (Input.GetKeyDown(KeyCode.A)) {
-                var startTime = Time.realtimeSinceStartup;
-                Debug.Log($"Building an platoon of {armySize} jobs at {startTime}");
+                // var startTime = Time.realtimeSinceStartup;
+                // Debug.Log($"Building an platoon of {armySize} jobs at {startTime}");
             
                 var platoon = new PathfindingMovement[armySize];
                 var gridAsArray = _grid.GetGridAsArray(Allocator.TempJob);
@@ -207,8 +206,8 @@ namespace AStar.MonoBehaviors {
                 gridAsArray.Dispose();
                 _army.AddRange(platoon);
                 
-                var endTime = Time.realtimeSinceStartup;
-                Debug.Log($"Added {armySize} to the army for {_army.Count} it total - at {endTime} in {endTime - startTime}s");
+                // var endTime = Time.realtimeSinceStartup;
+                // Debug.Log($"Added {armySize} to the army for {_army.Count} it total - at {endTime} in {endTime - startTime}s");
             }
         }
 
@@ -225,16 +224,16 @@ namespace AStar.MonoBehaviors {
             _gridVisual.LateUpdateVisual();
         }
 
-        private void DebugPath(int2[] path) {
-            var offset = new Vector3(cellSize / 2, cellSize / 2, 0);
-            for (int i = 0; i < path.Length - 1; i++) {
-                Debug.DrawLine(
-                    _grid.GetWorldPosition(path[i].x, path[i].y) + offset,
-                    _grid.GetWorldPosition(path[i + 1].x, path[i + 1].y) + offset,
-                    Color.red, 15f
-                );
-            }
-        }
+        // private void DebugPath(int2[] path) {
+        //     var offset = new Vector3(cellSize / 2, cellSize / 2, 0);
+        //     for (int i = 0; i < path.Length - 1; i++) {
+        //         Debug.DrawLine(
+        //             _grid.GetWorldPosition(path[i].x, path[i].y) + offset,
+        //             _grid.GetWorldPosition(path[i + 1].x, path[i + 1].y) + offset,
+        //             Color.red, 15f
+        //         );
+        //     }
+        // }
     }
 
 }

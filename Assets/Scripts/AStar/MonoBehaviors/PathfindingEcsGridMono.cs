@@ -88,7 +88,7 @@ namespace AStar.MonoBehaviors {
         }
         
         private void Start() {
-            _grid.PaintDebugGrid();
+            // _grid.PaintDebugGrid();
             InjectGridIntoEcsSystem();
         }
 
@@ -155,7 +155,7 @@ namespace AStar.MonoBehaviors {
         }
 
         public void SpawnArmy() {
-            var startTime = Time.realtimeSinceStartup;
+            // var startTime = Time.realtimeSinceStartup;
             if (_world.IsCreated && _createFollowerBufferEntity != Entity.Null) {
                 var buffer = _world.EntityManager.GetBuffer<CreateNewPathFollowerRequest>(_createFollowerBufferEntity);
                 for (int i = 0; i < armySize; i++) {
@@ -165,18 +165,18 @@ namespace AStar.MonoBehaviors {
                     });
                 }
             }
-            Debug.Log($"Request to spawn a platoon of {armySize} in {Time.realtimeSinceStartup - startTime}");
+            // Debug.Log($"Request to spawn a platoon of {armySize} in {Time.realtimeSinceStartup - startTime}");
         }
         
         public void DeSpawnArmy() {
-            var startTime = Time.realtimeSinceStartup;
+            // var startTime = Time.realtimeSinceStartup;
             if (_world.IsCreated && _removeFollowerBufferEntity != Entity.Null) {
                 var buffer = _world.EntityManager.GetBuffer<RemovePathFollowerRequest>(_removeFollowerBufferEntity);
                 buffer.Add(new RemovePathFollowerRequest() {
                         Value = armySize
                 });
             }
-            Debug.Log($"Request to spawn a platoon of {armySize} in {Time.realtimeSinceStartup - startTime}");
+            // Debug.Log($"Request to spawn a platoon of {armySize} in {Time.realtimeSinceStartup - startTime}");
         }
         
         private int2 GetRandomWalkablePosition() {

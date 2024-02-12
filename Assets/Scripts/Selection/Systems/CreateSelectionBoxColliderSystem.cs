@@ -30,7 +30,7 @@ namespace Selection.Systems {
         
         [BurstCompile]
         private void CreateSelectionCollider(ref SystemState state, DynamicBuffer<SelectionBoxBufferComponent> selectionDataBuffer, EntityCommandBuffer ecb) {
-            Debug.Log("creating box selection collider");
+            // Debug.Log("creating box selection collider");
             foreach (var selectionData in selectionDataBuffer) {
                 var physicsMaterial = Unity.Physics.Material.Default;
                 physicsMaterial.CollisionResponse = CollisionResponsePolicy.RaiseTriggerEvents;

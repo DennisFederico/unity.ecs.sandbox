@@ -24,6 +24,7 @@ namespace Collider.Systems {
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<PhysicsWorldSingleton>();
             state.RequireForUpdate<SimulationSingleton>();
+            state.RequireForUpdate<ImpactVfxComponent>();
             _vfxLookup = SystemAPI.GetComponentLookup<ImpactVfxComponent>(true);
         }
 

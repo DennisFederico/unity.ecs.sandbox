@@ -88,7 +88,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
                 if (node.ParentIndex != -1) return .5f;
                 return 0.25f;
             }, originOffset);
-            _grid.PaintDebugGrid();
+            // _grid.PaintDebugGrid();
         }
 
         private Vector3 _startDragPosition;
@@ -119,7 +119,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
                     jobHandle.Complete();
 
                     if (jobHandle.IsCompleted) {
-                        DebugPath(resultPath.AsArray().ToArray());
+                        // DebugPath(resultPath.AsArray().ToArray());
                         var path3 = TransformPath(resultPath);
                         if (!_player) {
                             _player = Instantiate(prefab);
@@ -149,7 +149,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
         }
 
         public void SpawnArmy() {
-            var startTime = Time.realtimeSinceStartup;
+            // var startTime = Time.realtimeSinceStartup;
                 
             var platoon = new PathfindingMovement[armySize];
             var gridAsArray = _grid.GetGridAsArray(Allocator.TempJob);
@@ -184,11 +184,11 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
             _army.AddRange(platoon);
 
             NewArmySizeEvent?.Invoke(this, _army.Count);
-            Debug.Log($"Added {armySize} to the army for {_army.Count} it total in {Time.realtimeSinceStartup - startTime}s");
+            // Debug.Log($"Added {armySize} to the army for {_army.Count} it total in {Time.realtimeSinceStartup - startTime}s");
         }
 
         public void DeSpawnArmy() {
-            var startTime = Time.realtimeSinceStartup;
+            // var startTime = Time.realtimeSinceStartup;
             var toRemove = Math.Min(_army.Count, armySize);
             for (int i = 0; i < toRemove; i++) {
                 var index = _random.NextInt(0, _army.Count);
@@ -196,7 +196,7 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
                 _army.RemoveAt(index);
             }
             NewArmySizeEvent?.Invoke(this, _army.Count);
-            Debug.Log($"Removed {_army.Count} from the army in {Time.realtimeSinceStartup - startTime}s");
+            // Debug.Log($"Removed {_army.Count} from the army in {Time.realtimeSinceStartup - startTime}s");
         }
         
         private Vector3[] TransformPath(NativeList<int2> path) {
@@ -212,15 +212,15 @@ namespace Utils.Narkdagas.PathFinding.MonoTester {
             _gridVisual.LateUpdateVisual();
         }
 
-        private void DebugPath(int2[] path) {
-            var offset = new Vector3(cellSize / 2, cellSize / 2, 0);
-            for (int i = 0; i < path.Length - 1; i++) {
-                Debug.DrawLine(
-                    _grid.GetWorldPosition(path[i].x, path[i].y) + offset,
-                    _grid.GetWorldPosition(path[i + 1].x, path[i + 1].y) + offset,
-                    Color.red, 15f
-                );
-            }
-        }
+        // private void DebugPath(int2[] path) {
+        //     var offset = new Vector3(cellSize / 2, cellSize / 2, 0);
+        //     for (int i = 0; i < path.Length - 1; i++) {
+        //         Debug.DrawLine(
+        //             _grid.GetWorldPosition(path[i].x, path[i].y) + offset,
+        //             _grid.GetWorldPosition(path[i + 1].x, path[i + 1].y) + offset,
+        //             Color.red, 15f
+        //         );
+        //     }
+        // }
     }
 }

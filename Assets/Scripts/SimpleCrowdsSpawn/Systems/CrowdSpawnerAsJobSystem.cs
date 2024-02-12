@@ -3,7 +3,6 @@ using SimpleCrowdsSpawn.Systems.Jobs;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
-using UnityEngine;
 
 namespace SimpleCrowdsSpawn.Systems {
     
@@ -20,7 +19,7 @@ namespace SimpleCrowdsSpawn.Systems {
             var crowdSize = entityQuery.CalculateEntityCount();
             
             if (crowdSize >= _maxCrowdSize) return;
-            Debug.Log($"Crowd size System As job: {crowdSize}");
+            // Debug.Log($"Crowd size System As job: {crowdSize}");
             
             // Buffer a command to instantiate a crowd member
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()

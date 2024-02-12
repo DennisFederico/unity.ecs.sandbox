@@ -1,4 +1,3 @@
-using System;
 using Selection.Components;
 using Unity.Burst;
 using Unity.Collections;
@@ -6,7 +5,6 @@ using Unity.Entities;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace Selection.Systems {
 
@@ -58,7 +56,7 @@ namespace Selection.Systems {
                 var belongsA = pws.Bodies[triggerEvent.BodyIndexA].Collider.Value.GetCollisionFilter().BelongsTo;
                 var belongsB = pws.Bodies[triggerEvent.BodyIndexB].Collider.Value.GetCollisionFilter().BelongsTo;
                 if ((belongsA & belongsB) == 0 && (belongsA & compoundBelong) == 0 && (belongsB & compoundBelong) == 0) {
-                    Debug.Log("Unexpected collision - either both have the same filter or not in the expected filters");
+                    // Debug.Log("Unexpected collision - either both have the same filter or not in the expected filters");
                     continue;
                 }
                 // Select the unit that "collidesWidth"

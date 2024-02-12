@@ -14,7 +14,8 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField] private Button teamSwitchSceneButton;
     [SerializeField] private Button formationChangeSceneButton;
     [SerializeField] private Button towerDefenseSceneButton;
-
+    [SerializeField] private Button exitButton;
+    
     public enum Scenes {
         SystemsLoaderTest,
         AStarPathfindingEcs,
@@ -69,5 +70,6 @@ public class MainMenuManager : MonoBehaviour {
             Debug.Log("Loading TowerDefenseScene");
             SceneLoader.Load(Scenes.TowerDefenseScene, true);
         });
+        exitButton.onClick.AddListener(Application.Quit);
     }
 }

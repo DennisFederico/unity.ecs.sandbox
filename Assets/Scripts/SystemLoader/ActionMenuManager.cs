@@ -22,7 +22,7 @@ namespace SystemLoader {
 
         private void StartSystems() {
             if (!_started && _world.IsCreated) {
-                Debug.Log("Starting Systems");
+                // Debug.Log("Starting Systems");
                 var simulationSystemGroup = _world.GetExistingSystemManaged<SimulationSystemGroup>();
                 var spawnBallSystemHandle = _world.CreateSystem<SpawnBallSystem>();
                 simulationSystemGroup.AddSystemToUpdateList(spawnBallSystemHandle);
@@ -50,7 +50,7 @@ namespace SystemLoader {
 
         private void StopSystems() {
             if (_started && _world != null && _world.IsCreated) {
-                Debug.Log("Stopping Systems");
+                // Debug.Log("Stopping Systems");
                 var simulationSystemGroup = _world.GetExistingSystemManaged<SimulationSystemGroup>();
                 var spawnBallSystemHandle = _world.GetExistingSystem<SpawnBallSystem>();
                 simulationSystemGroup.RemoveSystemFromUpdateList(spawnBallSystemHandle);

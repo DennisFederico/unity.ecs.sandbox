@@ -39,10 +39,6 @@ namespace SwarmSpawner {
         private void Start() {
             _speed = speed;
             _world = World.DefaultGameObjectInjectionWorld;
-            if (_world.IsCreated) {
-                _entityManager = _world.EntityManager;
-                _magnetAreaEntity = _entityManager.CreateEntityQuery(typeof(FloatTargetAreaTag)).GetSingletonEntity();
-            }
         }
 
         private void ProcessMoveInput(Vector3 value) {
@@ -74,7 +70,7 @@ namespace SwarmSpawner {
         }
 
         private void HandleRotation(Vector3 direction) {
-            //NO SLERP - MAKE IT SNAPPY
+            //NO TWEEN - MAKE IT SNAPPY
             transform.rotation = Vector3.zero == direction ? Quaternion.identity : Quaternion.LookRotation(direction);
         }
 
@@ -91,7 +87,10 @@ namespace SwarmSpawner {
 
         private void SyncEcsMagnetPosition() {
             //Does this check impacts the performance??
-            if (!_world.IsCreated || !_entityManager.Exists(_magnetAreaEntity)) return;
+            if (!_world.IsCreated) return;
+            if (!_entityManager.Exists(_magnetAreaEntity)) {
+                _magnetAreaEntity = _entityManager.CreateEntityQuery(typeof(FloatTargetAreaTag)).GetSingletonEntity();
+            }
             _entityManager.SetComponentData(_magnetAreaEntity, LocalTransform.FromPosition(transform.position));
         }
 

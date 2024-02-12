@@ -215,7 +215,7 @@ namespace Utils.Narkdagas.PathFinding {
 
         private void Start() {
             FunctionPeriodic.Create(() => {
-                float startTime = Time.realtimeSinceStartup;
+                // float startTime = Time.realtimeSinceStartup;
                 //FindPath(new int2(0, 0), new int2(18, 13), new int2(20, 20));
                 
                 int numJobs = 5;
@@ -232,7 +232,7 @@ namespace Utils.Narkdagas.PathFinding {
                 jobs.Dispose(combinedDependencies);
                 combinedDependencies.Complete();
                 
-                Debug.Log($"Time: {(Time.realtimeSinceStartup - startTime) * 1000f} ms");
+                // Debug.Log($"Time: {(Time.realtimeSinceStartup - startTime) * 1000f} ms");
             }, 1f);
 
             // var gridSize = new int2(4, 4);

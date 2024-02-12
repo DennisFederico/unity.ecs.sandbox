@@ -19,7 +19,7 @@ namespace SimpleCrowdsSpawn {
 
             _timer += Time.deltaTime;
             if (_timer > 1f) {
-                Debug.Log($"Crowd size Mono: {_crowdMembers.Count}");
+                // Debug.Log($"Crowd size Mono: {_crowdMembers.Count}");
                 _timer = 0f;
             }
         }

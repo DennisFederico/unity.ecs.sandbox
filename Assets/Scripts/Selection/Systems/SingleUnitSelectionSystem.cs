@@ -15,6 +15,7 @@ namespace Selection.Systems {
         
         //TODO - Evaluate or measure the performance against using Enable/disable tags instead of adding/removing components
         //TODO - Also we could have a single query over those components to work the ray-cast results
+        
         //IMPORTANT: RayCasts are sent from the MonoBehavior world, since using a Camera in the ECS world is not Burst compatible
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
@@ -40,19 +41,17 @@ namespace Selection.Systems {
             SelectedVisualPrefabComponent selectedPrefab) {
             foreach (var rayCastComponent in rayCastBuffer) {
                 if (physicsWorld.CastRay(rayCastComponent.Value, out var hit)) {
-                    
-                    //TODO MOVE THE QUESTION INSIDE THE ACTUAL SELECT/DESELECT METHODS
-                    if (SystemAPI.HasComponent<SelectedUnitTag>(hit.Entity)) {
-                        if (rayCastComponent.Additive) continue;
-                        DeselectUnit(ref state, ecb, hit.Entity);
-                    } else {
-                        if (!rayCastComponent.Additive) {
-                            DeselectAllUnits(ref state, ecb);    
+                    if (rayCastComponent.Additive) {
+                        if (SystemAPI.HasComponent<SelectedUnitTag>(hit.Entity)) {
+                            DeselectUnit(ref state, ecb, hit.Entity);
+                        } else {
+                            SelectUnit(ref state, ecb, hit.Entity, selectedPrefab.Value);
                         }
+                    } else {
+                        DeselectAllUnits(ref state, ecb, hit.Entity);
                         SelectUnit(ref state, ecb, hit.Entity, selectedPrefab.Value);
                     }
-                } else {
-                    if (rayCastComponent.Additive) continue; 
+                } else if (!rayCastComponent.Additive) {
                     DeselectAllUnits(ref state, ecb);
                 }
             }
@@ -62,13 +61,20 @@ namespace Selection.Systems {
         [BurstCompile]
         private void SelectUnit(ref SystemState state, EntityCommandBuffer ecb, Entity entity, Entity selectedVisual) {
             if (SystemAPI.HasComponent<SelectedUnitTag>(entity)) return;
-            //TODO BOLLOCKS ... Adding a components rearranges the memory, What if we use a enable/disable component?
+            //TODO IMPORTANT ... Adding a components rearranges the memory, We should use an enable/disable component instead
             ecb.AddComponent<SelectedUnitTag>(entity);
             // Add the Visual
             var ring = ecb.Instantiate(selectedVisual);
             ecb.AddComponent(ring, new Parent() {
                 Value = entity
             });
+        }
+        
+        [BurstCompile]
+        private void DeselectAllUnits(ref SystemState state, EntityCommandBuffer ecb, Entity except) {
+            foreach (var (_, entity) in SystemAPI.Query<SelectedUnitTag>().WithEntityAccess()) {
+                if (entity != except) DeselectUnit(ref state, ecb, entity);
+            }
         }
         
         [BurstCompile]

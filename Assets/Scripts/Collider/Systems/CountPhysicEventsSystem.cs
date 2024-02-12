@@ -51,8 +51,8 @@ namespace Collider.Systems {
             state.Dependency.Complete();
             triggerHandle.Complete();
             collisionHandle.Complete();
-            Debug.Log($"numTriggerEvents: {numTriggerEvents.Value}");
-            Debug.Log($"numCollisionEvents: {numCollisionEvents.Value}");
+            // Debug.Log($"numTriggerEvents: {numTriggerEvents.Value}");
+            // Debug.Log($"numCollisionEvents: {numCollisionEvents.Value}");
             numTriggerEvents.Dispose();
             numCollisionEvents.Dispose();
         }

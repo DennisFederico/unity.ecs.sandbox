@@ -199,22 +199,22 @@ namespace Utils.Narkdagas.GridSystem {
             return array;
         }
         
-        public void PaintDebugGrid() {
-            if (_gridArray == null) {
-                return;
-            }
-
-            var leftBottomOffset = new Vector3(1, 1, 0) * _cellSize * .5f;
-
-            for (int x = 0; x < _gridArray.GetLength(0); x++) {
-                for (int y = 0; y < _gridArray.GetLength(1); y++) {
-                    Debug.DrawLine(GetWorldPosition(x, y) - leftBottomOffset, GetWorldPosition(x, y + 1) - leftBottomOffset, Color.black, 100f);
-                    Debug.DrawLine(GetWorldPosition(x, y) - leftBottomOffset, GetWorldPosition(x + 1, y) - leftBottomOffset, Color.black, 100f);
-                }
-            }
-            
-            Debug.DrawLine(GetWorldPosition(0, _height) - leftBottomOffset, GetWorldPosition(_width, _height) - leftBottomOffset, Color.black, 100f);
-            Debug.DrawLine(GetWorldPosition(_width, 0) - leftBottomOffset, GetWorldPosition(_width, _height) - leftBottomOffset, Color.black, 100f);
-        }
+        // public void PaintDebugGrid() {
+        //     if (_gridArray == null) {
+        //         return;
+        //     }
+        //
+        //     var leftBottomOffset = new Vector3(1, 1, 0) * _cellSize * .5f;
+        //
+        //     for (int x = 0; x < _gridArray.GetLength(0); x++) {
+        //         for (int y = 0; y < _gridArray.GetLength(1); y++) {
+        //             Debug.DrawLine(GetWorldPosition(x, y) - leftBottomOffset, GetWorldPosition(x, y + 1) - leftBottomOffset, Color.black, 100f);
+        //             Debug.DrawLine(GetWorldPosition(x, y) - leftBottomOffset, GetWorldPosition(x + 1, y) - leftBottomOffset, Color.black, 100f);
+        //         }
+        //     }
+        //     
+        //     Debug.DrawLine(GetWorldPosition(0, _height) - leftBottomOffset, GetWorldPosition(_width, _height) - leftBottomOffset, Color.black, 100f);
+        //     Debug.DrawLine(GetWorldPosition(_width, 0) - leftBottomOffset, GetWorldPosition(_width, _height) - leftBottomOffset, Color.black, 100f);
+        // }
     }
 }
