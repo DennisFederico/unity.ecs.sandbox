@@ -18,13 +18,19 @@ Download or clone the repository and open the project with Unity. I've used 2023
 
 ## Scenes
 
+The code for each scene is contained in their own namespace in the `Assets/Scripts` folders, with the exception of some imported utils from [Code Monkey](https://unitycodemonkey.com/) for managing the grid of A*Pathfinding, other utils of my own.  
+
+
 ### 1. Bootstrap & MainMenu
 
 The bootstrap it's just a "launcher" to load the scene loader and scene transitions manager, the main menu scene is loaded from here and it's a simple scene with a few buttons to load each test/demo scene in the Sandbox.
 
-### 2. Formation Change Demo
+---
 
-Here we have 2 "Towers" (Entities) that controls the number of units on their armies and the formation they should follow around them.
+### 2. Formation Change Demo
+([Assets/Scripts/Formations](Assets/Scripts/Formations) namespace)
+
+Here we have 2 Baked "Towers" (Entities) that controls the number of units on their armies and the formation they should follow around them.
 
 The TowerComponent holds the number of "units" on the tower armies (cubes in the scene), the army formation and the radius around the tower. The formation is a simple enum with 3 values: Line, Circle, and Square.
 
@@ -42,18 +48,56 @@ Note from this setup, that the actual formation resides in the Tower, which is c
 #### Systems
 - **SpawnUnitsSystem** checks for a **IEnableableComponent** SpawnUnitsTag, and if it's enabled, it will spawn the units around the tower in the formation specified in the TowerComponent. It also assigns the cube color using *URPMaterialPropertyBaseColor* component.
 - **UnitMoveSystem** moves the units to the target position specified in the MoveComponent.
-- **ChangeFormationSystem**, this system *Update* method runs every 3 seconds aprox. It Queries for TowerComponent with **no** SpawnUnitsTag (disabled), meaning that their units have already spawned and changes the formation value of the Tower (not the units).
+- **ChangeFormationSystem**, this system *Update* method runs every 3 seconds approx. It Queries for TowerComponent with **no** SpawnUnitsTag (disabled), meaning that their units have already spawned and changes the formation value of the Tower (not the units).
 - **UnitChangeFormationSystem** queries for all *FormationComponent* and the *ParentEntityReferenceComponent*, if the unit and the tower formation are different, ***a new position is calculated based on the formation dictated by the tower***. 
 
 #### Others
-- *PositionUtils* class contain helper methods to calculate the position of the units based on the formation and the tower position.
+- ***PositionUtils*** class contain helper methods to calculate the position of the units based on the formation and the tower position.
 
 ![Formations.gif](webimg%2FFormations.gif)
 
 ---
 
 ### 3. Team/Color Switch Demo
---TODO Description
+([Assets/Scripts/Switching](Assets/Scripts/Switching) namespace)
+
+In this scene there are 2 "teams" colored blue and red, the selected teams changes with the click of the left mouse button,
+when that happens the members of the team switch color to their team color if "selected" or become neutrally colored when not.
+
+Here was my first test for [URPMaterialPropertyBaseColor](https://docs.unity3d.com/Packages/com.unity.entities.graphics@1.0/manual/material-overrides.html) Component to change the color of the entities.
+And Scheduling jobs (IJobEntity) with EntityQueries as argument. Also the "selection" visual is added/removed as a child of the selected entity, so in case the parent is moved around, such visual should follow the entity as part of the hierarchy.
+
+This test does a heavy use of tag components to mark the entities as they switch states, this tags are **IEnableableComponent**, so the tags are not added/removed, just enabled/disabled, to avoid structural changes.
+But there are other "structural changes" in this exercise, like adding/removing the "selection visual" as a child of the selected entities.
+
+#### Components
+
+- **IsSelectedComponentTag**: A simple IEnableableComponent to mark the entities that are "selected".
+- **IsPlayingComponentTag**: (not really used) IEnableableComponent to mark the entities that are "playing" or "benched".
+- **PlayerNameComponent**: (not really used) Holds the name of the player, just to show that you can add any kind of data to the entities. Ideally this could be used to show the value when hovering or clicking over the entity visual.
+- **PrefabHolderComponent**: This one holds the prefab of the ***selection visual*** that is instantiated for each selected entity and added to its hierarchy.
+- **TeamMemberComponent**: Holds the Team and returns the Color as a ***float4*** value depending on the Team.
+- **TeamSelectedStateComponent**: Only used during the "start" phase of the *SwitchTeamSelectionSystem*, it dictates which is the team to be selected on the first (switch) mouse click.
+- **VisualComponentTag**: A tag to mark the "selection visual" entities, so they can be removed when the entity is deselected. 
+- **VisualRepresentationTag**: A tag to represent the entities that have a visual representation in the scene, and subject to "color change", in the context of this exercise it would have been the "playing" (not benched) entities.
+- **DebugLogDataComponent**: A simple component to hold the message to be logged by the DebugLogSystem.
+
+#### Systems
+
+- **SwitchTeamSelectionSystem**: This system is responsible for the "switch" of the selected team, it checks for left-mouse clicks and process the changes, adding/removing the selection visual, changing color, etc. ***Using jobs (IJobEntity) and EntityQueries***.
+- **StateEventDispatcherSystem**: This is and "event" SystemBase, it counts the selected entities for the currently selected team and dispatches and event if it is different from the previous "frame".
+  - ***CanvasSwitchSelectionTeamHandler*** is a MonoBehaviour that listens to the event and updates the UI to show the number of selected entities for each team.
+```csharp
+        private void OnEnable() {
+            _world = World.DefaultGameObjectInjectionWorld;
+            if (_world.IsCreated) {
+                _stateEventDispatcherSystem = _world.GetOrCreateSystemManaged<StateEventDispatcherSystem>();
+                _stateEventDispatcherSystem.SimulationStateChangedEvent += OnSimulationStateChangedEvent;
+            }
+        }
+```
+
+- **DebugLogSystem**: A SystemBase created as prototype of an event system that dispatched log messages from other systems. A MonoBehaviour can register to the event and log the messages to the console or any other Text output.
 
 ![TeamSwitch.gif](webimg%2FTeamSwitch.gif)
 
