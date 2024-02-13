@@ -8,8 +8,7 @@ namespace SimpleCrowdsSpawn.Aspects {
     
     [BurstCompile]
     public readonly partial struct MoveToPositionAspect : IAspect {
- 
-        //private readonly Entity _self;
+        
         private readonly RefRW<LocalTransform> _transform;
         private readonly RefRO<Speed> _speed;
         private readonly RefRO<TargetPosition> _targetPosition;

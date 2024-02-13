@@ -198,19 +198,136 @@ and writes it back to ECS on changes. (Not the most performant approach, but wor
 ![Pathfind-ecs2.gif](webimg%2FPathfind-ecs2.gif)
 
 ### 6. Load Systems Programatically
---TODO Description
+([Assets/Scripts/SystemLoader](Assets/Scripts/SystemLoader) namespace)
+
+This is a simple scene to test the loading and unloading of systems programatically, it's a simple scene with balls that spawn randomly on a defined area on the system "update". 
+The System is an ISystem struct and instead of using the derived SystemBase to "enable/disable" the System, for this test I've opted to add/remove the system from the World "System Update List".
+
+The ***ActionMenuManager*** is the MonoBehaviour that adds and removes the ***SpawnBallSystem*** from the "System Update List" of the current ECS World, mimicking a "Start/Stop" of the system. 
+A similar effect is achieved using the ***"RequireForUpdate"*** and using a singleton entity that can be created/destroyed (or enabling/disabling the component?). In this case the **BallSpawnerDataComponent** would be a perfect candidate. 
+
+```csharp
+        private void StopSystems() {
+            if (_started && _world != null && _world.IsCreated) {
+                // Debug.Log("Stopping Systems");
+                var simulationSystemGroup = _world.GetExistingSystemManaged<SimulationSystemGroup>();
+                var spawnBallSystemHandle = _world.GetExistingSystem<SpawnBallSystem>();
+                simulationSystemGroup.RemoveSystemFromUpdateList(spawnBallSystemHandle);
+                _world.DestroySystem(spawnBallSystemHandle);
+                //TTL System destroys all TTL entities when destroyed
+                var ttlSystem = _world.GetExistingSystem<TimeToLiveSystem>();
+                simulationSystemGroup.RemoveSystemFromUpdateList(ttlSystem);
+                _world.DestroySystem(ttlSystem);
+            }
+
+            _started = false;
+        }
+```
+
+Another interesting thing of this exercise is the the ***RandomSeeder*** component used in a Singleton Entity to calculate any Random numbers needed by the systems.
+
+#### Components
+- **BallSpawnerDataComponent**: Holds the area where the balls are spawned and the spawn rate. This component is expected to be used in a singleton entity.
+- **PrefabHoldingComponent**: Holds the prefab of the "Ball" to be spawned by the SpawnBallSystem.
+- **RandomSeeder**: Holds the seed for the Random number generator, and is used by the SpawnBallSystem to calculate the position of the spawned balls.
+- **TimeToLiveComponent**: Holds the time to live of the spawned balls, and is used by the TimeToLiveSystem to destroy the balls after the TTL is reached.
+
+#### Systems
+- **SpawnBallSystem**: Spawns the balls in the area defined by the BallSpawnerDataComponent.
+- **TimeToLiveSystem**: Destroys the balls after the TTL is reached.
+
+#### Others
+- ***ActionMenuManager***: MonoBehaviour that listens to the UI buttons to "start/stop" the SpawnBallSystem.
 
 ![SystemStartStop.gif](webimg%2FSystemStartStop.gif)
 
+---
+
 ### 7. Click and Box Selection
----TODO Description
+([Assets/Scripts/Selection](Assets/Scripts/Selection) namespace)
+
+This scene is an exercise to apply the ideas from **Turbo Makes Games** video [Unity ECS Area Selection - RTS/City Builder - Unity DOTS Tutorial [ECS Ver. 0.17]](https://www.youtube.com/watch?v=n60pawK956A).
+Where he implements a box selection using ECS physics via a ConvexCollider. Using the ConvexCollider we create a prism using four vertices calculated using the camera perspective, but care should be taken as additional
+experiments have shown me that this vertices cannot be too far apart, or the collider will not be created, and the selection will not work. An improvement can be made to use another type of collider or calculate the
+vertices in a different way, so that the bounding volume is not too big.
+
+In the spirit of ECS, a data component (*SelectionVerticesBufferComponent*) is used by a system (*CreateSelectionPrismColliderSystem*) that creates a "physical" volume, the Physics World System then 
+"triggers" collision based on *PhysicsCategoryTags* that are processed by the *MultipleUnitSelectionSystem*, this System processes the selection considering the *SelectedUnitTag*.
+
+#### Components
+- **RayCastBufferComponent**: A buffer element sent from MonoBehaviour, that holds the RaycastInput data for the PhysicsWorldSystem to calculate the hits when doing single click selection.
+- **SelectionVerticesBufferComponent**: A buffer element sent from MonoBehaviour, that holds the vertices of the selection prism, used by the PhysicsWorldSystem to ***trigger*** the selection.
+- **SelectionColliderDataComponent**: A data component added to the physical volume that contains the PhysicsCategoryTags of the expected trigger.
+- **SelectedUnitTag** and **DecalComponentTag**: Tag components to mark the entities that are selected and selection visual entities.
+
+#### Systems
+- **CreateSelectionPrismColliderSystem**: Creates the physical volume using the vertices from the *SelectionVerticesBufferComponent*.
+- **MultipleUnitSelectionSystem**: Processes the selection based on triggers created by the **PhysicsWorldSystem** between the physical volume and the capsules in the scene.
+- **SingleUnitSelectionSystem**: Processes the selection based on RaycastInput data, it uses the **PhysicsWorldSystem** to calculate the hits and select the entities.
+- **SelectedCountEventSystem**: A SystemBase that counts the entities with *SelectedUnitTag* and fires an event if the count is different from the previous count.
+
+#### Others
+- **UnitSelectManager**: MonoBehaviour that listens to the mouse input and sends the RaycastInput or the vertices of the selection prism to the ECS world, for single-click or box selection.
+  - It also listen to *OnSelectedCountChanged* event from *SelectedCountEventSystem* to update the count of selected units.
 
 ![ClickSelect.gif](webimg%2FClickSelect.gif)
 
+---
+
 ### 8. Spawner System
---TODO Description
+([Assets/Scripts/SimpleCrowdsSpawn](Assets/Scripts/SimpleCrowdsSpawn) namespace)
+
+This is an interesting exercise that combines some of the previous exercises so far, with a mouse user "sends" a request to place an entity with a banner as a visual representation, 
+and the "SpawnerSystem" will create entities from that position, once there's a spawn walking the scene, you can select one of them "at random" as the new spawn point. 
+
+This exercise includes, PrefabHolder entity, SpawningSystem, MoveSystem, Randomness, Raycast, and Events (for the UI update of the unit count), 
+similar on how it was done in the previous exercises.
+
+The most important difference in this exercise is the use of [***Aspects***](https://docs.unity3d.com/Packages/com.unity.entities@1.0/manual/aspects-intro.html) as a wrapping structure that groups
+access to common components of the moving entities (LocalTransform, Speed, TargetPosition).
+
+Another "change" to this exercise is that the **selection marker** exists, and its position updated, in the MonoBehavior world; In previous exercises the marker was Instantiated from a 
+a prefab on ECS side and added to the Hierarchy of the selected entity, thus its LocalTransform was updated from the "parent" entity. Not only the management of the position is required
+from MonoBehavior side, but if the entity that holds the marker is destroyed, the MonoBehavior manager must "disable" the GameObject.
+
+When a unit "selected" as SpawnPoint is "de-spawned" (destroyed), we lose the reference entity (as and Id) for spawning and the link from Mono to ECS,
+to allow some "cleaning" processing after such entity with **SelectedMarker** component is destroyed, we extend the component from **ICleanupComponentData**, 
+this helps the entity survive being destroyed but it gets stripped out of all its components with the exception of the *SelectedMarker*, then the **CleanSelectedMarkerSystem** 
+finds such entity with **SelectedMarker** component but **No** LocalTransform and updates the reference in the *CrowdSpawner* singleton to `Entity.Null` 
+(to avoid using an invalid entity for spawning) and removes the **SelectedMarker** component from the entity destroying it completely.
+(see. [ICleanupComponentData](https://docs.unity3d.com/Packages/com.unity.entities@1.0/api/Unity.Entities.ICleanupComponentData.html) and [Cleanup Components](https://docs.unity3d.com/Packages/com.unity.entities@1.0/manual/components-cleanup.html) documentation)
+
+#### Aspects
+- **MoveToPositionAspect**: Wraps the LocalTransform, Speed, and TargetPosition components.
+  - (ReadWrite) **LocalTransform**: The position and rotation of the entity.
+  - (ReadOnly) **Speed**: The speed of the entity.
+  - (ReadOnly) **TargetPosition**: The position to move to.
+
+- **NewRandomPositionAspect**: Wraps the same components as the MoveToPositionAspect, but with different access pattern, fit to the purpose.
+  - (ReadWrite) **LocalTransform**: The position and rotation of the entity.
+  - (ReadOnly) **Speed**: The speed of the entity.
+  - (ReadOnly) **TargetPosition**: The position to move to. 
+
+#### Other Components
+- **PlaceSpawnerRequestBuffer**: A buffer element to signal the placement of a new spawner (using the position, rotation) or selecting a random "CrowdMember" (Moving entity) as SpawnPoint. 
+- **SpawnRequestBuffer**: A buffer element with an amount of entities to spawn by the *SpawnSystem* at the position of the *SelectedMarker* or * entity.
+- **CrowdSpawner**: This component holds a reference to the prefab to Spawn and the currently selected entity as spawn point. Must be a singleton entity.
+
+#### Systems
+- **MoveSystem**: Does a "parallel" scheduling of two IJobEntity jobs, one to move the crowd members to the target position, 
+and the other to select a new random target position for the crowd members that have reached the target position.
+**NOTE**: IJobEntity parallelize at chunk level (it is an IJobChunk under the hood), so it's not running a thread per entity but per chunk, usually around 128 entities per chunk.
+- **PlaceSpawnerSystem**: Processes the *PlaceSpawnerRequestBuffer* and sets the position and rotation of the "Banner" component or selects a CrowdMember at Random to be the Spawning point.
+- **SpawnSystem**: Processes the *SpawnRequestBuffer* and spawns the entities at the position of the entity referenced by **CrowdSpawner** singleton.
+- **CleanSelectedMarkerSystem**: Updates *CrowdSpawner* if its referenced spawning entity got deleted, by looking for entities with *SelectedMarker* but no LocalTransform.
+
+#### Others
+- **CrowdsSpawnerInoutManager**: MonoBehaviour that listens to the UI buttons to "place" the spawner or "select" a random crowd member as the spawn point.
+- **SelectionMarkerManager**: MonoBehaviour that updates the position of the Selection Maker **GameObject** or disables it if the entity doesn't exist anymore.
 
 ![Crowds.gif](webimg%2FCrowds.gif)
+
+---
 
 ### 9. Physics Trigger with Particle FX
 --TODO Description
