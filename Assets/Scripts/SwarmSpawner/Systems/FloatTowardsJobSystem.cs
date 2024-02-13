@@ -42,19 +42,14 @@ namespace SwarmSpawner.Systems {
         [BurstCompile]
         private void Execute([ChunkIndexInQuery] int chunkIndex, [EntityIndexInChunk] int entityIndex,
             ref FloatTowardsComponentData floatTowards, ref LocalTransform localTransform,
-            ref PhysicsVelocity velocity, ref PhysicsMass mass) {
+            ref PhysicsVelocity velocity, ref PhysicsMass mass, ref RandomComponent random) {
             
             // If the time hasn't come to re-target, return
             if (ElapsedTime < floatTowards.NextReTargetTime) return;
             
-            // Initialise the Random number generator if it hasn't been initialised yet
-            if(floatTowards.Random.state == 0) {
-                floatTowards.Random = new Random((uint) (ElapsedTime * 100 + chunkIndex + entityIndex + 1));
-            }
-            
             // Set a new random point to float towards if the time has come
             floatTowards.NextReTargetTime = (float)(ElapsedTime + floatTowards.ReTargetRate);
-            var point = floatTowards.Random.NextFloat3(-TargetArea.area / 2f, TargetArea.area / 2f);
+            var point = random.Value.NextFloat3(-TargetArea.area / 2f, TargetArea.area / 2f);
             floatTowards.TargetPoint = TargetAreaTransform.TransformPoint(point);
             
             // move towards the target point

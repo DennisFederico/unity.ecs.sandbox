@@ -1,15 +1,20 @@
 using SwarmSpawner.Components;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace SwarmSpawner.Systems {
     
+    
     public partial struct SpawnSystem : ISystem {
+        
+        private Random _random;
+        
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
+            _random = new Random((uint) (SystemAPI.Time.ElapsedTime + 123456789));
         }
 
         [BurstCompile]
@@ -27,6 +32,7 @@ namespace SwarmSpawner.Systems {
                 var randomPos = transform.ValueRW.TransformPoint(randomPoint);
                 var randomLocalTransform = LocalTransform.FromPosition(randomPos);
                 ecb.AddComponent(entity, randomLocalTransform);
+                ecb.AddComponent(entity, new RandomComponent() { Value = new Random(_random.NextUInt()) });
             }
         }
 

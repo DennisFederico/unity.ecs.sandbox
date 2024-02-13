@@ -330,20 +330,164 @@ and the other to select a new random target position for the crowd members that 
 ---
 
 ### 9. Physics Trigger with Particle FX
---TODO Description
+([Assets/Scripts/Collider](Assets/Scripts/Collider) namespace)
+
+Here is a simple test for Physics Trigger, and finding the "contact" point of the trigger to "spawn" a Particle FX.
+In the scene the user can spawn balls that fall traversing a box collider and during the fall, contact points are 
+picked at time intervals (triggers) to spawn some particle FX assigned to each ball prefab.
+
+#### Components
+- **SpheresHolderComponent**: Holds a prefab for 3 balls (one for each mouse button) that could be spawned by the *SpawnSphereSystem*. 
+- **SpawnRequestComponentBuffer**: Is a buffer that holds which mouse button was clicked (int) the Ray from the camera and a distance over that ray 
+on where to spawn the ball by the *SpawnSphereSystem*.
+- **ImpactVfxComponent**: Holds the prefab of the particle FX to be spawned, the FX an the Time-To-Live of the effect is added to the Ball prefab using a 
+- Baker Authoring MonoBehaviour (***ImpactVfxAuthoring***).
+- **TimeToLiveComponent**: Controls the time to live of an entity that this component is added to, before it is "destroyed" by the ***TimeToLiveSystem***
+
+#### Systems
+- **SpawnSphereSystem**: Spawns a Sphere at the distance over a Ray contained in the **SpawnRequestComponentBuffer**. The Sphere to spawn is one of the prefabs in the **SpheresHolderComponent** singleton.
+- **TimeToLiveSystem**: Destroys the entities after the TTL is reached, by looking and updating the TimeToLiveComponent of the entities
+```csharp
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state) {
+            var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
+            foreach (var (ttl, entity) in SystemAPI.Query<RefRO<TimeToLiveComponent>>().WithEntityAccess()) {
+                if (ttl.ValueRO.CreatedAt + ttl.ValueRO.TimeToLive < SystemAPI.Time.ElapsedTime) {
+                    ecb.DestroyEntity(entity);
+                }
+            }
+        }
+```
+
+- **ImpactVfxSystem**: Spawns the particle FX at the contact point of the sphere with the box collider, the contact point is calculated by the ***PhysicsWorldSystem***, both the 
+sphere and the collider have a PhysicShape configured to "interact" as triggers.
+```csharp
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state) {
+            state.CompleteDependency();
+            
+            var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
+                .CreateCommandBuffer(state.WorldUnmanaged);
+            var pws = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
+            var simulationSingleton = SystemAPI.GetSingleton<SimulationSingleton>();
+            var simulation = simulationSingleton.AsSimulation();
+
+            _vfxLookup.Update(ref state);
+
+            foreach (var triggerEvent in simulation.TriggerEvents) {
+                var collisionFilterA = pws.Bodies[triggerEvent.BodyIndexA].Collider.Value.GetCollisionFilter();
+                var collisionFilterB = pws.Bodies[triggerEvent.BodyIndexB].Collider.Value.GetCollisionFilter();
+                if (!CollisionFilter.IsCollisionEnabled(collisionFilterA, collisionFilterB)) return;
+
+                int bodyIndexSphere;
+                int bodyIndexCube;
+                CollisionFilter collisionFilter;
+                Entity vfxPrefab;
+                
+                if (_vfxLookup.HasComponent(triggerEvent.EntityA)) {
+                    bodyIndexSphere = triggerEvent.BodyIndexA;
+                    bodyIndexCube = triggerEvent.BodyIndexB;
+                    collisionFilter = collisionFilterA;
+                    vfxPrefab = _vfxLookup[triggerEvent.EntityA].VfxPrefab;
+                } else {
+                    bodyIndexSphere = triggerEvent.BodyIndexB;
+                    bodyIndexCube = triggerEvent.BodyIndexA;
+                    collisionFilter = collisionFilterB;
+                    vfxPrefab = _vfxLookup[triggerEvent.EntityB].VfxPrefab;
+                }
+                
+                PointDistanceInput distanceInput = new PointDistanceInput {
+                    Position = pws.Bodies[bodyIndexSphere].WorldFromBody.pos,
+                    MaxDistance = 10f,
+                    Filter = collisionFilter
+                };
+                
+                if (pws.Bodies[bodyIndexCube].CalculateDistance(distanceInput, out var distanceHit)) {
+                    var vfx = ecb.Instantiate(vfxPrefab);
+                    ecb.AddComponent(vfx,LocalTransform.FromPosition(distanceHit.Position));
+                }
+            }
+        }
+```
+
+**Note**: The System could potentially be improved by scheduling **ITriggerEventsJob**, if considering hundreds of triggers per frame.
+
+#### Others
+- **ColliderTestInputManager**: MonoBehaviour that listens to the mouse input and sends the Ray and clicked button (as int) to the ECS world, 
+via *SpawnReqestComponentBuffer* for spawning the spheres.
+
+```csharp
+        private void OnEnable() {
+            mainCamera = mainCamera == null ? Camera.main : mainCamera;
+            _world = World.DefaultGameObjectInjectionWorld;
+
+            if (_world.IsCreated) {
+                if (!_world.EntityManager.Exists(_spawnRequestBuffer)) {
+                    _spawnRequestBuffer = _world.EntityManager.CreateSingletonBuffer<SpawnRequestComponentBuffer>();
+                }
+            }
+        }
+```
 
 ![TriggerFx.gif](webimg%2FTriggerFx.gif)
 
+---
+
 ### 10. Swarm Magnet Scene
---TODO Description
+([Assets/Scripts/SwarmSpawner](Assets/Scripts/SwarmSpawner) namespace)
+
+The main idea of this was to control the position of an entity using a very simple "Character Controller" on the MonoBehaviour side, using the "New" Input System.
+
+In addition, and to make things more interesting, there are two spawn points from where small balls are spawned and move towards the controlled entity as a "magnet" effect,
+or more like a swarm of bees following the queen bee. The bees in this case are moved by "impulse" using physics and given the acceleration towards a random point around the controlled entity,
+they usually move past the part point and then "correct" their path to a new random point, giving the swarm feeling.
+
+There is no TTL assigned to the "bees" and they will keep spawning consistently at a rate specified in the **SpawnComponentData** authored in each spawner.
+
+#### Components
+- **AreaComponentData**: Holds a float 3 that defines a box area around the controlled entity, used by the *FloatTowardJobSystem* to calculate the random target position.
+- **FloatTargetAreaTag**: The controlled entity is marked with this tag component for convenience, to be used by the *FloatTowardJobSystem*.
+- **FloatTowardsComponentData**: The component assigned to the "swarm" entities, holds the target position to "fly" to, the move speed (impulse)
+and the rate in which the change target position, whether or not the target position is reached.
+- **RandomComponent**: This component is assigned when "bees" are spawned by the **SpawnSystem** it contains a burst-compatible `Unity.Mathematics.Random` that is used to calculate the random target position in **FloatTowardJobSystem**.
+
+#### Systems
+- **FloatTowardJobSystem**: This system is responsible for the "swarm" movement, it calculates a new random target position for the entities and moves them towards it using physics impulse.
+- **SpawnSystem**: Spawns the "swarm" entities at the defined spawn points, and assigns the **RandomComponent** to them.
+- **BallCounterSystem**: Counts the number of "swarm" entities and fires an event if the count is different from the previous value.
+
+#### Others
+- **MagnetController**: MonoBehaviour that listens to the input from the "New" Input System and syncs the position of the "target" area directly EntityManager.
+```csharp
+        private void SyncEcsMagnetPosition() {
+            //Does this check impacts the performance??
+            if (!_world.IsCreated || !_entityManager.Exists(_magnetAreaEntity)) {
+                Debug.LogError($"Cannot sync magnet position. World is not created or magnet area entity does not exist.");
+                return;
+            }
+            _entityManager.SetComponentData(_magnetAreaEntity, LocalTransform.FromPosition(transform.position));
+        }
+```
+- **BallCounter**: MonoBehaviour that listens to the event from the **BallCounterSystem** and updates the UI to show the number of "swarm" entities.
 
 ![Swarm.gif](webimg%2FSwarm.gif)
 
-### 11. Tower Defense Scene
---TODO Description
+---
 
-![Towers.gif](webimg%2FTowers.gif)
+## Worth Mentioning outside the exercises scenes
 
+Each Scene contains a MonoBehaviour GameObject that "reset" the ECS World when the scene "unloads" and the GameObject is destroyed, this is to avoid "leaking" of the ECS World and its systems,
 
-
+```csharp
+        private void OnDestroy() {
+            if (World.DefaultGameObjectInjectionWorld is not { IsCreated: true }) return;
+            var worldName = World.DefaultGameObjectInjectionWorld.Name;
+            World.DefaultGameObjectInjectionWorld.Dispose();
+            var world = new World(worldName);
+            World.DefaultGameObjectInjectionWorld = world;
+            var systems = DefaultWorldInitialization.GetAllSystems(WorldSystemFilterFlags.Default);
+            DefaultWorldInitialization.AddSystemsToRootLevelSystemGroups(world, systems);
+            ScriptBehaviourUpdateOrder.AppendWorldToCurrentPlayerLoop(world);
+        }
+```
 

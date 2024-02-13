@@ -8,6 +8,7 @@ using Unity.Transforms;
 
 namespace SwarmSpawner.Systems {
     
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     public partial struct FloatTowardsSystem : ISystem {
         [BurstCompile]
@@ -22,25 +23,21 @@ namespace SwarmSpawner.Systems {
             var targetArea = SystemAPI.GetComponent<AreaComponentData>(targetAreaEntity);
             var targetTransform = SystemAPI.GetComponent<LocalTransform>(targetAreaEntity);
 
-            int index = 0;
-            foreach (var (transform, floatTowards, velocity, mass) in 
+            // int index = 0;
+            foreach (var (transform, floatTowards, velocity, mass, random) in 
                      SystemAPI.Query<
                          RefRW<LocalTransform>,
                          RefRW<FloatTowardsComponentData>,
                          RefRW<PhysicsVelocity>,
-                         RefRO<PhysicsMass>>()) {
+                         RefRO<PhysicsMass>, 
+                         RefRW<RandomComponent>>()) {
 
                 if (SystemAPI.Time.ElapsedTime < floatTowards.ValueRW.NextReTargetTime) return;
-                
-                //Initialise the Random number generator if it hasn't been initialised yet
-                if (floatTowards.ValueRW.Random.state == 0) {
-                    floatTowards.ValueRW.Random = new Random((uint) (SystemAPI.Time.ElapsedTime * 100 + index + 1));
-                }
                 
                 //Set a new random point to float towards if the time has come
                 floatTowards.ValueRW.NextReTargetTime = (float) (SystemAPI.Time.ElapsedTime + floatTowards.ValueRO.ReTargetRate);
                 var vectorArea = targetArea.area / 2f;
-                var targetPoint = floatTowards.ValueRW.Random.NextFloat3(-vectorArea, vectorArea);
+                var targetPoint = random.ValueRW.Value.NextFloat3(-vectorArea, vectorArea);
                 floatTowards.ValueRW.TargetPoint = targetTransform.TransformPoint(targetPoint); //because the target point is relative to the target area's transform
                 
                 //Calculate the direction to the target point
@@ -48,7 +45,7 @@ namespace SwarmSpawner.Systems {
                 var moveImpulse = direction * floatTowards.ValueRO.Speed;
                 velocity.ValueRW.ApplyLinearImpulse(mass.ValueRO, transform.ValueRO.Scale, moveImpulse);
 
-                index++;
+                // index++;
             }
         }
 
