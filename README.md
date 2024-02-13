@@ -101,13 +101,99 @@ But there are other "structural changes" in this exercise, like adding/removing 
 
 ![TeamSwitch.gif](webimg%2FTeamSwitch.gif)
 
+---
+
 ### 4. Pathfinding (MonoBehaviour) Demo
---TODO Description
+([Assets/Scripts/Utils/Narkdagas/PathFinding](Assets/Scripts/Utils/Narkdagas/PathFinding) namespace)
+
+This is an exercise based on the great videos from [Code Monkey](https://unitycodemonkey.com/) tutorial on A* Pathfinding, using C# Job System. The original tutorial is [here](https://www.youtube.com/watch?v=1bO1FdEThnU).
 
 ![PathJobs.gif](webimg%2FPathJobs.gif)
 
 ### 5. Pathfinding (ECS) Demo
---TODO Description
+([Assets/Scripts/AStar](Assets/Scripts/AStar) namespace)
+
+This is a self-made conversion of the previous Pathfinding exercise to use Unity's ECS. It demonstrates a series of systems chained that:
+creates new entities, calculate a path for them to follow, moves them and request, set a new destination upon reaching the end of the path, and back to calculate a new path.
+
+Entities are spawned by the *CreatePathFollowerSystem* when processing a Buffer of *CreateNewPathFollowerRequest* components, this process creates a new entity from a prefab
+with a *PathFindingRequest* component that holds the start and end positions for the ***PathfindingSystem***.
+
+The PathfindingSystem queries for Entities with enabled *PathFindingRequest* components, and disabled PathFollowIndex component, this last component means that the entity is
+already following a path, so it's not a candidate for pathfinding.
+
+```csharp
+            _entitiesWithPathRequest = new EntityQueryBuilder(Allocator.Temp)
+                .WithAll<PathFindingUserTag>()
+                .WithAll<PathFindingRequest>()
+                .WithDisabledRW<PathFollowIndex>()
+                .WithAllRW<PathPositionElement>()
+                .Build(ref state);
+```
+
+A path is calculated by the *FindPathForEntityJob* that is scheduled using the above query, the job is called along with the current grid as a NativeArray of **PathNode** that contains the info (obstacles, etc.).
+```csharp
+        public void OnUpdate(ref SystemState state) {
+            
+            var gridInfo = SystemAPI.GetSingleton<GridSingletonComponent>();
+            var grid = SystemAPI.GetSingletonBuffer<PathNode>(true);
+            var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
+            state.Dependency = new FindPathForEntityJob {
+                GridInfo = gridInfo,
+                Grid = grid.AsNativeArray(),
+                Ecb = ecb.AsParallelWriter(),
+            }.ScheduleParallel(_entitiesWithPathRequest, state.Dependency);
+        }
+```
+
+The path is stored as a Buffer of **PathPositionElement** on the entity and a **PathFollowIndex** component holds the index of the path that the entity is currently moving to, 
+this is used by the *MovePathFollowerSystem* that updates the LocalTransform of the entity.
+
+The whole **Grid** is stored as a SingletonComponent on ECS by a MonoBehavior, marking/removing obstacles is handled by **PathfindingEcsGridMono** that keeps a "parallel" copy of the grid
+and writes it back to ECS on changes. (Not the most performant approach, but works fine for small grids, a better approach would have been to "push" the grid updates on a buffer and process them on an GridUpdateSystem)
+
+```csharp
+        private void InjectGridIntoEcsSystem() {
+            if (_world.IsCreated) {
+                _theGrid = _world.EntityManager.CreateSingleton(new GridSingletonComponent {
+                    Width = width,
+                    Height = height,
+                    CellSize = cellSize,
+                    Origin = transform.position
+                },"TheGrid");
+                
+                _world.EntityManager.AddComponent<PathNode>(_theGrid);
+                var ecsGrid = _world.EntityManager.GetBuffer<PathNode>(_theGrid);
+                ecsGrid.AddRange(_grid.GetGridAsArray(Allocator.Temp));
+            } 
+        }
+```
+
+```csharp
+        private void GridOnGridValueChanged(object sender, OnGridValueChangedEventArgs e) {
+            //TODO: Notify the system about changes in the grid instead of replacing the whole grid.
+            if (_world.IsCreated && _world.EntityManager.Exists(_theGrid)) {
+                var ecsGrid = _world.EntityManager.GetBuffer<PathNode>(_theGrid);
+                ecsGrid.CopyFrom(_grid.GetGridAsArray(Allocator.Temp));
+                ecsGrid.TrimExcess();
+            } 
+        }
+```
+
+### Components
+- **CreateNewPathFollowerRequest**: A buffer element to spawn a new entity from a prefab.
+- **PathFindingRequest**: An IEnableableComponent that signals the PathfindingSystem to calculate a new path.
+- **GridSingletonComponent**: Holds the grid info, width, height, cell size, and origin vector.
+- **MoveSpeed**: Holds the speed of the entity when following the path.
+- **PathPositionElement**: A buffer element that holds the path positions.
+- **PathFollowIndex**: Holds the index of the current path position.
+- etc...
+
+### Systems
+- **CreatePathFollowerSystem**: Spawns a new entity from a prefab with a PathFindingRequest component.
+- **PathfindingSystem**: Calculates the path for the entities with enabled PathFindingRequest component.
+- **MovePathFollowerSystem**: Moves the entities (with enabled **PathFollowIndex**) to the next position in the path. On reaching the end of the path, it disables the **PathFollowIndex** component.
+- **NewRandomPathRequestSystem**: For entities with disabled **PathFollowIndex** and disabled **PathFindingRequest**, calculates a Random Target position and enables the **PathFindingRequest** component to calculate a new path to that position.
 
 ![Pathfind-ecs2.gif](webimg%2FPathfind-ecs2.gif)
 
