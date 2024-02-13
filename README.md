@@ -18,16 +18,27 @@ Download or clone the repository and open the project with Unity. I've used 2023
 
 ## Scenes
 
-The code for each scene is contained in their own namespace in the `Assets/Scripts` folders, with the exception of some imported utils from [Code Monkey](https://unitycodemonkey.com/) for managing the grid of A*Pathfinding, other utils of my own.  
+The code for each scene is contained in their own namespace in the `Assets/Scripts` folders, with the exception of some imported utils from [Code Monkey](https://unitycodemonkey.com/) for managing the grid of A*Pathfinding, and other utils of my own.  
 
+- [Formation Change](#2-formation-change-demo)
+- [TeamColor Switch](#3-teamcolor-switch-demo)
+- [Pathfinding Jobs Demo](#4-pathfinding-jobs-demo)
+- [Pathfinding ECS Demo](#5-pathfinding-ecs-demo)
+- [Load Systems Programatically](#6-load-systems-programatically)
+- [Click and Box Selection](#7-click-and-box-selection)
+- [Spawner System](#8-spawner-system)
+- [Physics Trigger with Particle FX](#9-physics-trigger-with-particle-fx)
+- [Swarm Magnet Scene](#10-swarm-magnet-scene)
 
-### 1. Bootstrap & MainMenu
+---
+
+### 1 Bootstrap & MainMenu
 
 The bootstrap it's just a "launcher" to load the scene loader and scene transitions manager, the main menu scene is loaded from here and it's a simple scene with a few buttons to load each test/demo scene in the Sandbox.
 
 ---
 
-### 2. Formation Change Demo
+### 2 Formation Change Demo
 ([Assets/Scripts/Formations](Assets/Scripts/Formations) namespace)
 
 Here we have 2 Baked "Towers" (Entities) that controls the number of units on their armies and the formation they should follow around them.
@@ -58,7 +69,7 @@ Note from this setup, that the actual formation resides in the Tower, which is c
 
 ---
 
-### 3. Team/Color Switch Demo
+### 3 TeamColor Switch Demo
 ([Assets/Scripts/Switching](Assets/Scripts/Switching) namespace)
 
 In this scene there are 2 "teams" colored blue and red, the selected teams changes with the click of the left mouse button,
@@ -103,14 +114,14 @@ But there are other "structural changes" in this exercise, like adding/removing 
 
 ---
 
-### 4. Pathfinding (MonoBehaviour) Demo
+### 4 Pathfinding Jobs Demo
 ([Assets/Scripts/Utils/Narkdagas/PathFinding](Assets/Scripts/Utils/Narkdagas/PathFinding) namespace)
 
 This is an exercise based on the great videos from [Code Monkey](https://unitycodemonkey.com/) tutorial on A* Pathfinding, using C# Job System. The original tutorial is [here](https://www.youtube.com/watch?v=1bO1FdEThnU).
 
 ![PathJobs.gif](webimg%2FPathJobs.gif)
 
-### 5. Pathfinding (ECS) Demo
+### 5 Pathfinding ECS Demo
 ([Assets/Scripts/AStar](Assets/Scripts/AStar) namespace)
 
 This is a self-made conversion of the previous Pathfinding exercise to use Unity's ECS. It demonstrates a series of systems chained that:
@@ -197,7 +208,7 @@ and writes it back to ECS on changes. (Not the most performant approach, but wor
 
 ![Pathfind-ecs2.gif](webimg%2FPathfind-ecs2.gif)
 
-### 6. Load Systems Programatically
+### 6 Load Systems Programatically
 ([Assets/Scripts/SystemLoader](Assets/Scripts/SystemLoader) namespace)
 
 This is a simple scene to test the loading and unloading of systems programatically, it's a simple scene with balls that spawn randomly on a defined area on the system "update". 
@@ -243,7 +254,7 @@ Another interesting thing of this exercise is the the ***RandomSeeder*** compone
 
 ---
 
-### 7. Click and Box Selection
+### 7 Click and Box Selection
 ([Assets/Scripts/Selection](Assets/Scripts/Selection) namespace)
 
 This scene is an exercise to apply the ideas from **Turbo Makes Games** video [Unity ECS Area Selection - RTS/City Builder - Unity DOTS Tutorial [ECS Ver. 0.17]](https://www.youtube.com/watch?v=n60pawK956A).
@@ -274,7 +285,7 @@ In the spirit of ECS, a data component (*SelectionVerticesBufferComponent*) is u
 
 ---
 
-### 8. Spawner System
+### 8 Spawner System
 ([Assets/Scripts/SimpleCrowdsSpawn](Assets/Scripts/SimpleCrowdsSpawn) namespace)
 
 This is an interesting exercise that combines some of the previous exercises so far, with a mouse user "sends" a request to place an entity with a banner as a visual representation, 
@@ -329,7 +340,7 @@ and the other to select a new random target position for the crowd members that 
 
 ---
 
-### 9. Physics Trigger with Particle FX
+### 9 Physics Trigger with Particle FX
 ([Assets/Scripts/Collider](Assets/Scripts/Collider) namespace)
 
 Here is a simple test for Physics Trigger, and finding the "contact" point of the trigger to "spawn" a Particle FX.
@@ -433,7 +444,7 @@ via *SpawnReqestComponentBuffer* for spawning the spheres.
 
 ---
 
-### 10. Swarm Magnet Scene
+### 10 Swarm Magnet Scene
 ([Assets/Scripts/SwarmSpawner](Assets/Scripts/SwarmSpawner) namespace)
 
 The main idea of this was to control the position of an entity using a very simple "Character Controller" on the MonoBehaviour side, using the "New" Input System.
