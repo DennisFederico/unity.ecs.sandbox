@@ -3,11 +3,11 @@ using Unity.Entities;
 using UnityEngine;
 
 namespace TowerDefense.MonoBehaviours {
-    public class DamageableAuthoring : MonoBehaviour {
+    public class HealthAuthoring : MonoBehaviour {
 
         [SerializeField] private float health;
-        private class DamageableAuthoringBaker : Baker<DamageableAuthoring> {
-            public override void Bake(DamageableAuthoring authoring) {
+        private class HealthAuthoringBaker : Baker<HealthAuthoring> {
+            public override void Bake(HealthAuthoring authoring) {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new HealthComponent {
                     Value = authoring.health

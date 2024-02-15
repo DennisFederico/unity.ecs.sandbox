@@ -1,9 +1,12 @@
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Transforms;
 using PathFollowerAspect = TowerDefense.Aspects.PathFollowerAspect;
 
 namespace TowerDefense.Systems {
     
+    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateAfter(typeof(TransformSystemGroup))]
     public partial struct MoveByAspectSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

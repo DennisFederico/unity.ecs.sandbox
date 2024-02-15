@@ -9,7 +9,7 @@ using Unity.Physics.Systems;
 using Unity.Transforms;
 
 namespace TowerDefense.Systems {
-
+    
     [BurstCompile]
     public partial struct ShootProjectileJob : IJobEntity {
 
@@ -20,16 +20,14 @@ namespace TowerDefense.Systems {
         [BurstCompile]
         private void Execute(ref TowerDataComponent towerData, in TowerConfigAsset configAsset, in LocalToWorld towerPos) {
             towerData.ShootTimer -= DeltaTime;
-            if (towerData.ShootTimer <= 0) {
-                ref var config = ref configAsset.Config.Value;
-                ClosestHitCollector<DistanceHit> closestHitCollector = new ClosestHitCollector<DistanceHit>(config.Range);
-                if (PhysicsWorld.OverlapSphereCustom(towerPos.Position, config.Range, ref closestHitCollector, config.Filter)) {
-                    towerData.ShootTimer = config.ShootFrequency;
-                    Entity bullet = EntityBuffer.Instantiate(0, towerData.ProjectilePrefab);
-                    EntityBuffer.SetComponent(1, bullet, LocalTransform.FromPosition(towerPos.Position + towerPos.Up));
-                    EntityBuffer.AddComponent(2, bullet, new TargetDataComponent { Value = closestHitCollector.ClosestHit.Entity });
-                }
-            }
+            if (!(towerData.ShootTimer <= 0)) return;
+            ref var config = ref configAsset.Config.Value;
+            ClosestHitCollector<DistanceHit> closestHitCollector = new ClosestHitCollector<DistanceHit>(config.Range);
+            if (!PhysicsWorld.OverlapSphereCustom(towerPos.Position, config.Range, ref closestHitCollector, config.Filter)) return;
+            towerData.ShootTimer = config.ShootFrequency;
+            Entity bullet = EntityBuffer.Instantiate(0, towerData.ProjectilePrefab);
+            EntityBuffer.SetComponent(1, bullet, LocalTransform.FromPosition(towerPos.Position + towerPos.Up));
+            EntityBuffer.AddComponent(2, bullet, new TargetDataComponent { Value = closestHitCollector.ClosestHit.Entity });
         }
     }
 

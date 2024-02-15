@@ -1,40 +1,36 @@
-using System.Collections.Generic;
-using System.Linq;
 using TowerDefense.Components;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace TowerDefense.MonoBehaviours {
     public class SpawnerAuthoring : MonoBehaviour {
-        
+
         [SerializeField] private GameObject prefab;
         [SerializeField] private float spawnInterval = 5f;
-        public List<Transform> SpawnPoints => GetComponentsInChildren<Transform>().Where(go => go.gameObject != gameObject).ToList();
+        //TRIED WITH A REFERENCE TO AN SCRIPTABLE OBJECT BUT DIDN'T WORK PROPERLY 
+        [SerializeField] private Transform parentWaypoints;
+
         private class SpawnerAuthoringBaker : Baker<SpawnerAuthoring> {
             public override void Bake(SpawnerAuthoring authoring) {
-                var entity = GetEntity(TransformUsageFlags.Renderable);
+                DependsOn(authoring.parentWaypoints);
+                var waypointsCount = authoring.parentWaypoints.childCount;
+                var entity = GetEntity(TransformUsageFlags.None);
                 
-                // var waypoints = AddBuffer<WaypointsComponent>(entity);
-                // foreach (var spawnPoint in authoring.SpawnPoints) {
-                //     waypoints.Add(new WaypointsComponent {Value = spawnPoint.position});
-                // }
-
-                BlobAssetReference<BlobPath> blobPath;
-                using (BlobBuilder blobBuilder = new BlobBuilder(Allocator.Temp)) {
-                    ref BlobPath blobPathRef = ref blobBuilder.ConstructRoot<BlobPath>();
-                    
-                    BlobBuilderArray<float3> waypoints = blobBuilder.Allocate(ref blobPathRef.Waypoints, authoring.SpawnPoints.Count);
-                    for (int i = 0; i < authoring.SpawnPoints.Count; i++) {
-                        waypoints[i] = authoring.SpawnPoints[i].position;
+                BlobAssetReference<WaypointsArray> blobAssetReference;
+                
+                using (var blobBuilder = new BlobBuilder(Allocator.Temp)) {
+                    ref var waypointsArrayRef = ref blobBuilder.ConstructRoot<WaypointsArray>();
+                    var waypointsArray = blobBuilder.Allocate(ref waypointsArrayRef.Waypoints, waypointsCount);
+                    for (int i = 0; i < waypointsCount; i++) {
+                        waypointsArray[i] = authoring.parentWaypoints.GetChild(i).position;
                     }
-                    blobPath = blobBuilder.CreateBlobAssetReference<BlobPath>(Allocator.Persistent);
+                    blobAssetReference = blobBuilder.CreateBlobAssetReference<WaypointsArray>(Allocator.Persistent);
                 }
-                AddComponent(entity, new BlobPathAsset {Path = blobPath});
-                
+
+                AddComponent(entity, new WaypointsAsset { Path = blobAssetReference });
                 AddComponent(entity, new SpawnerDataComponent {
-                    Prefab = GetEntity(authoring.prefab, TransformUsageFlags.Dynamic), 
+                    Prefab = GetEntity(authoring.prefab, TransformUsageFlags.Dynamic),
                     SpawnInterval = authoring.spawnInterval,
                     SpawnTimer = authoring.spawnInterval
                 });
