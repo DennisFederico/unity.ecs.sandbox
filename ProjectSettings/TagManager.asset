@@ -11,8 +11,8 @@ TagManager:
   - Terrain
   - Water
   - UI
-  - 
-  - 
+  - VisualGhostBuildable
+  - VisualGhostOccupied
   - 
   - 
   - 

@@ -489,8 +489,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towers:
-  - {fileID: 8430169748512386396, guid: 86f3028015d974592956b41137fb4096, type: 3}
-  - {fileID: 5321673014717367935, guid: 8b118e35b176945d5962990cbec658e9, type: 3}
+  - {fileID: 3341958363922121033, guid: 368aad67381fa4e7aa75ac331cd45072, type: 3}
+  - {fileID: 3341958363922121033, guid: 80998926afd794a839b64961d74f3279, type: 3}
 --- !u!4 &711818883 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 454480, guid: dc5ec57a326bc487ba7e94b7e0e051f1,
@@ -855,6 +855,53 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc5ec57a326bc487ba7e94b7e0e051f1, type: 3}
+--- !u!1 &1672282544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1672282546}
+  - component: {fileID: 1672282545}
+  m_Layer: 0
+  m_Name: ZombieSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1672282545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672282544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c39c8f8095947ee964ed294d6577701, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1481633043623290892, guid: cff61d4ad0fe544f091ea165017bee39, type: 3}
+  spawnInterval: 8
+  parentWaypoints: {fileID: 110623965}
+--- !u!4 &1672282546
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672282544}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1696984972
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1074,7 +1121,7 @@ GameObject:
   - component: {fileID: 2122974903}
   - component: {fileID: 2122974902}
   m_Layer: 0
-  m_Name: Spawner
+  m_Name: SkeletonSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1116,4 +1163,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 110623965}
   - {fileID: 2122974903}
+  - {fileID: 1672282546}
   - {fileID: 672017601}

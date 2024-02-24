@@ -1,4 +1,5 @@
 using TowerDefense.Components;
+using TowerDefenseBase.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -18,16 +19,16 @@ namespace TowerDefense.Systems {
         public EntityCommandBuffer.ParallelWriter EntityBuffer;
         
         [BurstCompile]
-        private void Execute(ref TowerDataComponent towerData, in TowerConfigAsset configAsset, in LocalToWorld towerPos) {
-            towerData.ShootTimer -= DeltaTime;
-            if (!(towerData.ShootTimer <= 0)) return;
+        private void Execute(ref TurretDataComponent turretData, in TurretConfigAsset configAsset, in LocalToWorld towerPos) {
+            turretData.ShootTimer -= DeltaTime;
+            if (!(turretData.ShootTimer <= 0)) return;
             ref var config = ref configAsset.Config.Value;
             ClosestHitCollector<DistanceHit> closestHitCollector = new ClosestHitCollector<DistanceHit>(config.Range);
             if (!PhysicsWorld.OverlapSphereCustom(towerPos.Position, config.Range, ref closestHitCollector, config.Filter)) return;
-            towerData.ShootTimer = config.ShootFrequency;
-            Entity bullet = EntityBuffer.Instantiate(0, towerData.ProjectilePrefab);
+            turretData.ShootTimer = config.ShootFrequency;
+            Entity bullet = EntityBuffer.Instantiate(0, turretData.ProjectilePrefab);
             EntityBuffer.SetComponent(1, bullet, LocalTransform.FromPosition(towerPos.Position + towerPos.Up));
-            EntityBuffer.AddComponent(2, bullet, new TargetDataComponent { Value = closestHitCollector.ClosestHit.Entity });
+            EntityBuffer.AddComponent(2, bullet, new ProjectileTargetComponent { Value = closestHitCollector.ClosestHit.Entity });
         }
     }
 
@@ -40,7 +41,7 @@ namespace TowerDefense.Systems {
         public EntityCommandBuffer.ParallelWriter EosEntityBuffer;
         
         [BurstCompile]
-        private void Execute(in TargetDataComponent target, in MoveSpeedComponent speed, ref LocalTransform transform, Entity entity) {
+        private void Execute(in ProjectileTargetComponent target, in MoveSpeedComponent speed, ref LocalTransform transform, Entity entity) {
             if (PositionLookup.TryGetComponent(target.Value, out var targetPosition)) {
                 float3 direction = targetPosition.Position - transform.Position;
                 transform.Position += math.normalize(direction) * (speed.Value * DeltaTime);
@@ -80,15 +81,18 @@ namespace TowerDefense.Systems {
             } 
             
             if (Entity.Null.Equals(projectileEntity) || Entity.Null.Equals(enemyEntity)) return;
-            
-            //Check if the projectile has already hit the enemy
-            var hits = HitListLookup[projectileEntity];
-            for (int i = 0; i < hits.Length; i++) {
-                if (hits[i].Entity.Equals(enemyEntity)) return;
+
+            var totalHits = 1;
+            //Check if the projectile can hit more than one enemy
+            if (HitListLookup.TryGetBuffer(projectileEntity, out var hits)) {
+                //Check if already hit
+                for (int i = 0; i < hits.Length; i++) {
+                    if (hits[i].Entity.Equals(enemyEntity)) return;
+                }
+                //Add the enemy to the list of already hit entities
+                hits.Add(new Hits {Entity = enemyEntity});
+                totalHits = hits.Length;
             }
-            
-            //Add the enemy to the list of already hit entities
-            hits.Add(new Hits {Entity = enemyEntity});
             
             //Deal damage to the enemy
             enemyHealth.Value -= 5;
@@ -103,7 +107,7 @@ namespace TowerDefense.Systems {
             EntityBuffer.AddComponent(2, hitVfx, LocalTransform.FromPosition(PositionLookup[projectileEntity].Position));
             
             //Destroy the projectile
-            if (projectileVfx.HitsLeft <= hits.Length) {
+            if (projectileVfx.HitsLeft <= totalHits) {
                 EntityBuffer.DestroyEntity(3, projectileEntity);
             }
         }

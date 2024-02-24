@@ -1,4 +1,5 @@
 using TowerDefense.Components;
+using TowerDefenseBase.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -35,7 +36,7 @@ namespace TowerDefense.Systems {
                 .CreateCommandBuffer(state.WorldUnmanaged);
             var physicsWorldSingleton = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
             foreach (var (towerData, towerConfigAsset, towerPos) in 
-                     SystemAPI.Query<RefRW<TowerDataComponent>, RefRO<TowerConfigAsset>, RefRO<LocalToWorld>>()) {
+                     SystemAPI.Query<RefRW<TurretDataComponent>, RefRO<TurretConfigAsset>, RefRO<LocalToWorld>>()) {
                 towerData.ValueRW.ShootTimer -= SystemAPI.Time.DeltaTime;
                 if (towerData.ValueRO.ShootTimer < 0) {
                     ref var config = ref towerConfigAsset.ValueRO.Config.Value;
@@ -45,7 +46,7 @@ namespace TowerDefense.Systems {
                         Entity bullet = ecbBos.Instantiate(towerData.ValueRO.ProjectilePrefab);
 
                         ecbBos.SetComponent(bullet, LocalTransform.FromPosition(towerPos.ValueRO.Position + towerPos.ValueRO.Up));
-                        ecbBos.AddComponent(bullet, new TargetDataComponent { Value = closestHitCollector.ClosestHit.Entity });
+                        ecbBos.AddComponent(bullet, new ProjectileTargetComponent { Value = closestHitCollector.ClosestHit.Entity });
                     }
                 }
             }
@@ -53,7 +54,7 @@ namespace TowerDefense.Systems {
             _enemyPositionLookup.Update(ref state);
             //Projectiles should be "tagged" and us an Aspect to manipulate them
             foreach (var (target, speed, transform, projectile) in
-                     SystemAPI.Query<RefRO<TargetDataComponent>, RefRO<MoveSpeedComponent>, RefRW<LocalTransform>>().WithEntityAccess()) {
+                     SystemAPI.Query<RefRO<ProjectileTargetComponent>, RefRO<MoveSpeedComponent>, RefRW<LocalTransform>>().WithEntityAccess()) {
 
                 if (_enemyPositionLookup.TryGetComponent(target.ValueRO.Value, out var targetPosition)) {
                     float3 direction = targetPosition.Position - transform.ValueRO.Position;
@@ -71,7 +72,7 @@ namespace TowerDefense.Systems {
             //TODO 1. AIM FOR THE CENTER OF THE PHYSICAL SHAPE
             //TODO 2. USE COLLISION INSTEAD OF DISTANCE FOR THE ACTUAL HIT
             foreach (var (target, transform, projectile) in
-                     SystemAPI.Query<RefRO<TargetDataComponent>, RefRO<LocalTransform>>().WithEntityAccess()) {
+                     SystemAPI.Query<RefRO<ProjectileTargetComponent>, RefRO<LocalTransform>>().WithEntityAccess()) {
                 if (_enemyPositionLookup.TryGetComponent(target.ValueRO.Value, out var targetPosition)) {
                     if (math.distance(targetPosition.Position, transform.ValueRO.Position) < 0.1) {
                         var hp = _enemyHealthLookup[target.ValueRO.Value];

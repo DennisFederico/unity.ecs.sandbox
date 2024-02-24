@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 94a39319ba99ac3479eab8666c59e5b9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 246331
+  packageName: Tower Defence Sci-Fi Turret
+  packageVersion: 1.0
+  assetPath: Assets/TD_Sci-Fi_Turret1_Example/Materials/Turret1/turret1_head2.mat
+  uploadId: 561125
