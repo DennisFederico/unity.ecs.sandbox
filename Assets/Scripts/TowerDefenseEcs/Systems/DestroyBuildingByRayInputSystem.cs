@@ -15,12 +15,12 @@ namespace TowerDefenseEcs.Systems {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<PhysicsWorldSingleton>();
-            state.RequireForUpdate<DestroyBuildingRayInputData>();
+            state.RequireForUpdate<DestroyBuildingData>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            var buildingDestroyBuffer = SystemAPI.GetSingletonBuffer<DestroyBuildingRayInputData>();
+            var buildingDestroyBuffer = SystemAPI.GetSingletonBuffer<DestroyBuildingData>();
             if (buildingDestroyBuffer.IsEmpty) return;
 
             //We delete the building entity at the end of the frame

@@ -4,8 +4,7 @@ using Unity.Physics;
 namespace TowerDefenseEcs.Components {
     
     [InternalBufferCapacity(3)]
-    public struct PlaceBuildingRayInputData : IBufferElementData {
+    public struct DestroyBuildingData : IBufferElementData {
         public RaycastInput Value;
-        public int TowerIndex;
     }
 }

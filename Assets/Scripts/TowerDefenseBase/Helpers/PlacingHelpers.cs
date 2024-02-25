@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TowerDefenseHybrid.Mono {
+namespace TowerDefenseBase.Helpers {
     
     public enum PlacementFacing {
         Up, //Z+

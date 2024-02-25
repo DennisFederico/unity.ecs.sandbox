@@ -624,8 +624,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bbe27ef2a564ba3a009cc4a1bbedba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towers:
+  buildings:
   - {fileID: 3341958363922121033, guid: 368aad67381fa4e7aa75ac331cd45072, type: 3}
+  - {fileID: 3341958363922121033, guid: 80998926afd794a839b64961d74f3279, type: 3}
+  ghosts: []
 --- !u!4 &733196001
 Transform:
   m_ObjectHideFlags: 0

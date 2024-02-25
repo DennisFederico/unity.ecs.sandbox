@@ -29,6 +29,7 @@ namespace TowerDefenseBase.Mono {
                     ShootFrequency = authoring.fireRate,
                     Filter = filter
                 });
+                
                 AddBlobAsset(ref configAsset, out var hash);
                 
                 AddComponent(entity, new TurretConfigAsset {

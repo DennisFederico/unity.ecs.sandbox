@@ -7,7 +7,6 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
-using ISystemStartStop = Unity.Entities.ISystemStartStop;
 
 namespace Switching.Systems {
     
