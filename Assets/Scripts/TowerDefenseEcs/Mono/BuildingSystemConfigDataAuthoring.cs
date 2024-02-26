@@ -18,7 +18,7 @@ namespace TowerDefenseEcs.Mono {
                         InputSystemTag = authoring.InputSystemTag,
                         TerrainTag = authoring.TerrainTag,
                         TurretTag = authoring.TurretTag,
-                        PlacingObstacles = authoring.PlacingObstacles
+                        PlacingObstacles = authoring.PlacingObstacles,
                     });
             }
         }

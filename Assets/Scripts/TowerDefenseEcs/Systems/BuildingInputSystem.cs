@@ -1,7 +1,10 @@
+using System;
+using TowerDefenseBase.Components;
 using TowerDefenseBase.Helpers;
 using TowerDefenseBase.Input;
 using TowerDefenseEcs.Components;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,35 +17,35 @@ namespace TowerDefenseEcs.Systems {
         private TowerDefenseBaseInput.PlayerActionsActions _playerActions;
 
         //TODO: Should we have an entity with the latest Input state that can be read by other system?
+        //TODO: Should add Rotation and Building Index as part of the state
         private bool _processNewInputState;
         private struct InputState {
             public Vector2 MousePosition;
-            public bool UpdateMousePosition;
-            public bool PlaceStandardTurret;
-            public bool PlaceFreezeTurret;
-            public bool RotateTurret;
-            public bool DestroyTurret;
-
-            //TODO... Just for debug. Remove this
-            public override string ToString() {
-                return $"InputState: \n \tMousePosition: {MousePosition} \n \tPlaceStandardTurret: {PlaceStandardTurret} \n \tPlaceFreezeTurret: {PlaceFreezeTurret} \n \tRotateTurret: {RotateTurret} \n \tDestroyTurret: {DestroyTurret}";
+            // public int BuildingIndex;
+            // public quaternion Rotation;
+            public InputAction Action;
+            
+            public enum InputAction {
+                UpdateState,
+                BuildAction,
+                DestroyAction,
             }
         }
         private InputState _inputState;
         
-        //TODO should we put a reference in the config data to the main camera?
         private Camera _mainCamera;
         private BuildingSystemConfigData _buildingSystemConfigData;
         private PlacementFacing _placementFacing;
+        private int _currentBuildingIndex;
+        private int _numBuildingTypes;
         private CollisionFilter _placeBuildingCollisionFilter;
         private CollisionFilter _destroyBuildingCollisionFilter;
 
         protected override void OnCreate() {
-            //TODO Should we handle the system to be enabled/disable from Mono on Scene Load/Unload?
-            //Mainly because of the InputSystem
+            //TODO Should we handle the system to be enabled/disable from Mono on Scene Load/Unload? Mainly because of the InputSystem
             //Enabled = false;
-            
             RequireForUpdate<BuildingSystemConfigData>();
+            RequireForUpdate<BuildingRegistryTag>();
             CreateBufferIfRequired<PlaceBuildingData>();
             CreateBufferIfRequired<DestroyBuildingData>();
             CreateBufferIfRequired<GhostBuildingData>();
@@ -54,12 +57,12 @@ namespace TowerDefenseEcs.Systems {
             //PREPARE THE INPUT SYSTEM
             _input = new TowerDefenseBaseInput();
             _playerActions = _input.PlayerActions;
-            
             _playerActions.MouseMove.performed += OnUpdateMousePosition;
-            _playerActions.PlaceStandardTurret.started += OnPlaceStandardTurret;
-            _playerActions.PlaceFreezeTurret.started += OnPlaceFreezeTurret;
+            _playerActions.BuildTurret.started += OnBuildTurret;
             _playerActions.RotateTurret.started += OnRotateTurret;
             _playerActions.DestroyTurret.started += OnDestroyTurret;
+            _playerActions.SelectTurret.performed += OnSelectTurret;
+            _playerActions.SelectTurretScroll.performed += OnSelectTurretScroll; 
             _playerActions.Enable();
             
             //PREPARE THE COLLISION FILTERS
@@ -74,72 +77,97 @@ namespace TowerDefenseEcs.Systems {
                 CollidesWith = _buildingSystemConfigData.TurretTag.Value,
                 GroupIndex = 0
             };
+            
+            //Dynamically get the number of building types
+            var buildingRegistry = SystemAPI.GetSingletonEntity<BuildingRegistryTag>();
+            _numBuildingTypes = SystemAPI.GetBuffer<BuildingsBufferElementData>(buildingRegistry).Length;
         }
-        
+
         protected override void OnStopRunning() {
             _playerActions.MouseMove.performed -= OnUpdateMousePosition;
-            _playerActions.PlaceStandardTurret.started -= OnPlaceStandardTurret;
-            _playerActions.PlaceFreezeTurret.started -= OnPlaceFreezeTurret;
+            _playerActions.BuildTurret.started -= OnBuildTurret;
             _playerActions.RotateTurret.started -= OnRotateTurret;
             _playerActions.DestroyTurret.started -= OnDestroyTurret;
+            _playerActions.SelectTurret.performed -= OnSelectTurret;
+            _playerActions.SelectTurretScroll.performed += OnSelectTurretScroll; 
             _playerActions.Disable();
         }
-        
+
         private void OnUpdateMousePosition(InputAction.CallbackContext ctx) {
             _processNewInputState = true;
             _inputState = new InputState() {
                 MousePosition = ctx.ReadValue<Vector2>(),
-                UpdateMousePosition = true
+                Action = InputState.InputAction.UpdateState
             };
         }
 
-        private void OnPlaceStandardTurret(InputAction.CallbackContext ctx) {
+        private void OnBuildTurret(InputAction.CallbackContext ctx) {
             _processNewInputState = true;
             _inputState = new InputState() {
                 MousePosition = ctx.ReadValue<Vector2>(),
-                PlaceStandardTurret = true
+                Action = InputState.InputAction.BuildAction
             };
         }
-        
-        private void OnPlaceFreezeTurret(InputAction.CallbackContext ctx) {
+
+        private void OnSelectTurret(InputAction.CallbackContext obj) {
             _processNewInputState = true;
+            _currentBuildingIndex = (int)obj.ReadValue<float>();
+            var lastPosition = _inputState.MousePosition;
             _inputState = new InputState() {
-                MousePosition = ctx.ReadValue<Vector2>(),
-                PlaceFreezeTurret = true
+                MousePosition = lastPosition,
+                Action = InputState.InputAction.UpdateState
             };
         }
         
+        
+        private void OnSelectTurretScroll(InputAction.CallbackContext obj) {
+            _processNewInputState = true;
+            var delta = (int)obj.ReadValue<float>(); //value clamped between -1 and 1
+            //_currentBuildingIndex = math.clamp(delta + _currentBuildingIndex, 0, _numBuildingTypes);
+            _currentBuildingIndex += delta;
+            _currentBuildingIndex = _currentBuildingIndex < 0 ? _numBuildingTypes : _currentBuildingIndex > _numBuildingTypes ? 0 : _currentBuildingIndex;
+            var lastPosition = _inputState.MousePosition;
+            _inputState = new InputState() {
+                MousePosition = lastPosition,
+                Action = InputState.InputAction.UpdateState
+            };
+        }
+
         private void OnRotateTurret(InputAction.CallbackContext ctx) {
             _processNewInputState = true;
+            var facingScroll = (int)ctx.ReadValue<float>();
+            _placementFacing = _placementFacing.ChangeBy(facingScroll);
+            var lastPosition = _inputState.MousePosition;
             _inputState = new InputState() {
-                MousePosition = ctx.ReadValue<Vector2>(),
-                RotateTurret = true
+                MousePosition = lastPosition,
+                Action = InputState.InputAction.UpdateState
             };
         }
-        
+
+
         private void OnDestroyTurret(InputAction.CallbackContext ctx) {
             _processNewInputState = true;
             _inputState = new InputState() {
                 MousePosition = ctx.ReadValue<Vector2>(),
-                DestroyTurret = true
+                Action = InputState.InputAction.DestroyAction
             };
         }
 
         protected override void OnUpdate() {
             if (!_processNewInputState) return;
 
-            if (_inputState.UpdateMousePosition) {
-                ProcessUpdateMousePositionInput();
-            }
-            if (_inputState.PlaceStandardTurret || _inputState.PlaceFreezeTurret) {
-                ProcessPlaceBuildingInput();
-            }
-            if (_inputState.DestroyTurret) {
-                ProcessDestroyBuildingInput();
-            }
-            if (_inputState.RotateTurret) {
-                _placementFacing = _placementFacing.Next();
-                ProcessUpdateMousePositionInput();
+            switch (_inputState.Action) {
+                case InputState.InputAction.UpdateState:
+                    ProcessUpdateMousePositionInput();
+                    break;
+                case InputState.InputAction.BuildAction:
+                    ProcessPlaceBuildingInput();
+                    break;
+                case InputState.InputAction.DestroyAction:
+                    ProcessDestroyBuildingInput();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             _processNewInputState = false;
         }
@@ -160,7 +188,7 @@ namespace TowerDefenseEcs.Systems {
             buffer.Add(new GhostBuildingData() {
                 RayInput = rayInput,
                 Rotation = _placementFacing.Rotation(),
-                BuildingIndex = 0,
+                BuildingIndex = _currentBuildingIndex -1,
                 ObstacleLayers = _buildingSystemConfigData.PlacingObstacles
             });
         }
@@ -176,7 +204,7 @@ namespace TowerDefenseEcs.Systems {
             buffer.Add(new PlaceBuildingData() {
                 RayInput = rayInput,
                 Rotation = _placementFacing.Rotation(),
-                BuildingIndex = _inputState.PlaceFreezeTurret ? 1 : 0,
+                BuildingIndex = _currentBuildingIndex -1,
                 ObstacleLayers = _buildingSystemConfigData.PlacingObstacles
             });
         }

@@ -11,6 +11,7 @@ namespace TowerDefenseBase.Mono {
         private class TowerRegisterAuthoringBaker : Baker<BuildingRegistryAuthoring> {
             public override void Bake(BuildingRegistryAuthoring authoring) {
                 var entity = GetEntity(TransformUsageFlags.None);
+                AddComponent<BuildingRegistryTag>(entity);
                 var towers = AddBuffer<BuildingsBufferElementData>(entity);
                 foreach (var tower in authoring.buildings) {
                     towers.Add(new BuildingsBufferElementData() {

@@ -7,7 +7,6 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace TowerDefenseEcs.Systems {
 
@@ -19,6 +18,7 @@ namespace TowerDefenseEcs.Systems {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<PhysicsWorldSingleton>();
+            state.RequireForUpdate<BuildingRegistryTag>();
             state.RequireForUpdate<BuildingsBufferElementData>();
             state.RequireForUpdate<PlaceBuildingData>();
         }
@@ -31,12 +31,16 @@ namespace TowerDefenseEcs.Systems {
 
             //Get the physics world, the building prefabs and the command buffer (all dependencies)
             var pws = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
-            var buildings = SystemAPI.GetSingletonBuffer<BuildingsBufferElementData>();
+            var buildingRegistry = SystemAPI.GetSingletonEntity<BuildingRegistryTag>();
+            var buildings = SystemAPI.GetBuffer<BuildingsBufferElementData>(buildingRegistry);
+            //var buildings = SystemAPI.GetSingletonBuffer<BuildingsBufferElementData>();
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 
             //Check if the placement is valid, 1. RayCast to the ground, 2. Overlap the building shape against obstacles
             var hits = new NativeList<int>(Allocator.Temp);
             foreach (var input in towerPlacementBuffer) {
+                if (input.BuildingIndex < 0 || input.BuildingIndex >= buildings.Length) continue;
+                
                 //RayCastInput already filter for the terrain layer
                 if (!pws.PhysicsWorld.CastRay(input.RayInput, out var hit)) continue;
 

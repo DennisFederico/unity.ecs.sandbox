@@ -39,18 +39,9 @@ namespace TowerDefenseBase.Input
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Place Standard Turret"",
+                    ""name"": ""Build Turret"",
                     ""type"": ""Value"",
                     ""id"": ""7c85008e-3f0e-4c63-8672-1585c9bf877a"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Place Freeze Turret"",
-                    ""type"": ""Value"",
-                    ""id"": ""9fa49685-bcc7-48cb-8c0a-41fbbea532d0"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -66,10 +57,37 @@ namespace TowerDefenseBase.Input
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Rotate Turret"",
+                    ""name"": ""Rotate Turret2"",
                     ""type"": ""Value"",
                     ""id"": ""20156d75-f668-47d5-ad50-4c0b5a4d9b83"",
                     ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Rotate Turret"",
+                    ""type"": ""Value"",
+                    ""id"": ""432155e8-2af9-4b93-8d0e-1aec0d7988d6"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Select Turret"",
+                    ""type"": ""Button"",
+                    ""id"": ""299e9c5d-618f-4734-bf50-063fa3393704"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Select Turret Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""f5b7aa70-04ee-449b-a232-85177c5bb798"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -94,7 +112,7 @@ namespace TowerDefenseBase.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Place Standard Turret"",
+                    ""action"": ""Build Turret"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -105,7 +123,7 @@ namespace TowerDefenseBase.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Place Standard Turret"",
+                    ""action"": ""Build Turret"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -116,40 +134,7 @@ namespace TowerDefenseBase.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Place Standard Turret"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""RightClick"",
-                    ""id"": ""a3fd335c-e1e9-4548-b62f-1d76155eb43f"",
-                    ""path"": ""OneModifier"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Place Freeze Turret"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""modifier"",
-                    ""id"": ""91ca2da0-b6b9-43a1-83b3-77a61591ba0d"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Place Freeze Turret"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""binding"",
-                    ""id"": ""a9644efb-dd28-44f7-8155-5a6c33c19651"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Place Freeze Turret"",
+                    ""action"": ""Build Turret"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -193,7 +178,7 @@ namespace TowerDefenseBase.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate Turret"",
+                    ""action"": ""Rotate Turret2"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -204,7 +189,7 @@ namespace TowerDefenseBase.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate Turret"",
+                    ""action"": ""Rotate Turret2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -215,9 +200,119 @@ namespace TowerDefenseBase.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
+                    ""action"": ""Rotate Turret2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d8891ddd-75c5-4012-b575-561df4b5c72e"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=0)"",
+                    ""groups"": """",
+                    ""action"": ""Select Turret"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""65908dd6-5d70-4256-a993-6a123b524775"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale"",
+                    ""groups"": """",
+                    ""action"": ""Select Turret"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ffdfa5d7-6b71-43c4-995e-97ddd4eeec09"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=2)"",
+                    ""groups"": """",
+                    ""action"": ""Select Turret"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe644358-c08b-494e-abfe-e781dced2cfd"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=-1)"",
+                    ""groups"": """",
+                    ""action"": ""Select Turret Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""52c8128b-9419-445b-ae32-5b899cc61e81"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale"",
+                    ""groups"": """",
+                    ""action"": ""Select Turret Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""MouseScroll"",
+                    ""id"": ""85ec52a2-67a9-4f6b-a1e5-0ae14ae182df"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=-1,max=1)"",
+                    ""groups"": """",
+                    ""action"": ""Rotate Turret"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""fcf7d4d7-55f5-4c2e-8d4f-d00ab7f30337"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Rotate Turret"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""995e2525-1cf2-4f7e-9e92-21cd1b74b443"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate Turret"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""41c02291-ab4c-407b-bfe5-425a16200245"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=-1)"",
+                    ""groups"": """",
+                    ""action"": ""Rotate Turret"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""45ee4f4d-cae0-486d-a8a0-c6f92a9cb223"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale"",
+                    ""groups"": """",
+                    ""action"": ""Rotate Turret"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,10 +322,12 @@ namespace TowerDefenseBase.Input
             // PlayerActions
             m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
             m_PlayerActions_MouseMove = m_PlayerActions.FindAction("Mouse Move", throwIfNotFound: true);
-            m_PlayerActions_PlaceStandardTurret = m_PlayerActions.FindAction("Place Standard Turret", throwIfNotFound: true);
-            m_PlayerActions_PlaceFreezeTurret = m_PlayerActions.FindAction("Place Freeze Turret", throwIfNotFound: true);
+            m_PlayerActions_BuildTurret = m_PlayerActions.FindAction("Build Turret", throwIfNotFound: true);
             m_PlayerActions_DestroyTurret = m_PlayerActions.FindAction("Destroy Turret", throwIfNotFound: true);
+            m_PlayerActions_RotateTurret2 = m_PlayerActions.FindAction("Rotate Turret2", throwIfNotFound: true);
             m_PlayerActions_RotateTurret = m_PlayerActions.FindAction("Rotate Turret", throwIfNotFound: true);
+            m_PlayerActions_SelectTurret = m_PlayerActions.FindAction("Select Turret", throwIfNotFound: true);
+            m_PlayerActions_SelectTurretScroll = m_PlayerActions.FindAction("Select Turret Scroll", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -293,19 +390,23 @@ namespace TowerDefenseBase.Input
         private readonly InputActionMap m_PlayerActions;
         private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
         private readonly InputAction m_PlayerActions_MouseMove;
-        private readonly InputAction m_PlayerActions_PlaceStandardTurret;
-        private readonly InputAction m_PlayerActions_PlaceFreezeTurret;
+        private readonly InputAction m_PlayerActions_BuildTurret;
         private readonly InputAction m_PlayerActions_DestroyTurret;
+        private readonly InputAction m_PlayerActions_RotateTurret2;
         private readonly InputAction m_PlayerActions_RotateTurret;
+        private readonly InputAction m_PlayerActions_SelectTurret;
+        private readonly InputAction m_PlayerActions_SelectTurretScroll;
         public struct PlayerActionsActions
         {
             private @TowerDefenseBaseInput m_Wrapper;
             public PlayerActionsActions(@TowerDefenseBaseInput wrapper) { m_Wrapper = wrapper; }
             public InputAction @MouseMove => m_Wrapper.m_PlayerActions_MouseMove;
-            public InputAction @PlaceStandardTurret => m_Wrapper.m_PlayerActions_PlaceStandardTurret;
-            public InputAction @PlaceFreezeTurret => m_Wrapper.m_PlayerActions_PlaceFreezeTurret;
+            public InputAction @BuildTurret => m_Wrapper.m_PlayerActions_BuildTurret;
             public InputAction @DestroyTurret => m_Wrapper.m_PlayerActions_DestroyTurret;
+            public InputAction @RotateTurret2 => m_Wrapper.m_PlayerActions_RotateTurret2;
             public InputAction @RotateTurret => m_Wrapper.m_PlayerActions_RotateTurret;
+            public InputAction @SelectTurret => m_Wrapper.m_PlayerActions_SelectTurret;
+            public InputAction @SelectTurretScroll => m_Wrapper.m_PlayerActions_SelectTurretScroll;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -318,18 +419,24 @@ namespace TowerDefenseBase.Input
                 @MouseMove.started += instance.OnMouseMove;
                 @MouseMove.performed += instance.OnMouseMove;
                 @MouseMove.canceled += instance.OnMouseMove;
-                @PlaceStandardTurret.started += instance.OnPlaceStandardTurret;
-                @PlaceStandardTurret.performed += instance.OnPlaceStandardTurret;
-                @PlaceStandardTurret.canceled += instance.OnPlaceStandardTurret;
-                @PlaceFreezeTurret.started += instance.OnPlaceFreezeTurret;
-                @PlaceFreezeTurret.performed += instance.OnPlaceFreezeTurret;
-                @PlaceFreezeTurret.canceled += instance.OnPlaceFreezeTurret;
+                @BuildTurret.started += instance.OnBuildTurret;
+                @BuildTurret.performed += instance.OnBuildTurret;
+                @BuildTurret.canceled += instance.OnBuildTurret;
                 @DestroyTurret.started += instance.OnDestroyTurret;
                 @DestroyTurret.performed += instance.OnDestroyTurret;
                 @DestroyTurret.canceled += instance.OnDestroyTurret;
+                @RotateTurret2.started += instance.OnRotateTurret2;
+                @RotateTurret2.performed += instance.OnRotateTurret2;
+                @RotateTurret2.canceled += instance.OnRotateTurret2;
                 @RotateTurret.started += instance.OnRotateTurret;
                 @RotateTurret.performed += instance.OnRotateTurret;
                 @RotateTurret.canceled += instance.OnRotateTurret;
+                @SelectTurret.started += instance.OnSelectTurret;
+                @SelectTurret.performed += instance.OnSelectTurret;
+                @SelectTurret.canceled += instance.OnSelectTurret;
+                @SelectTurretScroll.started += instance.OnSelectTurretScroll;
+                @SelectTurretScroll.performed += instance.OnSelectTurretScroll;
+                @SelectTurretScroll.canceled += instance.OnSelectTurretScroll;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -337,18 +444,24 @@ namespace TowerDefenseBase.Input
                 @MouseMove.started -= instance.OnMouseMove;
                 @MouseMove.performed -= instance.OnMouseMove;
                 @MouseMove.canceled -= instance.OnMouseMove;
-                @PlaceStandardTurret.started -= instance.OnPlaceStandardTurret;
-                @PlaceStandardTurret.performed -= instance.OnPlaceStandardTurret;
-                @PlaceStandardTurret.canceled -= instance.OnPlaceStandardTurret;
-                @PlaceFreezeTurret.started -= instance.OnPlaceFreezeTurret;
-                @PlaceFreezeTurret.performed -= instance.OnPlaceFreezeTurret;
-                @PlaceFreezeTurret.canceled -= instance.OnPlaceFreezeTurret;
+                @BuildTurret.started -= instance.OnBuildTurret;
+                @BuildTurret.performed -= instance.OnBuildTurret;
+                @BuildTurret.canceled -= instance.OnBuildTurret;
                 @DestroyTurret.started -= instance.OnDestroyTurret;
                 @DestroyTurret.performed -= instance.OnDestroyTurret;
                 @DestroyTurret.canceled -= instance.OnDestroyTurret;
+                @RotateTurret2.started -= instance.OnRotateTurret2;
+                @RotateTurret2.performed -= instance.OnRotateTurret2;
+                @RotateTurret2.canceled -= instance.OnRotateTurret2;
                 @RotateTurret.started -= instance.OnRotateTurret;
                 @RotateTurret.performed -= instance.OnRotateTurret;
                 @RotateTurret.canceled -= instance.OnRotateTurret;
+                @SelectTurret.started -= instance.OnSelectTurret;
+                @SelectTurret.performed -= instance.OnSelectTurret;
+                @SelectTurret.canceled -= instance.OnSelectTurret;
+                @SelectTurretScroll.started -= instance.OnSelectTurretScroll;
+                @SelectTurretScroll.performed -= instance.OnSelectTurretScroll;
+                @SelectTurretScroll.canceled -= instance.OnSelectTurretScroll;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -369,10 +482,12 @@ namespace TowerDefenseBase.Input
         public interface IPlayerActionsActions
         {
             void OnMouseMove(InputAction.CallbackContext context);
-            void OnPlaceStandardTurret(InputAction.CallbackContext context);
-            void OnPlaceFreezeTurret(InputAction.CallbackContext context);
+            void OnBuildTurret(InputAction.CallbackContext context);
             void OnDestroyTurret(InputAction.CallbackContext context);
+            void OnRotateTurret2(InputAction.CallbackContext context);
             void OnRotateTurret(InputAction.CallbackContext context);
+            void OnSelectTurret(InputAction.CallbackContext context);
+            void OnSelectTurretScroll(InputAction.CallbackContext context);
         }
     }
 }
