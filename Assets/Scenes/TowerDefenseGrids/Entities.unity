@@ -493,7 +493,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1481633043623290892, guid: 5f89e353ed42c462eaf115ec176d8642, type: 3}
   spawnInterval: 5
-  waypointsScriptableObject: {fileID: 11400000, guid: 0099e655fb28c43f4b246db4f13527b8,
+  waypointsScriptableObject: {fileID: 11400000, guid: 7404524f3e4dd4be29e5aa1e04350347,
     type: 2}
 --- !u!1 &541619674
 GameObject:
@@ -789,7 +789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1481633043623290892, guid: cff61d4ad0fe544f091ea165017bee39, type: 3}
   spawnInterval: 8
-  waypointsScriptableObject: {fileID: 11400000, guid: 0099e655fb28c43f4b246db4f13527b8,
+  waypointsScriptableObject: {fileID: 11400000, guid: 7404524f3e4dd4be29e5aa1e04350347,
     type: 2}
 --- !u!1 &1389165563
 GameObject:
