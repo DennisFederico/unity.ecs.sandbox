@@ -33,15 +33,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Rotate Turret2",
-                    "type": "Value",
-                    "id": "20156d75-f668-47d5-ad50-4c0b5a4d9b83",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Rotate Turret",
                     "type": "Value",
                     "id": "432155e8-2af9-4b93-8d0e-1aec0d7988d6",
@@ -149,34 +140,34 @@
                 },
                 {
                     "name": "One Modifier",
-                    "id": "ce2cb4fb-94ec-401c-b15f-274b9eaf94a6",
+                    "id": "a7458953-b4ec-4d1b-9582-5346ed6887d7",
                     "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Rotate Turret2",
+                    "action": "Destroy Turret",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "modifier",
-                    "id": "fb55a8cc-283c-434d-a482-15e4a05c7ce7",
-                    "path": "<Keyboard>/r",
+                    "id": "ba0bd9b8-fd5e-46cf-957e-3da5ecb3f700",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Rotate Turret2",
+                    "action": "Destroy Turret",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "binding",
-                    "id": "4c74060c-26ca-4dc2-883a-4dfdb75597db",
+                    "id": "93d1c781-d8a3-4ace-88c5-b6c1d06e6378",
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Rotate Turret2",
+                    "action": "Destroy Turret",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -269,26 +260,37 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "41c02291-ab4c-407b-bfe5-425a16200245",
-                    "path": "<Keyboard>/r",
+                    "name": "Keyboard",
+                    "id": "e6bb753c-e89b-49be-ba5c-e093f090052a",
+                    "path": "1DAxis",
                     "interactions": "",
-                    "processors": "Scale(factor=-1)",
+                    "processors": "",
                     "groups": "",
                     "action": "Rotate Turret",
-                    "isComposite": false,
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "45ee4f4d-cae0-486d-a8a0-c6f92a9cb223",
-                    "path": "<Keyboard>/t",
+                    "name": "negative",
+                    "id": "05582f51-5a40-4ff1-a515-22bff2331c87",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
-                    "processors": "Scale",
+                    "processors": "",
                     "groups": "",
                     "action": "Rotate Turret",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "18639249-c734-4802-9d87-be795f4bdc17",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate Turret",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

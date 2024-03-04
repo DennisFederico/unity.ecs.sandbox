@@ -28,8 +28,8 @@ namespace TowerDefenseHybrid.Systems {
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
             
             foreach (var placementData in buildingPlacementBuffer) {
-                var buildingEntity = ecb.Instantiate(towers[placementData.buildingId].Prefab);
-                //TODO: should we handle the scale too?
+                if (placementData.BuildingId < 1 || placementData.BuildingId > towers.Length) continue;
+                var buildingEntity = ecb.Instantiate(towers[placementData.BuildingId -1].Prefab);
                 ecb.SetComponent(buildingEntity, LocalTransform.FromPositionRotation(placementData.Position,placementData.Rotation));
             }
             buildingPlacementBuffer.Clear();

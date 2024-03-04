@@ -57,15 +57,6 @@ namespace TowerDefenseBase.Input
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Rotate Turret2"",
-                    ""type"": ""Value"",
-                    ""id"": ""20156d75-f668-47d5-ad50-4c0b5a4d9b83"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Rotate Turret"",
                     ""type"": ""Value"",
                     ""id"": ""432155e8-2af9-4b93-8d0e-1aec0d7988d6"",
@@ -173,34 +164,34 @@ namespace TowerDefenseBase.Input
                 },
                 {
                     ""name"": ""One Modifier"",
-                    ""id"": ""ce2cb4fb-94ec-401c-b15f-274b9eaf94a6"",
+                    ""id"": ""a7458953-b4ec-4d1b-9582-5346ed6887d7"",
                     ""path"": ""OneModifier"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate Turret2"",
+                    ""action"": ""Destroy Turret"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""modifier"",
-                    ""id"": ""fb55a8cc-283c-434d-a482-15e4a05c7ce7"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""id"": ""ba0bd9b8-fd5e-46cf-957e-3da5ecb3f700"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate Turret2"",
+                    ""action"": ""Destroy Turret"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""binding"",
-                    ""id"": ""4c74060c-26ca-4dc2-883a-4dfdb75597db"",
+                    ""id"": ""93d1c781-d8a3-4ace-88c5-b6c1d06e6378"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate Turret2"",
+                    ""action"": ""Destroy Turret"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -293,26 +284,37 @@ namespace TowerDefenseBase.Input
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""41c02291-ab4c-407b-bfe5-425a16200245"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""name"": ""Keyboard"",
+                    ""id"": ""e6bb753c-e89b-49be-ba5c-e093f090052a"",
+                    ""path"": ""1DAxis"",
                     ""interactions"": """",
-                    ""processors"": ""Scale(factor=-1)"",
+                    ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Rotate Turret"",
-                    ""isComposite"": false,
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""45ee4f4d-cae0-486d-a8a0-c6f92a9cb223"",
-                    ""path"": ""<Keyboard>/t"",
+                    ""name"": ""negative"",
+                    ""id"": ""05582f51-5a40-4ff1-a515-22bff2331c87"",
+                    ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
-                    ""processors"": ""Scale"",
+                    ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Rotate Turret"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""18639249-c734-4802-9d87-be795f4bdc17"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate Turret"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -324,7 +326,6 @@ namespace TowerDefenseBase.Input
             m_PlayerActions_MouseMove = m_PlayerActions.FindAction("Mouse Move", throwIfNotFound: true);
             m_PlayerActions_BuildTurret = m_PlayerActions.FindAction("Build Turret", throwIfNotFound: true);
             m_PlayerActions_DestroyTurret = m_PlayerActions.FindAction("Destroy Turret", throwIfNotFound: true);
-            m_PlayerActions_RotateTurret2 = m_PlayerActions.FindAction("Rotate Turret2", throwIfNotFound: true);
             m_PlayerActions_RotateTurret = m_PlayerActions.FindAction("Rotate Turret", throwIfNotFound: true);
             m_PlayerActions_SelectTurret = m_PlayerActions.FindAction("Select Turret", throwIfNotFound: true);
             m_PlayerActions_SelectTurretScroll = m_PlayerActions.FindAction("Select Turret Scroll", throwIfNotFound: true);
@@ -392,7 +393,6 @@ namespace TowerDefenseBase.Input
         private readonly InputAction m_PlayerActions_MouseMove;
         private readonly InputAction m_PlayerActions_BuildTurret;
         private readonly InputAction m_PlayerActions_DestroyTurret;
-        private readonly InputAction m_PlayerActions_RotateTurret2;
         private readonly InputAction m_PlayerActions_RotateTurret;
         private readonly InputAction m_PlayerActions_SelectTurret;
         private readonly InputAction m_PlayerActions_SelectTurretScroll;
@@ -403,7 +403,6 @@ namespace TowerDefenseBase.Input
             public InputAction @MouseMove => m_Wrapper.m_PlayerActions_MouseMove;
             public InputAction @BuildTurret => m_Wrapper.m_PlayerActions_BuildTurret;
             public InputAction @DestroyTurret => m_Wrapper.m_PlayerActions_DestroyTurret;
-            public InputAction @RotateTurret2 => m_Wrapper.m_PlayerActions_RotateTurret2;
             public InputAction @RotateTurret => m_Wrapper.m_PlayerActions_RotateTurret;
             public InputAction @SelectTurret => m_Wrapper.m_PlayerActions_SelectTurret;
             public InputAction @SelectTurretScroll => m_Wrapper.m_PlayerActions_SelectTurretScroll;
@@ -425,9 +424,6 @@ namespace TowerDefenseBase.Input
                 @DestroyTurret.started += instance.OnDestroyTurret;
                 @DestroyTurret.performed += instance.OnDestroyTurret;
                 @DestroyTurret.canceled += instance.OnDestroyTurret;
-                @RotateTurret2.started += instance.OnRotateTurret2;
-                @RotateTurret2.performed += instance.OnRotateTurret2;
-                @RotateTurret2.canceled += instance.OnRotateTurret2;
                 @RotateTurret.started += instance.OnRotateTurret;
                 @RotateTurret.performed += instance.OnRotateTurret;
                 @RotateTurret.canceled += instance.OnRotateTurret;
@@ -450,9 +446,6 @@ namespace TowerDefenseBase.Input
                 @DestroyTurret.started -= instance.OnDestroyTurret;
                 @DestroyTurret.performed -= instance.OnDestroyTurret;
                 @DestroyTurret.canceled -= instance.OnDestroyTurret;
-                @RotateTurret2.started -= instance.OnRotateTurret2;
-                @RotateTurret2.performed -= instance.OnRotateTurret2;
-                @RotateTurret2.canceled -= instance.OnRotateTurret2;
                 @RotateTurret.started -= instance.OnRotateTurret;
                 @RotateTurret.performed -= instance.OnRotateTurret;
                 @RotateTurret.canceled -= instance.OnRotateTurret;
@@ -484,7 +477,6 @@ namespace TowerDefenseBase.Input
             void OnMouseMove(InputAction.CallbackContext context);
             void OnBuildTurret(InputAction.CallbackContext context);
             void OnDestroyTurret(InputAction.CallbackContext context);
-            void OnRotateTurret2(InputAction.CallbackContext context);
             void OnRotateTurret(InputAction.CallbackContext context);
             void OnSelectTurret(InputAction.CallbackContext context);
             void OnSelectTurretScroll(InputAction.CallbackContext context);

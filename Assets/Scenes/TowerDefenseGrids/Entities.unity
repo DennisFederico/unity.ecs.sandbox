@@ -456,7 +456,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 464109547}
-  - component: {fileID: 464109546}
+  - component: {fileID: 464109548}
   m_Layer: 0
   m_Name: SkeletonSpawner
   m_TagString: Untagged
@@ -464,21 +464,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &464109546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 464109545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c39c8f8095947ee964ed294d6577701, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 1481633043623290892, guid: 5f89e353ed42c462eaf115ec176d8642, type: 3}
-  spawnInterval: 5
-  parentWaypoints: {fileID: 437173524}
 --- !u!4 &464109547
 Transform:
   m_ObjectHideFlags: 0
@@ -494,6 +479,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &464109548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464109545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e9c70116f04c2f8148f497a0f898a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1481633043623290892, guid: 5f89e353ed42c462eaf115ec176d8642, type: 3}
+  spawnInterval: 5
+  waypointsScriptableObject: {fileID: 11400000, guid: 0099e655fb28c43f4b246db4f13527b8,
+    type: 2}
 --- !u!1 &541619674
 GameObject:
   m_ObjectHideFlags: 0
@@ -751,7 +752,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1275108901}
-  - component: {fileID: 1275108900}
+  - component: {fileID: 1275108902}
   m_Layer: 0
   m_Name: ZombieSpawner
   m_TagString: Untagged
@@ -759,21 +760,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1275108900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275108899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c39c8f8095947ee964ed294d6577701, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 1481633043623290892, guid: cff61d4ad0fe544f091ea165017bee39, type: 3}
-  spawnInterval: 8
-  parentWaypoints: {fileID: 437173524}
 --- !u!4 &1275108901
 Transform:
   m_ObjectHideFlags: 0
@@ -789,6 +775,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1275108902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275108899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e9c70116f04c2f8148f497a0f898a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1481633043623290892, guid: cff61d4ad0fe544f091ea165017bee39, type: 3}
+  spawnInterval: 8
+  waypointsScriptableObject: {fileID: 11400000, guid: 0099e655fb28c43f4b246db4f13527b8,
+    type: 2}
 --- !u!1 &1389165563
 GameObject:
   m_ObjectHideFlags: 0

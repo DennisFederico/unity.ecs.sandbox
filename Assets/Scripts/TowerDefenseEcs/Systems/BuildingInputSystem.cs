@@ -4,7 +4,6 @@ using TowerDefenseBase.Helpers;
 using TowerDefenseBase.Input;
 using TowerDefenseEcs.Components;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Physics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -62,7 +61,7 @@ namespace TowerDefenseEcs.Systems {
             _playerActions.RotateTurret.started += OnRotateTurret;
             _playerActions.DestroyTurret.started += OnDestroyTurret;
             _playerActions.SelectTurret.performed += OnSelectTurret;
-            _playerActions.SelectTurretScroll.performed += OnSelectTurretScroll; 
+            _playerActions.SelectTurretScroll.performed += OnSelectTurretScroll;
             _playerActions.Enable();
             
             //PREPARE THE COLLISION FILTERS
@@ -123,7 +122,6 @@ namespace TowerDefenseEcs.Systems {
         private void OnSelectTurretScroll(InputAction.CallbackContext obj) {
             _processNewInputState = true;
             var delta = (int)obj.ReadValue<float>(); //value clamped between -1 and 1
-            //_currentBuildingIndex = math.clamp(delta + _currentBuildingIndex, 0, _numBuildingTypes);
             _currentBuildingIndex += delta;
             _currentBuildingIndex = _currentBuildingIndex < 0 ? _numBuildingTypes : _currentBuildingIndex > _numBuildingTypes ? 0 : _currentBuildingIndex;
             var lastPosition = _inputState.MousePosition;

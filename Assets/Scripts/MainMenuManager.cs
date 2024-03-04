@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utils.Narkdagas.SceneManagement;
 
@@ -13,7 +14,8 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField] private Button colliderTestSceneButton;
     [SerializeField] private Button teamSwitchSceneButton;
     [SerializeField] private Button formationChangeSceneButton;
-    [SerializeField] private Button towerDefenseSceneButton;
+    [SerializeField] private Button towerDefenseSceneHybridButton;
+    [SerializeField] private Button towerDefenseSceneEcsButton;
     [SerializeField] private Button exitButton;
     
     public enum Scenes {
@@ -26,6 +28,7 @@ public class MainMenuManager : MonoBehaviour {
         ColliderTest, 
         TeamSwitchSceneTest,
         FormationChangeScene,
+        TowerDefenseGrids,
         TowerDefenseScene
     }
 
@@ -66,7 +69,11 @@ public class MainMenuManager : MonoBehaviour {
             Debug.Log("Loading FormationChangeScene");
             SceneLoader.Load(Scenes.FormationChangeScene, true);
         });
-        towerDefenseSceneButton.onClick.AddListener(() => {
+        towerDefenseSceneHybridButton.onClick.AddListener(() => {
+            Debug.Log("Loading TowerDefenseGridsScene");
+            SceneLoader.Load(Scenes.TowerDefenseGrids, true);
+        });
+        towerDefenseSceneEcsButton.onClick.AddListener(() => {
             Debug.Log("Loading TowerDefenseScene");
             SceneLoader.Load(Scenes.TowerDefenseScene, true);
         });

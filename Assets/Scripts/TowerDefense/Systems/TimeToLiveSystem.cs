@@ -1,4 +1,4 @@
-using TowerDefense.Components;
+using TowerDefenseBase.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,6 +9,7 @@ namespace TowerDefense.Systems {
     public partial struct TimeToLiveSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<TimeToLiveComponent>();
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
@@ -20,13 +21,6 @@ namespace TowerDefense.Systems {
                 EntityBuffer = asParallelWriter,
                 DeltaTime = SystemAPI.Time.DeltaTime
             }.ScheduleParallel();
-
-            // foreach (var (ttl, entity) in SystemAPI.Query<RefRW<TimeToLiveComponent>>().WithEntityAccess()) {
-            //     ttl.ValueRW.Value -= SystemAPI.Time.DeltaTime;
-            //     if (ttl.ValueRO.Value < 0) {
-            //         ecbBos.DestroyEntity(entity);
-            //     }
-            // }
         }
 
         [BurstCompile]
@@ -34,7 +28,6 @@ namespace TowerDefense.Systems {
 
         [BurstCompile]
         private partial struct TimeToLiveEntityJob : IJobEntity {
-
             public EntityCommandBuffer.ParallelWriter EntityBuffer;
             [ReadOnly] public float DeltaTime;
             

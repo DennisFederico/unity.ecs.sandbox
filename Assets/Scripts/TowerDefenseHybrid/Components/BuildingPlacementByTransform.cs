@@ -5,7 +5,7 @@ namespace TowerDefenseHybrid.Components {
     
     [InternalBufferCapacity(3)]
     public struct BuildingPlacementByTransform : IBufferElementData {
-        public sbyte buildingId; //TODO Enum?
+        public sbyte BuildingId;
         public float3 Position;
         public quaternion Rotation;
     }

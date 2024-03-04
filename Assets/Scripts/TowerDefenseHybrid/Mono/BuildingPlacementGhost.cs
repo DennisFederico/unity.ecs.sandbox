@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TowerDefenseHybrid.Mono {
     public class BuildingPlacementGhost : MonoBehaviour {
-        [SerializeField] private Transform visualPrefab;
+        [SerializeField] private Transform[] ghostVisuals;
         [LayerField] [SerializeField] private int buildableLayer;
         [LayerField] [SerializeField] private int occupiedLayer;
         private Transform _currentVisual;
@@ -17,8 +17,7 @@ namespace TowerDefenseHybrid.Mono {
                 if (_currentVisual != null) {
                     Destroy(_currentVisual.gameObject);
                 }
-            
-                visualPrefab = value;
+                _currentVisual = value;
                 UpdateVisual();
             }
         }
@@ -49,6 +48,14 @@ namespace TowerDefenseHybrid.Mono {
         }
 
         private void OnGridCellCandidateChange(PlayerInputManager.CellPlacementData newCellPlacementData) {
+            if (_currentCellPlacementData.BuildingIndex != newCellPlacementData.BuildingIndex) {
+                if (newCellPlacementData.BuildingIndex < 1 || newCellPlacementData.BuildingIndex > ghostVisuals.Length) {
+                    Visual = null;
+                } else {
+                    Visual = ghostVisuals[newCellPlacementData.BuildingIndex - 1];
+                }
+            }
+            
             //If the cell was not valid, change the transform to the mouse position, to avoid the ghost to "jump" when enabled again
             if (!_currentCellPlacementData.IsValid && newCellPlacementData.IsValid) {
                 transform.position = newCellPlacementData.WorldPosition;
@@ -70,7 +77,7 @@ namespace TowerDefenseHybrid.Mono {
                 var offsetPosition = _currentCellPlacementData.CellCenterWorldPosition + new Vector3(0f, .15f, 0f);
                 _currentCellPlacementData.CellCenterWorldPosition = offsetPosition;
             }
-            Visual.gameObject.SetActive(newCellPlacementData.IsValid);
+            if (Visual != null) Visual.gameObject.SetActive(newCellPlacementData.IsValid);
             
             //Like this is more snappy, less smooth and more accurate/performant? (no LateUpdate)
             //A middle ground would be to flag the LateUpdate for only a few frames after the candidate cell changes (coroutine?)
@@ -92,7 +99,8 @@ namespace TowerDefenseHybrid.Mono {
 
 
         private void UpdateVisual() {
-            _currentVisual = Instantiate(visualPrefab, Vector3.zero, Quaternion.identity);
+            if (_currentVisual == null)  return;
+            _currentVisual = Instantiate(Visual, Vector3.zero, Quaternion.identity);
             _currentVisual.parent = transform;
             _currentVisual.localPosition = Vector3.zero;
             _currentVisual.localEulerAngles = Vector3.zero;
@@ -102,7 +110,7 @@ namespace TowerDefenseHybrid.Mono {
         
         private void UpdateLayer(int layerMask) {
             transform.gameObject.layer = layerMask;
-            SetLayerToParentRecursive(_currentVisual);
+            if (_currentVisual != null) SetLayerToParentRecursive(_currentVisual);
         }
 
         private static void SetLayerToParentRecursive(Transform childTransform) {

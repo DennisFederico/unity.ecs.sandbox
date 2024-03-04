@@ -1007,8 +1007,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54ad32f7452e4a8bb8035fa3c02eb289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visualPrefab: {fileID: 6079026007513691951, guid: 0d92c6009f8c543acacd084b33f48b8a,
-    type: 3}
+  ghostVisuals:
+  - {fileID: 6079026007513691951, guid: d6b4fd992e6ed41e78e2b2d9cb38ea3b, type: 3}
+  - {fileID: 6079026007513691951, guid: 58b7c39345878456aa1619b5db10d03f, type: 3}
   buildableLayer: 6
   occupiedLayer: 7
 --- !u!4 &557583029
@@ -1976,20 +1977,126 @@ MonoBehaviour:
     m_Flags: 0
   rotateBuildingGhostAction:
     m_Name: Rotate Tower
-    m_Type: 1
-    m_ExpectedControlType: Button
+    m_Type: 0
+    m_ExpectedControlType: Axis
     m_Id: 345b448d-f82a-4ece-bebe-656124beb0af
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 226d8782-c215-4862-8534-39d169ebf39e
-      m_Path: <Keyboard>/#(R)
+    - m_Name: Keyboard
+      m_Id: 8a86842b-cd44-4f31-b99a-411d3e1c2a59
+      m_Path: 1DAxis
       m_Interactions: 
       m_Processors: 
       m_Groups: 
       m_Action: Rotate Tower
+      m_Flags: 4
+    - m_Name: negative
+      m_Id: 90abe96f-39a6-451c-b4bb-c82c2b2b2c01
+      m_Path: <Keyboard>/r
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotate Tower
+      m_Flags: 8
+    - m_Name: positive
+      m_Id: 82953f59-a9d8-4cd0-9bd0-6df12b0569d0
+      m_Path: <Keyboard>/t
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotate Tower
+      m_Flags: 8
+    - m_Name: ScrollWheel
+      m_Id: b1ef082d-2e25-49cc-a4d3-0c764c6287a7
+      m_Path: 1DAxis
+      m_Interactions: 
+      m_Processors: Clamp(min=-1,max=1)
+      m_Groups: 
+      m_Action: Rotate Tower
+      m_Flags: 4
+    - m_Name: negative
+      m_Id: 6474ef73-bbc0-4f73-9dcd-f58c7477f21d
+      m_Path: <Mouse>/scroll/down
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotate Tower
+      m_Flags: 8
+    - m_Name: positive
+      m_Id: 9126b1a0-4c90-4c64-93c6-0f434322ca1c
+      m_Path: <Mouse>/scroll/up
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotate Tower
+      m_Flags: 8
+    m_Flags: 0
+  selectSpecificBuildingAction:
+    m_Name: Select Specific Building
+    m_Type: 1
+    m_ExpectedControlType: Button
+    m_Id: 530fb7c7-f2b2-4a7f-95be-b778a964dec5
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 80dd2987-ec9d-4181-8758-d95b25568c95
+      m_Path: <Keyboard>/0
+      m_Interactions: 
+      m_Processors: Scale(factor=0)
+      m_Groups: 
+      m_Action: Select Specific Building
       m_Flags: 0
+    - m_Name: 
+      m_Id: 130ea4fa-9f9e-4153-8028-58e0ab2d5c75
+      m_Path: <Keyboard>/1
+      m_Interactions: 
+      m_Processors: Scale
+      m_Groups: 
+      m_Action: Select Specific Building
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 4aad8506-a9d6-4822-a6aa-9ff9a6f2e45d
+      m_Path: <Keyboard>/2
+      m_Interactions: 
+      m_Processors: Scale(factor=2)
+      m_Groups: 
+      m_Action: Select Specific Building
+      m_Flags: 0
+    m_Flags: 0
+  selectNextBuildingAction:
+    m_Name: Select Next Building
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 87cf1c87-f95b-4191-ab3f-d43bd2fd0bab
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: Keyboard
+      m_Id: 243eda79-099f-4b40-a1c9-e8b564701fca
+      m_Path: 1DAxis
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Select Next Building
+      m_Flags: 4
+    - m_Name: negative
+      m_Id: 8f408cd8-81e6-40b7-bfac-45ee6bb267f7
+      m_Path: <Keyboard>/q
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Select Next Building
+      m_Flags: 8
+    - m_Name: positive
+      m_Id: 833ad2d3-bc49-4c19-b5d5-19da8aeb08a4
+      m_Path: <Keyboard>/w
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Select Next Building
+      m_Flags: 8
     m_Flags: 0
   buildableLayerMask:
     serializedVersion: 2
@@ -2029,6 +2136,7 @@ MonoBehaviour:
     Category31: 0
   buildingPrefab: {fileID: 3341958363922121033, guid: 368aad67381fa4e7aa75ac331cd45072,
     type: 3}
+  numBuildingTypes: 2
 --- !u!1 &1849441215
 GameObject:
   m_ObjectHideFlags: 0
