@@ -512,8 +512,17 @@ See:
 ![TowersHybrid.gif](webimg%2FTowersHybrid.gif)
 
 
-#### Turret placement with grid snapping driven from MonoBehaviour
+#### Turret placement driven on ECS side, no grid
 ![TowersEcs.gif](webimg%2FTowersEcs.gif)
+
+#### Gameplay enhancements
+
+- Add score when killing enemies and decrease when they reach the end.
+- Limit the number of turrets that can be placed.
+- Timer for when towers can be placed again. (reduce time on kills).
+- Add the freeze effect to the freeze turret. (slow down enemies).
+- HP bar for the enemies.
+- And so on...
 
 ---
 
