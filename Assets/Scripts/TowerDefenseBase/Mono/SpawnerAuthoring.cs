@@ -38,8 +38,6 @@ namespace TowerDefenseBase.Mono {
                 }
 
                 if (!TryGetBlobAssetReference(assetHash, out BlobAssetReference<Waypoints> blobAssetReference)) {
-                    Debug.Log($"Blob Asset not found for {soName}! Creating new one...");
-
                     using (var blobBuilder = new BlobBuilder(Allocator.Temp)) {
                         ref var waypointsRef = ref blobBuilder.ConstructRoot<Waypoints>();
                         var waypointsArray = blobBuilder.Allocate(ref waypointsRef.Points, waypoints.Length);
@@ -53,9 +51,6 @@ namespace TowerDefenseBase.Mono {
 
                     //Register the blob asset to the baker for proper updating on change
                     AddBlobAssetWithCustomHash(ref blobAssetReference, assetHash);
-                    //AddBlobAsset(ref blobAssetReference, out _);
-                } else {
-                    Debug.Log($"Blob Asset found for {soName}!");
                 }
 
                 var entity = GetEntity(TransformUsageFlags.None);

@@ -29,6 +29,7 @@ The code for each scene is contained in their own namespace in the `Assets/Scrip
 - [Spawner System](#8-spawner-system)
 - [Physics Trigger with Particle FX](#9-physics-trigger-with-particle-fx)
 - [Swarm Magnet Scene](#10-swarm-magnet-scene)
+- 
 
 ---
 
@@ -482,6 +483,34 @@ and the rate in which the change target position, whether or not the target posi
 - **BallCounter**: MonoBehaviour that listens to the event from the **BallCounterSystem** and updates the UI to show the number of "swarm" entities.
 
 ![Swarm.gif](webimg%2FSwarm.gif)
+
+---
+
+### 11 Tower Defense Scene(s)
+
+There are two versions of this PoC, one with the tower placing mechanics on the MonoBehaviour side with Grid snapping, 
+and the other with the tower placing mechanics completely on the ECS side, using only colliders for placement (no grid).
+
+Both tests uses the *New Input System* to place the turrets, the Hybrid version uses and Input Component configured in the inspector,
+whereas the full ECS version uses an Input Asset, the latter could have been re-used in the Hybrid version, but made that way for testing.
+
+Turrets are spawned in ECS World in both cases as required for the simulation, on the hybrid version "placement commands" are put in Buffers and processed by the *TurretPlacementSystem*,
+on the ECS the Input is capture on the ECS side and placement handled directly.
+
+Enemies are animated and have a MonoBehavior counterpart for visualization and animation that is Synced with the transform of the ECS entity using the *LocalTransform* component and the *SyncVisualGameObjectSystem*,
+which is a common system for both versions of the scene.
+
+See:
+- [Assets/Scripts/TowerDefenseBase](Assets/Scripts/TowerDefenseBase) namespace for common components and systems.
+- [Assets/Scripts/TowerDefenseHybrid](Assets/Scripts/TowerDefenseHybrid) namespace, contains components and systems that use an hybrid approach to place the turrets.
+- [Assets/Scripts/TowerDefenseEcs](Assets/Scripts/TowerDefenseEcs) namespace, contains components and systems that use a pure ECS approach to place the turrets.
+
+#### Turret placement with grid snapping driven from MonoBehaviour
+![TowersHybrid.gif](webimg%2FTowersHybrid.gif)
+
+
+#### Turret placement with grid snapping driven from MonoBehaviour
+![TowersEcs.gif](webimg%2FTowersEcs.gif)
 
 ---
 

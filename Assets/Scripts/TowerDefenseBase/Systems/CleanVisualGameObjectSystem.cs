@@ -30,7 +30,9 @@ namespace TowerDefenseBase.Systems {
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
             foreach (var (vTransform, entity) in SystemAPI.Query<VisualTransformComponent>().WithNone<LocalTransform>().WithEntityAccess()) {
-                Object.Destroy(vTransform.Transform.gameObject);
+                if (vTransform.Transform != null) {
+                    Object.Destroy(vTransform.Transform.gameObject);                    
+                } 
                 ecbEos.RemoveComponent<VisualTransformComponent>(entity);
             }
         }
