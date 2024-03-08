@@ -29,7 +29,7 @@ The code for each scene is contained in their own namespace in the `Assets/Scrip
 - [Spawner System](#8-spawner-system)
 - [Physics Trigger with Particle FX](#9-physics-trigger-with-particle-fx)
 - [Swarm Magnet Scene](#10-swarm-magnet-scene)
-- 
+- [Tower Defense Scene(s)](#11-tower-defense-scenes)
 
 ---
 
@@ -486,7 +486,7 @@ and the rate in which the change target position, whether or not the target posi
 
 ---
 
-### 11 Tower Defense Scene(s)
+### 11 Tower Defense Scenes
 
 There are two versions of this PoC, one with the tower placing mechanics on the MonoBehaviour side with Grid snapping, 
 and the other with the tower placing mechanics completely on the ECS side, using only colliders for placement (no grid).
