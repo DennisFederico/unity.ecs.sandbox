@@ -497,7 +497,10 @@ whereas the full ECS version uses an Input Asset, the latter could have been re-
 Turrets are spawned in ECS World in both cases as required for the simulation, on the hybrid version "placement commands" are put in Buffers and processed by the *TurretPlacementSystem*,
 on the ECS the Input is capture on the ECS side and placement handled directly.
 
-Enemies are animated and have a MonoBehavior counterpart for visualization and animation that is Synced with the transform of the ECS entity using the *LocalTransform* component and the *SyncVisualGameObjectSystem*,
+In addition to the above, almost all configuration data for turrets and enemies uses ScriptableObjects, for enemies the data components are set during baking from these ScriptableObjects,
+but for turrets these are made into a BlobAssetReference, as well as the list of waypoints shared by the enemies.
+
+Animated enemies have a MonoBehavior counterpart for visualization and animation that is Synced with the transform of the ECS entity using the *LocalTransform* component and the *SyncVisualGameObjectSystem*,
 which is a common system for both versions of the scene.
 
 See:
