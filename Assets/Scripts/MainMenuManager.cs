@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utils.Narkdagas.SceneManagement;
 
@@ -77,6 +76,9 @@ public class MainMenuManager : MonoBehaviour {
             Debug.Log("Loading TowerDefenseScene");
             SceneLoader.Load(Scenes.TowerDefenseScene, true);
         });
-        exitButton.onClick.AddListener(Application.Quit);
+        exitButton.onClick.AddListener(() => {
+            Debug.Log("Bye Bye...");
+            Application.Quit();
+        });
     }
 }

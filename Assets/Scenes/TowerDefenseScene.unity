@@ -814,7 +814,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &297440775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -827,8 +827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d5e65397ff4b899b889528107f16a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointsScriptableObject: {fileID: 11400000, guid: 0099e655fb28c43f4b246db4f13527b8,
-    type: 2}
+  waypointsSO: {fileID: 11400000, guid: ae4836619840f4cfc9d4f1d4c286c241, type: 2}
   waypointsReferences:
   - {fileID: 718687135}
   - {fileID: 1234671449}

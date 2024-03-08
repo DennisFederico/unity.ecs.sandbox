@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 6208332093100607265}
   - component: {fileID: 4864651186231684953}
   m_Layer: 0
-  m_Name: ZombieVisual
+  m_Name: ZombieVisual@Walk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

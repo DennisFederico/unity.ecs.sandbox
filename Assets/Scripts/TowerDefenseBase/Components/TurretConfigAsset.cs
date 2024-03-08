@@ -4,9 +4,9 @@ using Unity.Physics;
 namespace TowerDefenseBase.Components {
     
     public struct TurretConfig : IComponentData {
-        public float ShootFrequency;
         public CollisionFilter Filter;
         public float Range;
+        public float FovAngle;
     }
     
     public struct TurretConfigAsset : IComponentData {

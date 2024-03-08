@@ -10,6 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1743570551844cd82ebcb0fc58c0a28, type: 3}
-  m_Name: WaypointsHybrid
+  m_Name: WaypointHybrid
   m_EditorClassIdentifier: 
-  waypoints: []
+  Waypoints:
+  - x: 25.000004
+    y: 0
+    z: 0.0000019073486
+  - x: -5
+    y: 0
+    z: -0.000002861023
+  - x: -3.000002
+    y: 0
+    z: 5.999998
+  - x: 25.000002
+    y: 0
+    z: 6.000002
+  - x: 23
+    y: 0
+    z: 12.000001
+  - x: -1.0000019
+    y: 0
+    z: 11.999998
+  - x: 0.9999981
+    y: 0
+    z: 18
+  - x: 21
+    y: 0
+    z: 18.000002

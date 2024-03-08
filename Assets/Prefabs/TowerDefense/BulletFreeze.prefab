@@ -292,8 +292,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aba6182b03a46d38ed1a7c30c38136d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 20
   impactVfxPrefab: {fileID: 4924508274929071776, guid: 0edef91621bb6b34384ccc9dbb98729c,
     type: 3}
-  numHits: 1
+  damage: 3
   timeToLive: 5

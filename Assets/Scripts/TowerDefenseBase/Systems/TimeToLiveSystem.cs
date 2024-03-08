@@ -3,9 +3,8 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace TowerDefense.Systems {
+namespace TowerDefenseBase.Systems {
     
-    [DisableAutoCreation]
     public partial struct TimeToLiveSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {

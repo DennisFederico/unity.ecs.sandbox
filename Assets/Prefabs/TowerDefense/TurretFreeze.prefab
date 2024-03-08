@@ -299,10 +299,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a12db14afd7544699c614eba4d4aba33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turretDataSO: {fileID: 11400000, guid: ba4c2684762884691bc37d3df1856159, type: 2}
   bulletPrefab: {fileID: 1443543347202855104, guid: 2258f0d1fb2e3498f8635a7a1512e767,
     type: 3}
-  fireRate: 2
-  range: 2
 --- !u!114 &1328661036818334575
 MonoBehaviour:
   m_ObjectHideFlags: 0

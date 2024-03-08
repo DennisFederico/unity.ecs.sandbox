@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e98cb722714448d9bad299f5ab146651, type: 3}
+  m_Name: TurretStandard
+  m_EditorClassIdentifier: 
+  turretPrefab: {fileID: 919410444498718200, guid: 368aad67381fa4e7aa75ac331cd45072,
+    type: 3}
+  ghostPrefab: {fileID: 6079026007513691951, guid: d6b4fd992e6ed41e78e2b2d9cb38ea3b,
+    type: 3}
+  bulletPrefab: {fileID: 4847679336558101216, guid: fb40d1d7393ff4bda9a7cab10e00d7d6,
+    type: 3}
+  fovRange: 5
+  fovAngle: 60
+  fireRate: 2

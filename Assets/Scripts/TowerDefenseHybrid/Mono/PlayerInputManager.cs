@@ -1,3 +1,4 @@
+using System;
 using TowerDefenseBase.Helpers;
 using TowerDefenseHybrid.Components;
 using Unity.Entities;
@@ -10,7 +11,7 @@ namespace TowerDefenseHybrid.Mono {
     public class PlayerInputManager : MonoBehaviour {
 
         public static PlayerInputManager Instance;
-        public event System.Action<CellPlacementData> OnGridCellCandidateChange;
+        public event Action<CellPlacementData> OnGridCellCandidateChange;
 
         [SerializeField] private Camera mainCamera;
         [SerializeField] private InputAction updateHoverPositionAction;
@@ -30,7 +31,7 @@ namespace TowerDefenseHybrid.Mono {
 
         private CellPlacementData _candidateCellPlacementData;
 
-        public struct CellPlacementData : System.IEquatable<CellPlacementData> {
+        public struct CellPlacementData : IEquatable<CellPlacementData> {
             public int2 GridPosition;
             public bool IsBuildable;
             public bool IsOccupied;
@@ -55,14 +56,14 @@ namespace TowerDefenseHybrid.Mono {
             }
 
             public override int GetHashCode() {
-                return System.HashCode.Combine(GridPosition, IsOccupied);
+                return HashCode.Combine(GridPosition, IsOccupied);
             }
         }
 
         private void Awake() {
             if (Instance != null && Instance != this) {
                 Destroy(gameObject);
-                throw new System.Exception("An instance of this singleton already exists.");
+                throw new Exception("An instance of this singleton already exists.");
             }
 
             Instance = this;

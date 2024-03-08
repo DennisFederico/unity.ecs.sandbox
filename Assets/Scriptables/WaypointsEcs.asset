@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1743570551844cd82ebcb0fc58c0a28, type: 3}
   m_Name: WaypointsEcs
   m_EditorClassIdentifier: 
-  waypoints:
+  Waypoints:
   - x: -8
     y: 0
     z: -7

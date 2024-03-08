@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e98cb722714448d9bad299f5ab146651, type: 3}
+  m_Name: TurretFreeze
+  m_EditorClassIdentifier: 
+  turretPrefab: {fileID: 919410444498718200, guid: 80998926afd794a839b64961d74f3279,
+    type: 3}
+  ghostPrefab: {fileID: 6079026007513691951, guid: 58b7c39345878456aa1619b5db10d03f,
+    type: 3}
+  bulletPrefab: {fileID: 4847679336558101216, guid: 2258f0d1fb2e3498f8635a7a1512e767,
+    type: 3}
+  fovRange: 3.5
+  fovAngle: 90
+  fireRate: 2
