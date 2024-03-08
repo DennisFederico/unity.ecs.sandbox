@@ -17,14 +17,10 @@ namespace TowerDefenseBase.Mono {
 
         private class SpawnerAuthoringBaker : Baker<SpawnerAuthoring> {
             public override void Bake(SpawnerAuthoring authoring) {
-                Debug.Log($"Running the baker for {authoring.name}...");
-                // DependsOn(authoring.dataContainer);
-                // DependsOn(authoring.dataContainer.WaypointsSO);
                 DependsOn(authoring.waypointsSO);
 
-                // if (authoring.dataContainer == null || authoring.dataContainer.WaypointsSO == null || authoring.dataContainer.WaypointsSO.Waypoints == null || authoring.dataContainer.WaypointsSO.Waypoints.Length == 0) {
                 if (authoring.waypointsSO == null || authoring.waypointsSO.Waypoints == null || authoring.waypointsSO.Waypoints.Length == 0) {
-                    Debug.Log($"Scriptable Object not loaded / found! Skipping...");
+                    Debug.Log($"Cannot Bake spawner. WaypointsSO is null or empty.");
                     return;
                 }
                 

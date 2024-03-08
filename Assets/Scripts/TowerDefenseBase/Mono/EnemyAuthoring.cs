@@ -1,4 +1,5 @@
 using TowerDefenseBase.Components;
+using TowerDefenseBase.Scriptables;
 using Unity.Entities;
 using UnityEngine;
 
@@ -10,13 +11,17 @@ namespace TowerDefenseBase.Mono {
     public class EnemyAuthoring : MonoBehaviour {
         
         //Most of these should be added as a ScriptableObject and referenced here.
-        [SerializeField] private float speed = 3f;
-        [SerializeField] private GameObject visualPrefab;
-        [SerializeField] private float health;
+        [SerializeField] private EnemyDataSO enemyData;
         
         private class EnemyAuthoringBaker : Baker<EnemyAuthoring> {
             
             public override void Bake(EnemyAuthoring authoring) {
+                DependsOn(authoring.enemyData);
+                if (authoring.enemyData == null) {
+                    Debug.Log("Cannot Bake enemy. EnemyDataSO is null.");
+                    return;
+                }
+                
                 var enemyComponentsSet = new ComponentTypeSet(
                     typeof(EnemyTag),
                     typeof(HealthComponent),
@@ -26,9 +31,9 @@ namespace TowerDefenseBase.Mono {
 
                 var entity = GetEntity(authoring, TransformUsageFlags.Dynamic);
                 AddComponent(entity, enemyComponentsSet);
-                SetComponent(entity, new MoveSpeedComponent {Value = authoring.speed});
-                SetComponent(entity, new HealthComponent {Value = authoring.health});
-                AddComponentObject(entity, new VisualGameObjectComponent { VisualPrefab = authoring.visualPrefab });
+                SetComponent(entity, new MoveSpeedComponent {Value = authoring.enemyData.speed});
+                SetComponent(entity, new HealthComponent {Value = authoring.enemyData.health});
+                AddComponentObject(entity, new VisualGameObjectComponent { VisualPrefab = authoring.enemyData.visualPrefab });
                 // var additionalEntity = CreateAdditionalEntity(TransformUsageFlags.None, false, "VisualComponentEntity");
                 // AddComponentObject(additionalEntity, new VisualGameObjectComponent {VisualPrefab = authoring.visualPrefab});
             }
